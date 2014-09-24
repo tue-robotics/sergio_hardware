@@ -29,4 +29,10 @@ install(FILES
 sergiohardware.launch
 soem.ops
 base_controller.ops
+base_controller_odom.ops
+base_controller_odom_ff.ops
 DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+### Specific hardware components for testing torso ###
+orocos_component(MotorTest src/MotorTest.cpp)
+target_link_libraries(MotorTest ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})

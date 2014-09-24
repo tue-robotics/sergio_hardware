@@ -1,0 +1,65 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+import("rtt_rosnode")
+import("rtt_roscomm")
+import("soem_master")
+import("soem_beckhoff_drivers")
+import("tue_ethercat_drivers")
+import("sergio_hardware")
+ros.import("rtt_control_components")
+
+#### DECLARATION OF PARAMETERS ####
+var double Ts = 0.001
+
+#### LOAD SUPERVISOR ###
+loadComponent("Supervisor","SUPERVISORY::Supervisor")
+Supervisor.configure
+setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
+#Supervisor.start
+stream("Supervisor.rosemergency", ros.topic("/sergio/emergency_switch"));
+stream("Supervisor.rosshutdown", ros.topic("/sergio/etherCAT_shutdown")); 
+stream("Supervisor.rosetherCATenabled", ros.topic("/sergio/etherCAT_enabled")); 
+stream("Supervisor.hardware_status", ros.topic("/sergio/hardware_status")); 
+stream("Supervisor.dashboardCmd", ros.topic("/sergio/dashboard_ctrlcmds")); 
+
+### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
+##This component enables communication with EtherCAT through the SoemMaster component.
+loadComponent("Soem","soem_master::SoemMasterComponent")
+addPeer("Supervisor","Soem")
+#Configure the component. This looks for connected EtherCAT slaves and creates ports for all of the slaves.
+Soem.configure
+#Set a realtime priority to this component and run it every 1ms.
+setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
+connect ("Soem.Slave_1002.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;#ToDo: replace serialrunning port?
+
+#### LOAD COMPONENT TO ENABLE ANALOG INS ###
+loadComponent("AnalogIns","SOEM::AnalogInsPera2");
+addPeer("Supervisor","AnalogIns")
+AnalogIns.number_boards = 1;
+AnalogIns.configure
+setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
+connect ("AnalogIns.in_for1","Soem.Slave_1002.forceSensors", ConnPolicy() );
+connect ("AnalogIns.in_pos1","Soem.Slave_1002.positionSensors", ConnPolicy() );
+#connect ("AnalogIns.in_for2","Soem.Slave_1003.forceSensors", ConnPolicy() );
+#connect ("AnalogIns.in_pos2","Soem.Slave_1003.positionSensors", ConnPolicy() );
+
+#### LOAD COMPONENT TO STREAM ANALOG INS DATA TO ROS ###
+loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
+addPeer("Supervisor", "AnalogInsFToRos")
+setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
+AnalogInsFToRos.NumberOfDoublesInVector = 6;
+AnalogInsFToRos.configure;
+connect ("AnalogIns.out_for", "AnalogInsFToRos.in", ConnPolicy() )
+stream("AnalogInsFToRos.out4", ros.topic("/sergio/battery_value"))
+
+#### START COMPONENTS ####
+Supervisor.AddAllwaysOnPeer ("Soem")
+Supervisor.AddAllwaysOnPeer ("AnalogIns")
+Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
+Supervisor.start()
