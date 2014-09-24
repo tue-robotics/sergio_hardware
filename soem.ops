@@ -11,7 +11,7 @@ import("rtt_roscomm")
 import("soem_master")
 import("soem_beckhoff_drivers")
 import("tue_ethercat_drivers")
-import("sergio_hardware")
+#import("sergio_hardware")
 ros.import("rtt_control_components")
 
 #### DECLARATION OF PARAMETERS ####
