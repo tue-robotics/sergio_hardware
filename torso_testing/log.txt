@@ -1,0 +1,19 @@
+##### First test with the torso ####
+
+ERRORS:
+ -  A kabel blocks the end stop of the left knee when moving upwards
+ -  End stop at the right knee when moving upwards does not work
+ -  Buttens to move out of endstop are enabled by pressing the emergency button:
+     *  This can be dangerous
+     *  Possible protect these buttons with a case for safety
+ -  Lower spindle brake is to weak.
+ -  Encoder counter does not change when the spindle is moving but the brake is on
+ -  After hitting the upwards endstops (both spindles), the restore button only moves
+    down once. At the downwards endstops this works fine.
+
+
+INFORMATION:
+              | Force up | Force down | Move up     | Move down  |
+------------------------------------------------------------------
+lower spindle |  V < 0   |   V > 0    | d(enc) > 0  | d(enc) < 0 |
+upper spindle |  V < 0   |   V > 0    | d(enc) > 0  | d(enc) < 0 |
