@@ -126,8 +126,8 @@ connect ("TORSO_Outputs.brake2","TORSO_BrakeDO.in2", ConnPolicy() )
 
 # data to PERA
 connect ("TORSO_True.out","Soem.Slave_1002.enablePort", ConnPolicy() )
-connect ("TORSO_MotorAO.out1","Soem.Slave_1002.pwmDutyMotors", ConnPolicy() )
-connect ("TORSO_EnableDO.digital_out","Soem.Slave_1002.digitalOuts", ConnPolicy() )
+#connect ("TORSO_MotorAO.out1","Soem.Slave_1002.pwmDutyMotors", ConnPolicy() )
+#connect ("TORSO_EnableDO.digital_out","Soem.Slave_1002.digitalOuts", ConnPolicy() )
 connect ("TORSO_BrakeDO.digital_out","Soem.Slave_1003.bits", ConnPolicy() )
 
 # output from pera
