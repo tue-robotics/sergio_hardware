@@ -16,6 +16,8 @@ include_directories(
 	${catkin_INCLUDE_DIRS} 
 	${scl_filters_INCLUDE_DIRS} 
 	${USE_OROCOS_INCLUDE_DIRS})
+	
+file(GLOB_RECURSE HEADER_FILES include/*.hpp)
 
 orocos_install_headers(DIRECTORY 
 	include)
@@ -34,5 +36,5 @@ base_controller_odom_ff.ops
 DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 ### Specific hardware components for testing torso ###
-orocos_component(MotorTest src/MotorTest.cpp)
+orocos_component(MotorTest src/MotorTest.cpp ${HEADER_FILES})
 target_link_libraries(MotorTest ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
