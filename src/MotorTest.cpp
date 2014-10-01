@@ -81,7 +81,7 @@ bool MotorTest::startHook()
     log(Error)<<"MotorTest:: max_velocities not correctly specified" << endlog();
   }
 
-
+  log(Warning)<<"MOTORTEST:: started"<<endlog();
   return true;
 }
 
@@ -110,7 +110,8 @@ void MotorTest::updateHook()
     encs_prev = encs;
   }
   
-
+  
+  vel_limit_exceeded = false;
   if (vel_limit_exceeded)
   {
     out_brake1 = false;
@@ -128,7 +129,8 @@ void MotorTest::updateHook()
     doubles input(2,0.0);
     // Read the inputports and set the outputs
     if ( inport_motors.read(input) == NewData ) {
-      output = input;
+        output[0] = -input[0];
+        output[1] = -input[1];
       if (input[0]==0.0) {
           out_brake1 = false;
           out_enable1 = false;
