@@ -2,45 +2,44 @@
 #                                                                      #
 # Base controller odom deployer file 								   #
 #                                                                      #
-# Ton parameters                                                       #
+# Ton peters                                                      #
 # September 2014                                                       #
 #                                                                      #
 ########################################################################
 
-#### DECLARATION OF PARAMETERS ####
-var double Ts = 0.001
-var int BODYNUMBER 		= 1
-var string BODYNAME 	= "base"
-var bool HOMEABLE 		= false
-var string BASE_SLAVE_1 = "Soem.Slave_1002"
-var string BASE_SLAVE_2 = "Soem.Slave_1003"
+##### DECLARATION OF PARAMETERS ####
+	# Part settings
+var double 	Ts = 0.001
+var int 	BODYNUMBER 			= 1
+var string 	BODYNAME 			= "base"
+var bool 	HOMEABLE 			= false
+var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
+var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
 	# System properties
-var double WHEELRAD 		= 0.075*0.9825; 		# Corrected for effective wheel radius ToDo: check
-var double HALFSQRT2 		= 0.7071
-var double GEARRATIO 		= 9.0/169.0;			# Gearratio Maxxon GP42C
-var double BITS2CURRENT 	= 25.0/1023.0; 	# Bit value to current value (check is it 15 or 25?)
-var double CURRENT2TORQUE 	= 29.2e-3; 		# Torque constant of the motor Maxxon RE35
-var double BITS2WHEELTORQUE = BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO;
-var double TWOPI 			= 2.0*3.141592
-var double ENCODERCOUNTS 	= 500.0*4.0;		# Where does this value come from? 
-var int ENCODERBITS 		= 65536;				# From encoder datasheet
-var double ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
-#var double SI2V = TORQUE2CURRENT * CURRENT2VOLT * GEARRATIO
-var double SI2BITS 			= 1.0; 
-var double DISTBETWEENFRONTANDREARWHEELS = 0.530;	# Checked with technical drawing
-var double DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;	# Checked with technical drawing    
-#var double GEOMFACTOR = 0.3819; # Distance from center base to wheel
-var double GEOMFACTOR 		= 0.7638 ; # Distance from center base to wheel
+var double 	WHEELRAD 			= 0.075*0.9825; 	# Corrected for effective wheel radius
+var double 	HALFSQRT2 			= 0.7071
+var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
+var double 	BITS2CURRENT 		= 25.0/1023.0; 		# Bit value to current value (check is it 15 or 25?)
+var double 	CURRENT2TORQUE 		= 29.2e-3; 			# Torque constant of the motor Maxxon RE35
+var double 	BITS2WHEELTORQUE 	= BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO;
+var double 	TWOPI 				= 2.0*3.141592
+var double 	ENCODERCOUNTS 		= 500.0*4.0;		# Counts per cycle
+var int 	ENCODERBITS 		= 65536;			# From encoder datasheet
+var double 	ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
+var double 	DISTBETWEENFRONTANDREARWHEELS = 0.530; 
+var double 	DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;  
+var double 	GEOMFACTOR 			= 0.530 ; 			# Distance from center base to wheel
 	# Safety
-var array MAX_VELOCITIES 	= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
-var array MAX_ERRORS     	= array (2.0, 2.0, 2.0); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
-var array MAX_CONTROL_OUT 	= array (1000.0*BITS2WHEELTORQUE,1000.0*BITS2WHEELTORQUE,1000.0*BITS2WHEELTORQUE)
-var array MAX_VOLTAGES		= array (1000.0, 1000.0, 1000.0, 1000.0)
-var double MAX_SATURATION_TIME = 1.0;
+var int    	N_JOINTS			= 3; 				# number of joints
+var int    	N_MOTORS			= 4; 				# number of motors
+var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
+var array 	MAX_ERRORS     		= array (0.3, 0.3, 0.3); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
+var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
+var double 	MAX_SATURATION_TIME = 1.0;
 	# Reference
-var array MAX_ACC 			= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
-var double MAX_START_VEL 	= 0.7; 				# Velocity limit at startup
-var double MAX_INTERVAL 	= 1.0;				# Max interval between reference signals
+var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
+var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
+var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 #var array GAINS                     = array (4.0, 4.0, 4.0)
 #var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01)
@@ -56,7 +55,7 @@ var double MAX_INTERVAL 	= 1.0;				# Max interval between reference signals
 #var array LOWPASS_FREQUENCY         = array (100.0, 100.0, 100.0)
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 ### Low gain controller BW arround 2.0Hz
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
 var array GAINS                     = array (2.0, 2.0, 2.0)
 var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01)
 var array LEAD_FREQUENCY            = array (0.67, 0.67, 0.67)
@@ -82,17 +81,6 @@ var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
 
-### READ WHEEL ENCODERS ###
-loadComponent("BASE_ReadEncoders","SOEM::ReadEncodersTimeStamp")
-addPeer("Supervisor","BASE_ReadEncoders")
-setActivity("BASE_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
-BASE_ReadEncoders.encoderbits = ENCODERBITS;
-BASE_ReadEncoders.enc2SI = array (ENC2RAD, ENC2RAD, ENC2RAD, ENC2RAD)
-BASE_ReadEncoders.timestep = 0.000000256
-BASE_ReadEncoders.timebits = 65536
-BASE_ReadEncoders.time2enc = array(2.0, 2.0)
-BASE_ReadEncoders.configure
-
 ### ENCODER TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")
 addPeer("Supervisor","BASE_MotorToJointSpace")
@@ -110,9 +98,6 @@ addPeer("Supervisor","BASE_Controller")
 setActivity("BASE_Controller",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_Controller.vector_size = 3;
 BASE_Controller.sampling_time = Ts;
-BASE_Controller.max_errors = MAX_ERRORS;
-BASE_Controller.motor_saturation = MAX_CONTROL_OUT;
-BASE_Controller.max_sat_time = MAX_SATURATION_TIME;
 BASE_Controller.controllers = CONTROLLERS;
 BASE_Controller.gains = GAINS;
 BASE_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
@@ -143,19 +128,8 @@ loadComponent("BASE_SI2Bits","MATH::Gain")
 addPeer("Supervisor","BASE_SI2Bits")
 setActivity("BASE_SI2Bits",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_SI2Bits.vectorsize = 4;
-BASE_SI2Bits.gain = array ( 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE)
+BASE_SI2Bits.gain = array ( 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE)
 BASE_SI2Bits.configure
-
-### AnalogOuts (PWM signal) ###
-#loadComponent("BASE_AnalogOuts", "SOEM::AnalogOutsGeneric")
-#addPeer("Supervisor", "BASE_AnalogOuts")
-#setActivity("BASE_AnalogOuts", 0.0, HighestPriority, ORO_SCHED_RT)
-#BASE_AnalogOuts.numberofinports    			= 1
-#BASE_AnalogOuts.numberofoutports    		= 2
-#BASE_AnalogOuts.input_sizes 				= array (4.0)
-#BASE_AnalogOuts.output_sizes 				= array (3.0, 3.0)
-#BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 0.0, 1.0, 1.0, 0.0 )
-#BASE_AnalogOuts.configure;
 
 ### AnalogOuts ###
 loadComponent("BASE_AnalogOuts", "SOEM::AnalogOutsGeneric")
@@ -167,6 +141,17 @@ BASE_AnalogOuts.input_sizes 				= array (4.0)
 BASE_AnalogOuts.output_sizes 				= array (2.0, 2.0)
 BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 1.0, 1.0)
 BASE_AnalogOuts.configure;
+
+### Safety ###
+loadComponent("BASE_Safety","SUPERVISORY::Safety")
+addPeer("Supervisor","BASE_Safety")
+setActivity("BASE_Safety",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_Safety.NJ					= N_JOINTS
+BASE_Safety.NM					= N_MOTORS
+BASE_Safety.maxJointErrors		= MAX_ERRORS
+BASE_Safety.motorSaturations	= MAX_OUTPUT
+BASE_Safety.maxConSatTime		= MAX_SATURATION_TIME
+BASE_Safety.configure
 
 ### READ REFERENCE VELOCITIES ###
 loadComponent("BASE_ReadReferences","ROS::ReadTwistMsg")
@@ -184,22 +169,6 @@ addPeer("Supervisor","BASE_VelocityToPosition")
 setActivity("BASE_VelocityToPosition",Ts,LowestPriority,ORO_SCHED_OTHER)
 BASE_VelocityToPosition.vector_size = 3
 BASE_VelocityToPosition.configure
-
-### CHECK SATURATION OF MOTOR CONTROL ###
-loadComponent("BASE_SaturationCheck", "SUPERVISORY::SaturationCheck")
-addPeer("Supervisor", "BASE_SaturationCheck")
-setActivity("BASE_SaturationCheck", 0.0, HighestPriority, ORO_SCHED_RT)
-BASE_SaturationCheck.inport_sizes    			= array(4.0)
-BASE_SaturationCheck.motor_saturation    		= MAX_VOLTAGES
-BASE_SaturationCheck.max_saturation_time 		= MAX_SATURATION_TIME
-BASE_SaturationCheck.configure;
-
-### ENABLE_OUTPUTS ###
-loadComponent("BASE_Enable", "SUPERVISORY::ActuatorEnabler")
-addPeer("Supervisor", "BASE_Enable")
-setActivity("BASE_Enable", 0.0, HighestPriority, ORO_SCHED_RT)
-BASE_Enable.ports_safe_in    			= 2
-BASE_Enable.configure;
 
 ### DigitalOuts ###
 loadComponent("BASE_DigitalOuts", "SOEM::DigitalOuts")
@@ -229,71 +198,78 @@ BASE_Diagnostics.vecname2 = "Error"
 BASE_Diagnostics.vecname3 = "Voltage"
 BASE_Diagnostics.boolname1 = "Amplifiers"
 
+### OFFSET OF THE ANALOG OUTPUTS ###
+loadComponent("BASE_AnalogOffset","SOURCES::ConstantSignal")
+addPeer("Supervisor","BASE_AnalogOffset")
+setActivity("BASE_AnalogOffset",Ts,HighestPriority,ORO_SCHED_RT)
+BASE_AnalogOffset.vector_size 	= 4;
+BASE_AnalogOffset.value 		= array (-85.0, -75.0, -105.0, -110.0); 
+BASE_AnalogOffset.configure
+
+### ADD OFFSET ###
+loadComponent("BASE_AddOffset","MATH::Addition")
+addPeer("Supervisor","BASE_AddOffset")
+BASE_AddOffset.vectorsize 		= 4
+BASE_AddOffset.numberofinputs 	= 2
+setActivity("BASE_AddOffset",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_AddOffset.configure
+
 #### CONNECT COMPONENTS ####
 # Control loop
-connect (BASE_SLAVE_1 +".encoder1","BASE_ReadEncoders.enc1_in", ConnPolicy() ); #enc1[-]
-connect (BASE_SLAVE_1 +".encoder2","BASE_ReadEncoders.enc2_in", ConnPolicy() ); #enc2[-]
-connect (BASE_SLAVE_2 +".encoder1","BASE_ReadEncoders.enc3_in", ConnPolicy() ); #enc3[-]
-connect (BASE_SLAVE_2 +".encoder2","BASE_ReadEncoders.enc4_in", ConnPolicy() ); #enc4[-]
-connect (BASE_SLAVE_1 +".timeStamp","BASE_ReadEncoders.time1_in", ConnPolicy() ); #time1[-]
-connect (BASE_SLAVE_2 +".timeStamp","BASE_ReadEncoders.time2_in", ConnPolicy() ); #time2[-]
-connect ("BASE_ReadEncoders.out","BASE_MotorToJointSpace.in", ConnPolicy() )
-connect ("BASE_MotorToJointSpace.out","BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
-connect ("BASE_Controller.out","BASE_JointToMotorSpace.in", ConnPolicy() )
-connect ("BASE_JointToMotorSpace.out","BASE_SI2Bits.in", ConnPolicy() )
-connect ("BASE_SI2Bits.out", "BASE_AnalogOuts.in1", ConnPolicy() );
-connect ("BASE_AnalogOuts.out1", BASE_SLAVE_1 +".analogOuts", ConnPolicy() );
-connect ("BASE_AnalogOuts.out2", BASE_SLAVE_2 +".analogOuts", ConnPolicy() );
+connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpace.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
+connect ("BASE_Controller.out",			"BASE_JointToMotorSpace.in", ConnPolicy() )
+connect ("BASE_JointToMotorSpace.out",	"BASE_SI2Bits.in", ConnPolicy() )
+connect ("BASE_SI2Bits.out", 			"BASE_AddOffset.in1_ev", 	ConnPolicy() );
+connect ("BASE_AnalogOffset.out", 		"BASE_AddOffset.in2", 		ConnPolicy() );
+connect ("BASE_AddOffset.out", 			"BASE_AnalogOuts.in1", 		ConnPolicy() );
+connect ("BASE_AnalogOuts.out1", 		BASE_SLAVE_1 +".analogOuts", ConnPolicy() );
+connect ("BASE_AnalogOuts.out2", 		BASE_SLAVE_2 +".analogOuts", ConnPolicy() );
 
 # Safety
-connect ("BASE_Controller.safe", "BASE_Enable.safe_in1", ConnPolicy() ); 
-connect ("BASE_Controller.out", "BASE_SaturationCheck.in1", ConnPolicy() ); 
-connect ("BASE_SaturationCheck.safe", "BASE_Enable.safe_in2", ConnPolicy() ); 
-connect ("BASE_Enable.enable", BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
-connect ("BASE_Enable.enable", BASE_SLAVE_2+".enablePort", ConnPolicy() ); 
-connect ("BASE_Enable.enable", "BASE_DigitalOuts.in1", ConnPolicy() ); 
-connect ("BASE_Enable.enable", "BASE_DigitalOuts.in2", ConnPolicy() ); 
+connect ("BASE_Controller.jointErrors",	"BASE_Safety.jointErrors", 	ConnPolicy() ); # jointerrors
+connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
+connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
+connect ("BASE_Safety.enable",			"BASE_Controller.safe", 	ConnPolicy() ); # error
+connect ("BASE_Safety.enable", 			BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
+connect ("BASE_Safety.enable", 			BASE_SLAVE_2+".enablePort", ConnPolicy() ); 
+connect ("BASE_Safety.enable", 			"BASE_DigitalOuts.in1", ConnPolicy() ); 
+connect ("BASE_Safety.enable", 			"BASE_DigitalOuts.in2", ConnPolicy() ); 
 connect ("BASE_DigitalOuts.digital_out", BASE_SLAVE_1+".digitalOuts", ConnPolicy() ); 
 connect ("BASE_DigitalOuts.digital_out", BASE_SLAVE_2+".digitalOuts", ConnPolicy() ); 
 
 # Reference signal
-stream ("BASE_ReadReferences.cmd_vel", ros.topic("/sergio/base/references"));
-connect ("BASE_ReadReferences.out","BASE_VelocityToPosition.in", ConnPolicy() )
-connect ("BASE_MotorToJointSpace.out","BASE_VelocityToPosition.initial", ConnPolicy() ); # Use current position as initial position
-connect ("BASE_VelocityToPosition.out","BASE_Controller.ref_in", ConnPolicy() );
-
-# Odom to ros
-connect ("BASE_MotorToJointSpace.out", "BASE_OdometryPublisher.pos", ConnPolicy() );
-stream ("BASE_OdometryPublisher.odom", ros.topic("/sergio/base/measurements"));
-stream ("BASE_OdometryPublisher.reset", ros.topic("/sergio/base/reset_odometry"));
+stream ("BASE_ReadReferences.cmd_vel", 	ros.topic("/sergio/base/references"));
+connect ("BASE_ReadReferences.out",		"BASE_VelocityToPosition.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpace.out",	"BASE_VelocityToPosition.initial", ConnPolicy() ); # Use current position as initial position
+connect ("BASE_VelocityToPosition.out",	"BASE_Controller.ref_in", ConnPolicy() );
 
 # Diagnostics
-connect ("BASE_ReadReferences.out", "BASE_Diagnostics.vec1", ConnPolicy() )
-connect ("BASE_Controller.controlerrors", "BASE_Diagnostics.vec2", ConnPolicy() )
-connect ("BASE_SI2Bits.out", "BASE_Diagnostics.vec3", ConnPolicy() )
+connect ("BASE_MotorToJointSpace.out", 	"BASE_OdometryPublisher.pos", ConnPolicy() );
+stream ("BASE_OdometryPublisher.odom", 	ros.topic("/sergio/base/measurements"));
+stream ("BASE_OdometryPublisher.reset", ros.topic("/sergio/base/reset_odometry"));
+connect ("BASE_ReadReferences.out", 	"BASE_Diagnostics.vec1", ConnPolicy() )
+connect ("BASE_Controller.jointErrors", "BASE_Diagnostics.vec2", ConnPolicy() )
+connect ("BASE_SI2Bits.out", 			"BASE_Diagnostics.vec3", ConnPolicy() )
 stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 
 
 #### START COMPONENTS ####
 # Control loop
-Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
-Supervisor.AddEnabledPeer  ("BASE_Controller",BODYNUMBER )
-Supervisor.AddEnabledPeer  ("BASE_JointToMotorSpace",BODYNUMBER )
-Supervisor.AddEnabledPeer  ("BASE_SI2Bits",BODYNUMBER )
-Supervisor.AddEnabledPeer  ("BASE_AnalogOuts", BODYNUMBER)
-
-# Safety
-Supervisor.AddEnabledPeer  ("BASE_SaturationCheck", BODYNUMBER)
-Supervisor.AddEnabledPeer  ("BASE_Enable", BODYNUMBER)
-Supervisor.AddEnabledPeer  ("BASE_DigitalOuts", BODYNUMBER)
-
-# Reference signal
-Supervisor.AddEnabledPeer  ("BASE_ReadReferences",BODYNUMBER )
-Supervisor.AddEnabledPeer  ("BASE_VelocityToPosition",BODYNUMBER )
-
-# Odom to ros
-Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
-
+Supervisor.AddAllwaysOnPeer ("BASE_Controller")
+Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
+Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
+Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
+Supervisor.AddAllwaysOnPeer ("BASE_AddOffset")
+Supervisor.AddAllwaysOnPeer ("BASE_AnalogOuts")
 # Diagnostics
+Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
+Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
+# Safety and reference
+Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
+Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
+Supervisor.AddEnabledPeer   ("BASE_VelocityToPosition", BODYNUMBER )
+
+
