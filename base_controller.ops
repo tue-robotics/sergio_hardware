@@ -218,7 +218,7 @@ connect ("BASE_AnalogOuts.out2", 		BASE_SLAVE_2+".analogOuts", ConnPolicy() );
 connect ("BASE_Controller.jointErrors",	"BASE_Safety.jointErrors", 	ConnPolicy() ); # jointerrors
 connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
 connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
-connect ("BASE_Safety.enable",			"BASE_Controller.enable", 	ConnPolicy() ); # error
+connect ("BASE_Safety.enable",			"BASE_Controller.safe", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable", 			BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
 connect ("BASE_Safety.enable", 			BASE_SLAVE_2+".enablePort", ConnPolicy() ); 
 connect ("BASE_Safety.enable", 			"BASE_DigitalOuts.in1", 	ConnPolicy() ); 
