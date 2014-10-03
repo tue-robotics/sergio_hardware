@@ -11,7 +11,7 @@
 	# Part settings
 var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
-var string 	BODYNAME 			= "base"
+var string 	BODYPARTNAMEs 		= "base"
 var bool 	HOMEABLE 			= false
 var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
 var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
@@ -55,7 +55,7 @@ var double MAX_INTERVAL 	= 1.0;				# Max interval between reference signals
 #var array LOWPASS_FREQUENCY         = array (100.0, 100.0, 100.0)
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 ### Low gain controller BW arround 2.0Hz
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
 var array GAINS                     = array (2.0, 2.0, 2.0)
 var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01)
 var array LEAD_FREQUENCY            = array (0.67, 0.67, 0.67)
@@ -84,7 +84,7 @@ var array GAIN_fv = array(0.0023, 0.0055, 0.0015);
 var array GAIN_fa = array(0.04, 0.04, 0.025);
 
 ### NameBodyPart ###
-Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
+Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
 
 ### ENCODER TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")

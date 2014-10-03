@@ -11,7 +11,7 @@
 	# Part settings
 var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
-var string 	BODYNAME 			= "base"
+var string 	BODYPARTNAME 			= "base"
 var bool 	HOMEABLE 			= false
 var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
 var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
@@ -79,7 +79,7 @@ var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 
 ### NameBodyPart ###
-Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
+Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
 
 ### ENCODER TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")

@@ -12,7 +12,7 @@
 	# Part settings
 var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
-var string 	BODYNAME 			= "base"
+var string 	BODYPARTNAME 		= "base"
 var bool 	HOMEABLE 			= false
 var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
 var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
@@ -69,7 +69,7 @@ var array 	NOTCH_POLE_FREQ 			= array(200.0, 200.0, 200.0, 200.0)
 var array 	NOTCH_POLE_DAMP 			= array(0.9, 0.9, 0.9, 0.9)
 
 ### NameBodyPart ###
-Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
+Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
 
 ### CONTROLLER COMPONENT ###
 loadComponent("BASE_Controller","FILTERS::Controller")
