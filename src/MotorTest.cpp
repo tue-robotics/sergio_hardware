@@ -14,7 +14,7 @@
 
 using namespace std;
 using namespace RTT;
-using namespace CUSTOM;
+using namespace SERGIOCUSTOM;
 
 MotorTest::MotorTest(const string& name) : TaskContext(name, PreOperational)
 {
@@ -174,4 +174,4 @@ void MotorTest::stopHook()
 
 }
 
-ORO_CREATE_COMPONENT(CUSTOM::MotorTest)
+ORO_CREATE_COMPONENT(SERGIOCUSTOM::MotorTest)

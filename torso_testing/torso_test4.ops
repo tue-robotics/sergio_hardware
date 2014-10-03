@@ -56,7 +56,7 @@ TORSO_InputToMotor.function1 = array (1.0, 0.0, 0.0)
 TORSO_InputToMotor.function2 = array (0.0, 1.0, 0.0)
 
 # Generate output signals
-loadComponent("TORSO_Outputs","CUSTOM::MotorTest")
+loadComponent("TORSO_Outputs","SERGIOCUSTOM::MotorTest")
 addPeer("Supervisor","TORSO_Outputs")
 setActivity("TORSO_Outputs",0.0,HighestPriority,ORO_SCHED_RT)
 TORSO_Outputs.max_velocities = MAX_VELS

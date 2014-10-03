@@ -16,7 +16,7 @@
 using namespace std;
 using namespace RTT;
 
-namespace CUSTOM // Just because it looks nice
+namespace SERGIOCUSTOM // Just because it looks nice
 {
   /**
    * @brief A Component that adds two vectors elementwise.
