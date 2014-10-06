@@ -37,8 +37,4 @@ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 ### Specific hardware components for testing torso ###
 orocos_component(MotorTest src/MotorTest.cpp ${HEADER_FILES})
-orocos_component(DynamixelController src/DynamixelController.cpp ${HEADER_FILES})
-orocos_component(DynamixelControllers src/DynamixelControllers.cpp ${HEADER_FILES})
 target_link_libraries(MotorTest ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
-target_link_libraries(DynamixelController ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
-target_link_libraries(DynamixelControllers ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
