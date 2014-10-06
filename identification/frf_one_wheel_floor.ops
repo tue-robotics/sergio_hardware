@@ -1,12 +1,12 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	wheel 			= 1;			# define wheel
+var int 	wheel 			= 4;			# define wheel
 var int 	dir 			= 3;			# define direction of motion
-var double 	noise_level 	= 0.1;			# 
+var double 	noise_level 	= 0.6;			# 
 var double	ref_velocity 	= 1.0;			# m/s or rad/s
-var int buffersize 			= 16384*1;
-var string	FILENAME 		= "03-10-14_FRF_wheel1_floor.dat"
+var int buffersize 			= 16384*8;
+var string	FILENAME 		= "06-10-14_FRF_wheel4_floor02.dat"
 #############################################################
 
 # Configure settings
@@ -22,7 +22,7 @@ var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
 
 # Controller parameters
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
 var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
 var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
 var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)

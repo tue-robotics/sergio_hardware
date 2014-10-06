@@ -66,6 +66,10 @@ connect ("IDENTIFICATION_Noise.out",		"IDENTIFICATION_AddNoise.in2", ConnPolicy(
 connect ("IDENTIFICATION_AddNoise.out",		"BASE_AddOffset.in1_ev", ConnPolicy() );
 connect ("IDENTIFICATION_AddNoise.out",		"BASE_Diagnostics.vec3", ConnPolicy() );
 
+### Connect tracing componenets ###
+connect ("BASE_Controller.jointErrors",	"Tracing.in3", ConnPolicy() );
+connect ("BASE_Controller.out",			"Tracing.in2", ConnPolicy() );
+connect ("IDENTIFICATION_AddNoise.out",	"Tracing.in1", ConnPolicy() );
 
 # safety and reference
 Supervisor.AddEnabledPeer  	("IDENTIFICATION_Step",		BODYNUMBER)
