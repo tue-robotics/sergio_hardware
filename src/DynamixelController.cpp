@@ -49,7 +49,7 @@ bool DynamixelController::configureHook() {
 	}
 	if ( dynamixel_max < 0 || dynamixel_max > 1023 ||
 		 dynamixel_min < 0 || dynamixel_min > 1023 ||
-		 dynamixel_speed < 0 || dynamixel_speed > 1023 ||
+		 dynamixel_speed_default < 0 || dynamixel_speed_default > 1023 ||
 		 dynamixel_offset < 0 || dynamixel_offset > 1023 ){
 		log(Error) << "DynamixelController: properties max, min, speed and offset should be in range 0~1023!" << endlog();
 		return false;

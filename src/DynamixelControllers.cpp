@@ -52,7 +52,7 @@ bool DynamixelControllers::configureHook() {
 	}
 	if ( dynamixel_max.size() != n_dynamixels ||
 		 dynamixel_min.size() != n_dynamixels ||
-		 dynamixel_speed.size() != n_dynamixels ||
+		 dynamixel_speed_default.size() != n_dynamixels ||
 		 dynamixel_offset.size() != n_dynamixels ){
 		log(Error) << "DynamixelControllers: size of max, min, speed and offset should be equal to size of ids!" << endlog();
 		return false;
@@ -64,7 +64,7 @@ bool DynamixelControllers::configureHook() {
 		}
 		if ( dynamixel_max[i] < 0 || dynamixel_max[i] > 1023 ||
 			 dynamixel_min[i] < 0 || dynamixel_min[i] > 1023 ||
-			 dynamixel_speed[i] < 0 || dynamixel_speed[i] > 1023 ||
+			 dynamixel_speed_default[i] < 0 || dynamixel_speed_default[i] > 1023 ||
 			 dynamixel_offset[i] < 0 || dynamixel_offset[i] > 1023 ){
 			log(Error) << "DynamixelControllers: Id "<<dynamixel_ids[i]<<", properties max, min, speed and offset should be in range 0~1023!" << endlog();
 			return false;
