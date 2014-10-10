@@ -56,42 +56,45 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #var array LAG_FREQUENCY             = array (110.0, 110.0, 110.0, 110.0)
 #var array LOWPASS_FREQUENCY         = array (200.0, 200.0, 200.0, 200.0)
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","Notch","LowPass")
-var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
-var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-var array 	LEAD_FREQUENCY            	= array (9.0, 9.0, 9.0, 9.0)
-var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
-var array 	LOWPASS_FREQUENCY         	= array (100.0, 100.0, 100.0, 100.0)
-var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
-var array 	NOTCH_ZERO_FREQ				= array(60.0, 60.0, 60.0, 60.0)
-var array 	NOTCH_ZERO_DAMP	 			= array(0.5, 0.5, 0.5, 0.5)
-var array 	NOTCH_POLE_FREQ 			= array(200.0, 200.0, 200.0, 200.0)
-var array 	NOTCH_POLE_DAMP 			= array(0.9, 0.9, 0.9, 0.9)
+#var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","Notch","LowPass")
+#var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
+#var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+#var array 	LEAD_FREQUENCY            	= array (9.0, 9.0, 9.0, 9.0)
+#var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
+#var array 	LOWPASS_FREQUENCY         	= array (100.0, 100.0, 100.0, 100.0)
+#var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+#var array 	NOTCH_ZERO_FREQ				= array(60.0, 60.0, 60.0, 60.0)
+#var array 	NOTCH_ZERO_DAMP	 			= array(0.5, 0.5, 0.5, 0.5)
+#var array 	NOTCH_POLE_FREQ 			= array(200.0, 200.0, 200.0, 200.0)
+#var array 	NOTCH_POLE_DAMP 			= array(0.9, 0.9, 0.9, 0.9)
 
- # Controller test 1 (High gain 3.5Hz): 
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
-var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-var array 	LEAD_FREQUENCY            	= array (11.0, 11.0, 11.0, 11.0)
-var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
-var array 	LOWPASS_FREQUENCY         	= array (200.0, 200.0, 200.0, 200.0)
-var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
- # Controller test 2 (Low gain 2.16Hz):
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-var array 	GAINS                     	= array (5.0, 5.0, 5.0, 5.0)
-var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-var array 	LEAD_FREQUENCY            	= array (2.0, 2.0, 2.0, 2.0)
-var array 	LAG_FREQUENCY             	= array (13.0,13.0,13.0,13.0)
-var array 	LOWPASS_FREQUENCY         	= array (600.0, 600.0, 600.0, 600.0)
-var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
- # Controller test 3 (variable per wheel):
-var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-var array 	GAINS                     	= array (12.0, 12.0, 6.5, 10.0)
-var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-var array 	LEAD_FREQUENCY            	= array (3.5, 4.0, 2.2, 3)
-var array 	LAG_FREQUENCY             	= array (10.0,10.0,10.0,9.0)
-var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 600.0, 500.0)
-var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+
+	 # Controller test 1 (High gain 3.5Hz): WORKS
+	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+	var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
+	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+	var array 	LEAD_FREQUENCY            	= array (11.0, 11.0, 11.0, 11.0)
+	var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
+	var array 	LOWPASS_FREQUENCY         	= array (200.0, 200.0, 200.0, 200.0)
+	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+
+	 # Controller test 2 (Low gain 2.16Hz): UNSTABLE
+#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+#	var array 	GAINS                     	= array (5.0, 5.0, 5.0, 5.0)
+#	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+#	var array 	LEAD_FREQUENCY            	= array (2.0, 2.0, 2.0, 2.0)
+#	var array 	LAG_FREQUENCY             	= array (13.0,13.0,13.0,13.0)
+#	var array 	LOWPASS_FREQUENCY         	= array (600.0, 600.0, 600.0, 600.0)
+#	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+
+	 # Controller test 3 (variable per wheel): UNSTABLE on wheel 3
+#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+#	var array 	GAINS                     	= array (12.0, 12.0, 6.5, 10.0)
+#	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+#	var array 	LEAD_FREQUENCY            	= array (3.5, 4.0, 2.2, 3.0)
+#	var array 	LAG_FREQUENCY             	= array (10.0,10.0,10.0,9.0)
+#	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 600.0, 500.0)
+#	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
@@ -107,10 +110,10 @@ BASE_Controller.gains = GAINS;
 BASE_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 BASE_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
 BASE_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
-BASE_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
-BASE_Controller.zero_damp_Notch = NOTCH_ZERO_DAMP;
-BASE_Controller.pole_freq_Notch = NOTCH_POLE_FREQ;
-BASE_Controller.pole_damp_Notch = NOTCH_POLE_DAMP;
+#BASE_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
+#BASE_Controller.zero_damp_Notch = NOTCH_ZERO_DAMP;
+#BASE_Controller.pole_freq_Notch = NOTCH_POLE_FREQ;
+#BASE_Controller.pole_damp_Notch = NOTCH_POLE_DAMP;
 BASE_Controller.pole_freq_LowPass = LOWPASS_FREQUENCY;
 BASE_Controller.pole_damp_LowPass = LOWPASS_DAMPING;
 BASE_Controller.configure
