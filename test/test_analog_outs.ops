@@ -1,0 +1,150 @@
+########################################################################
+#                                                                      #
+# Base controller deployer file 									   #
+#                                                                      #
+# Janno Lunenburg                                                      #
+# 2013                                                                 #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+#import("sergio_etherCAT")
+#trigger
+import("rtt_ros")
+import("rtt_rosnode")
+import("rtt_roscomm")
+import("soem_master")
+import("soem_beckhoff_drivers")
+import("tue_ethercat_drivers")
+#import("sergio_hardware")
+#import("amigo_hardware")
+ros.import("rtt_control_components")
+
+#### DECLARATION OF PARAMETERS ####
+var double Ts = 0.001
+
+# Pulse generator
+var double REF_WIDTH = 2.0;
+var double REF_PERIOD = REF_WIDTH*4.0;
+var double REF_AMP1 = 1.0;
+var array REF_AMP = array(REF_AMP1, REF_AMP1, REF_AMP1,REF_AMP1);
+
+### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
+##This component enables communication with EtherCAT through the SoemMaster component.
+loadComponent("Soem","soem_master::SoemMasterComponent")
+#addPeer("Supervisor","Soem")
+#Configure the component. This looks for connected EtherCAT slaves and creates ports for all of the slaves.
+Soem.configure
+#Set a realtime priority to this component and run it every 1ms.
+setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
+#connect ("Soem.Slave_1002.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;#ToDo: replace serialrunning port?
+
+### Pulse Signal ###
+loadComponent("REF_Pulse_plus","SOURCES::PulseSignal")
+#addPeer("Supervisor","REF_Pulse_plus")
+setActivity("REF_Pulse_plus",Ts*0.5,HighestPriority,ORO_SCHED_RT)
+REF_Pulse_plus.amplitude = REF_AMP;
+REF_Pulse_plus.period = array (REF_PERIOD, REF_PERIOD, REF_PERIOD, REF_PERIOD)
+REF_Pulse_plus.pulse_width = array(REF_WIDTH, REF_WIDTH, REF_WIDTH, REF_WIDTH);
+REF_Pulse_plus.phase_delay = array(REF_WIDTH, REF_WIDTH, REF_WIDTH, REF_WIDTH);
+REF_Pulse_plus.vector_size = 4;
+REF_Pulse_plus.configure
+
+
+### Pulse Signal ###
+loadComponent("REF_Pulse_min","SOURCES::PulseSignal")
+#addPeer("Supervisor","REF_Pulse_min")
+setActivity("REF_Pulse_min",Ts,HighestPriority,ORO_SCHED_RT)
+REF_Pulse_min.amplitude = REF_AMP;
+REF_Pulse_min.period = array (REF_PERIOD, REF_PERIOD, REF_PERIOD, REF_PERIOD)
+REF_Pulse_min.pulse_width = array(REF_WIDTH, REF_WIDTH, REF_WIDTH, REF_WIDTH);
+REF_Pulse_min.phase_delay = array(REF_WIDTH*3.0, REF_WIDTH*3.0, REF_WIDTH*3.0, REF_WIDTH*3.0);
+REF_Pulse_min.vector_size = 4;
+REF_Pulse_min.configure
+
+### Combine pulse signals ###
+loadComponent("REF_Pulse","MATH::Subtraction")
+#addPeer("Supervisor","REF_Pulse")
+setActivity("REF_Pulse",0.0,HighestPriority,ORO_SCHED_RT)
+REF_Pulse.vectorsize = 4;
+REF_Pulse.configure
+
+### Pulse Signal ###
+loadComponent("REF_Constant","SOURCES::ConstantSignal")
+#addPeer("Supervisor","REF_Constant")
+setActivity("REF_Constant",Ts,HighestPriority,ORO_SCHED_RT)
+REF_Constant.vector_size = 4;
+REF_Constant.value = array (-85.0, -75.0, -105.0, -110.0); #(-85.0, -75.0, -105.0, -110.0)
+REF_Constant.configure
+
+### AnalogOuts ###
+loadComponent("BASE_AnalogOuts", "SOEM::AnalogOutsGeneric")
+#addPeer("Supervisor", "BASE_AnalogOuts")
+setActivity("BASE_AnalogOuts", 0.0, HighestPriority, ORO_SCHED_RT)
+BASE_AnalogOuts.numberofinports    			= 1
+BASE_AnalogOuts.numberofoutports    		= 2
+BASE_AnalogOuts.input_sizes 				= array (4.0)
+BASE_AnalogOuts.output_sizes 				= array (2.0, 2.0)
+BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 1.0, 1.0)
+BASE_AnalogOuts.configure;
+
+### Enable signal                                      #
+loadComponent("BASE_ConstantOutput", "SOURCES::ConstantBool");        #
+setActivity("BASE_ConstantOutput", Ts,HighestPriority, ORO_SCHED_RT); #							#
+BASE_ConstantOutput.value = true;				#
+BASE_ConstantOutput.configure;
+
+### DigitalOuts ###
+loadComponent("BASE_DigitalOuts", "SOEM::DigitalOuts")
+#addPeer("Supervisor", "BASE_DigitalOuts")
+setActivity("BASE_DigitalOuts", 0.0, HighestPriority, ORO_SCHED_RT)
+BASE_DigitalOuts.number_of_bits = 4;
+BASE_DigitalOuts.configure		
+
+### Doubles to ros ###
+loadComponent("REF_to_ros","ROS::DoublesToROS")
+#addPeer("Supervisor","REF_to_ros")
+setActivity("REF_to_ros",0.01,HighestPriority,ORO_SCHED_RT)
+REF_to_ros.NumberOfDoublesInVector = 4;
+REF_to_ros.configure
+
+### Connect components ###
+# create refference
+connect ("REF_Pulse_plus.out","REF_Pulse.in_plus", ConnPolicy() )
+connect ("REF_Pulse_min.out", "REF_Pulse.in_minus", ConnPolicy() )
+
+# Publish refference
+connect ("REF_Constant.out","REF_to_ros.in", ConnPolicy() )
+stream ("REF_to_ros.out1", ros.topic("/sergio/base/ref_1"));
+stream ("REF_to_ros.out2", ros.topic("/sergio/base/ref_2"));
+stream ("REF_to_ros.out3", ros.topic("/sergio/base/ref_3"));
+stream ("REF_to_ros.out4", ros.topic("/sergio/base/ref_4"));
+
+# set reference to output
+connect ("REF_Constant.out","BASE_AnalogOuts.in1", ConnPolicy() )
+connect ("BASE_AnalogOuts.out1","Soem.Slave_1002.analogOuts", ConnPolicy() )
+connect ("BASE_AnalogOuts.out2","Soem.Slave_1003.analogOuts", ConnPolicy() )
+
+# Safety
+connect ("BASE_ConstantOutput.out", "Soem.Slave_1002.enablePort", ConnPolicy() ); 
+connect ("BASE_ConstantOutput.out", "Soem.Slave_1003.enablePort", ConnPolicy() ); 
+connect ("BASE_ConstantOutput.out", "BASE_DigitalOuts.in1", ConnPolicy() ); 
+connect ("BASE_ConstantOutput.out", "BASE_DigitalOuts.in2", ConnPolicy() ); 
+connect ("BASE_DigitalOuts.digital_out", "Soem.Slave_1002.digitalOuts", ConnPolicy() ); 
+connect ("BASE_DigitalOuts.digital_out", "Soem.Slave_1003.digitalOuts", ConnPolicy() ); 
+
+
+### Start components ###
+Soem.start()
+BASE_ConstantOutput.start()
+REF_Constant.start()
+BASE_DigitalOuts.start()
+BASE_AnalogOuts.start()
+REF_Pulse_plus.start()
+REF_Pulse_min.start()
+REF_Pulse.start()
+REF_to_ros.start()
+
+
+
+
