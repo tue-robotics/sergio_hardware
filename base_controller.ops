@@ -43,13 +43,14 @@ var double 	MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
 var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 # Controller parameters
-#var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-#var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
-#var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
-#var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
-#var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
-#var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0, 50.0)
-#var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
+	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+	var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
+	var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
+	var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
+	var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
+	var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0, 50.0)
+	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
+
 #var array GAINS                     = array (5.2, 5.2, 5.2, 5.2)
 #var array INTEGRATOR_ZERO_FREQUENCY = array (0.1, 0.1, 0.1, 0.1)
 #var array LEAD_FREQUENCY            = array (6.5, 6.5, 6.5, 6.5)
@@ -70,13 +71,13 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 
 
 	 # Controller test 1 (High gain 3.5Hz): WORKS
-	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-	var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
-	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-	var array 	LEAD_FREQUENCY            	= array (11.0, 11.0, 11.0, 11.0)
-	var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
-	var array 	LOWPASS_FREQUENCY         	= array (200.0, 200.0, 200.0, 200.0)
-	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+#	var array 	GAINS                     	= array (15.0, 15.0, 15.0, 15.0)
+#	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+#	var array 	LEAD_FREQUENCY            	= array (11.0, 11.0, 11.0, 11.0)
+#	var array 	LAG_FREQUENCY             	= array (1000.0,1000.0,1000.0,1000.0)
+#	var array 	LOWPASS_FREQUENCY         	= array (200.0, 200.0, 200.0, 200.0)
+#	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
 	 # Controller test 2 (Low gain 2.16Hz): UNSTABLE
 #	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
