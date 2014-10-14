@@ -28,7 +28,7 @@ var int 	ENCODERBITS 		= 65536;			# From encoder datasheet
 var double 	ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
 var double 	DISTBETWEENFRONTANDREARWHEELS = 0.530; 
 var double 	DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;  
-var double 	GEOMFACTOR 			= 0.530 ; 			# Distance from center base to wheel
+var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
 	# Safety
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
@@ -56,7 +56,7 @@ var double MAX_INTERVAL 	= 1.0;				# Max interval between reference signals
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 ### Low gain controller BW arround 2.0Hz
 var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
-var array GAINS                     = array (2.0, 2.0, 2.0)
+var array GAINS                     = array (2.0, 2.0, 1.4)
 var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01)
 var array LEAD_FREQUENCY            = array (0.67, 0.67, 0.67)
 var array LAG_FREQUENCY             = array (6.0, 6.0, 6.0)
@@ -78,10 +78,10 @@ var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 #var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0)
 #var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 	# Feed forward paramters
-var array CONST_f = array(0.0015, -0.002, -0.007);
-var array GAIN_fc = array(0.01, 0.035, 0.05);
-var array GAIN_fv = array(0.0023, 0.0055, 0.0015);
-var array GAIN_fa = array(0.04, 0.04, 0.025);
+var array CONST_f = array(0.0015, -0.002, -0.0049);
+var array GAIN_fc = array(0.01, 0.035, 0.0354);
+var array GAIN_fv = array(0.0023, 0.0055, 0.0011);
+var array GAIN_fa = array(0.04, 0.04, 0.0177);
 
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
@@ -123,10 +123,10 @@ setActivity("BASE_JointToMotorSpace",0.0,LowestPriority,ORO_SCHED_OTHER)
 BASE_JointToMotorSpace.Nrows = 4
 BASE_JointToMotorSpace.Ncolumns = 3
 BASE_JointToMotorSpace.configure
-BASE_JointToMotorSpace.function1 = array ( -1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function2 = array (  1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function3 = array (  1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function4 = array ( -1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
+BASE_JointToMotorSpace.function1 = array ( -1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function2 = array (  1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function3 = array (  1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function4 = array ( -1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
 
 ### SI2BITS ###
 loadComponent("BASE_SI2Bits","MATH::Gain")

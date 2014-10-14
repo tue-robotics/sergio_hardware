@@ -19,7 +19,7 @@ var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
 var double 	WHEELRAD 			= 0.075*0.9825; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
 var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
-var double 	BITS2CURRENT 		= 25.0/1023.0; 		# Bit value to current value (check is it 15 or 25?)
+var double 	BITS2CURRENT 		= 25.0/2046.0; 		# Bit value to current value (check is it 15 or 25?)
 var double 	CURRENT2TORQUE 		= 29.2e-3; 			# Torque constant of the motor Maxxon RE35
 var double 	BITS2WHEELTORQUE 	= BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO;
 var double 	TWOPI 				= 2.0*3.141592
@@ -28,7 +28,7 @@ var int 	ENCODERBITS 		= 65536;			# From encoder datasheet
 var double 	ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
 var double 	DISTBETWEENFRONTANDREARWHEELS = 0.530; 
 var double 	DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;  
-var double 	GEOMFACTOR 			= 0.530 ; 			# Distance from center base to wheel
+var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
 	# Safety
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
@@ -76,7 +76,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 
 	# Controller paramters (low gain) STABLE
 #var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
-#var array GAINS                     = array (1.1, 1.1, 1.1)
+#var array GAINS                     = array (1.1, 1.1, 0.78)
 #var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01)
 #var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7)
 #var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0)
@@ -85,7 +85,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 
 	# Controller test 1 (high gain, x 3.14Hz, y 2.86Hz, phi 5.91Hz) STABLE
 #	var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
-#	var array GAINS                     = array (11.0, 12.0, 12.0)
+#	var array GAINS                     = array (11.0, 12.0, 8.5)
 #	var array INTEGRATOR_ZERO_FREQUENCY = array (0.1, 0.1, 0.1)
 #	var array LEAD_FREQUENCY            = array (2.5, 4.0, 3.5)
 #	var array LAG_FREQUENCY             = array (7.0, 10.0, 9.0)
@@ -94,7 +94,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	
 	# Controller test 1 (high gain, x Hz, y 2.08Hz, phi 4.97Hz) STABLE
 	var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
-	var array GAINS                     = array (3.0, 3.0, 3.0)
+	var array GAINS                     = array (3.0, 3.0, 2.1)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (0.5, 0.5, 0.5)
 	var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
 	var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)
@@ -141,17 +141,17 @@ setActivity("BASE_JointToMotorSpace",0.0,LowestPriority,ORO_SCHED_OTHER)
 BASE_JointToMotorSpace.Nrows = 4
 BASE_JointToMotorSpace.Ncolumns = 3
 BASE_JointToMotorSpace.configure
-BASE_JointToMotorSpace.function1 = array ( -1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function2 = array (  1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function3 = array (  1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
-BASE_JointToMotorSpace.function4 = array ( -1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR*HALFSQRT2/WHEELRAD )
+BASE_JointToMotorSpace.function1 = array ( -1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function2 = array (  1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function3 = array (  1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+BASE_JointToMotorSpace.function4 = array ( -1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
 
 ### SI2BITS ###
 loadComponent("BASE_SI2Bits","MATH::Gain")
 addPeer("Supervisor","BASE_SI2Bits")
 setActivity("BASE_SI2Bits",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_SI2Bits.vectorsize = 4;
-BASE_SI2Bits.gain = array ( 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE, 2.0/BITS2WHEELTORQUE)
+BASE_SI2Bits.gain = array ( 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE, 1.0/BITS2WHEELTORQUE)
 BASE_SI2Bits.configure
 
 ### AnalogOuts ###
