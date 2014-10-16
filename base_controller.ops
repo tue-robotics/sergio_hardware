@@ -22,7 +22,7 @@ var double 	HALFSQRT2 			= 0.7071
 var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	BITS2CURRENT 		= 25.0/2046.0; 		# Bit value to current value (check is it 15 or 25?)
 var double 	CURRENT2TORQUE 		= 29.2e-3; 			# Torque constant of the motor Maxxon RE35
-var double 	BITS2WHEELTORQUE 	= BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO;
+var double 	BITS2WHEELTORQUE 	= BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO; #=0.0067, 1/0.0067=149.2
 var double 	TWOPI 				= 2.0*3.141592
 var double 	ENCODERCOUNTS 		= 500.0*4.0;		# Counts per cycle
 var int 	ENCODERBITS 		= 65536;			# From encoder datasheet
