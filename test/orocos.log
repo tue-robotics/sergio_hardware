@@ -1,7 +1,7 @@
 0.000 [ Info   ][Logger] No ORO_LOGLEVEL environment variable set.
 0.000 [ Info   ][Logger]  OROCOS version '2.7.0' compiled with GCC 4.6.3. Running in GNU/Linux.
 0.000 [ Info   ][Logger] Orocos Logging Activated at level : [ Warning] ( 4 ) 
-0.000 [ Info   ][Logger] Reference System Time is : 1411502755197138847 ticks ( 1.4115e+09 seconds ).
+0.000 [ Info   ][Logger] Reference System Time is : 1413459611470856106 ticks ( 1.41346e+09 seconds ).
 0.000 [ Info   ][Logger] Logging is relative to this time.
 0.000 [ Info   ][Logger] RTT_COMPONENT_PATH was set to: /home/amigo/ros/hydro/dev/devel/lib/orocos:/home/amigo/ros/hydro/system/devel/lib/orocos:/opt/ros/hydro/lib/orocos . Searching in: /home/amigo/ros/hydro/dev/devel/lib/orocos:/home/amigo/ros/hydro/system/devel/lib/orocos:/opt/ros/hydro/lib/orocos
 0.000 [ Info   ][Logger] plugin 'rtt' not loaded before.
@@ -38,16 +38,16 @@
 0.018 [ Info   ][Logger] RTT_COMPONENT_PATH was set to: /home/amigo/ros/hydro/dev/devel/lib/orocos:/home/amigo/ros/hydro/system/devel/lib/orocos:/opt/ros/hydro/lib/orocos . Searching in: /home/amigo/ros/hydro/dev/devel/lib/orocos:/home/amigo/ros/hydro/system/devel/lib/orocos:/opt/ros/hydro/lib/orocos
 0.018 [ Info   ][Logger] OCL factory set for real-time logging
 0.018 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='Deployer'
-0.018 [ Info   ][Deployer] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2312 ).
+0.018 [ Info   ][Deployer] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6764 ).
 0.018 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='GlobalEngine'
-0.018 [ Info   ][GlobalEngine] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2313 ).
+0.018 [ Info   ][GlobalEngine] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6765 ).
 0.019 [ Info   ][Logger] No site file was found. Importing 'ocl' by default.
 0.019 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/ocl ...
 0.027 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-reporting-netcdf-gnulinux.so'
 0.027 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'OCL::NetcdfReporting'
 0.028 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-timer-gnulinux.so'
-0.029 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'OCL::LuaComponent'
-0.029 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-reporting-gnulinux.so'
+0.028 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'OCL::LuaComponent'
+0.028 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-reporting-gnulinux.so'
 0.029 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-common-gnulinux.so'
 0.030 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'OCL::HelloWorld'
 0.031 [ Info   ][ComponentLoader::import(path_list)] Loaded multi component library '/opt/ros/hydro/lib/orocos/gnulinux/ocl/liborocos-ocl-logging-gnulinux.so'
@@ -56,19 +56,19 @@
 0.033 [ Info   ][TypekitRepository::Import] Loading Typekit OCLTypekit.
 0.033 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'OCLTypekit' from 'ocl'
 0.033 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/ocl/plugins ...
-0.034 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'print' from 'print'
+0.033 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'print' from 'print'
 0.034 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'Lua' from 'rttlua-plugin'
-0.035 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'os' from 'os'
+0.034 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'os' from 'os'
 0.035 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'LuaTLSF' from 'rttlua-tlsf-plugin'
 0.035 [ Info   ][Logger] Loading Service or Plugin scripting in TaskContext Deployer
-0.036 [ Info   ][Logger] Found complete interface of requested service 'scripting'
-0.036 [ Info   ][Logger] Running Script test_analog_outs.ops ...
-0.037 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_ros ...
-0.037 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_ros/types ...
+0.035 [ Info   ][Logger] Found complete interface of requested service 'scripting'
+0.035 [ Info   ][Logger] Running Script test_analog_outs.ops ...
+0.036 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_ros ...
+0.036 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_ros/types ...
 0.058 [ Info   ][TypekitRepository::Import] Loading Typekit ros-primitives.
 0.058 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-primitives' from 'rtt-ros-primitives-typekit'
 0.058 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_ros/plugins ...
-0.060 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'ros' from 'rtt_ros_service'
+0.061 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'ros' from 'rtt_ros_service'
 0.061 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosnode ...
 0.061 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosnode/plugins ...
 0.069 [ Info   ][ComponentLoader::import(path_list)] Initializing ROS node in Orocos plugin...
@@ -77,14 +77,14 @@
 0.076 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_roscomm ...
 0.076 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_roscomm/plugins ...
 0.077 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rostopic' from 'rtt_rostopic_service'
-0.079 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'rosservice' from 'rtt_rosservice'
-0.079 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rosservice_registry' from 'rtt_rosservice_registry'
-0.079 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_master ...
-0.080 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'soem_master::SoemMasterComponent'
-0.080 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_master/plugins ...
-0.080 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'soem-plugin' from 'soem_plugin'
-0.080 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_beckhoff_drivers ...
-0.080 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_beckhoff_drivers/types ...
+0.080 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'rosservice' from 'rtt_rosservice'
+0.080 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rosservice_registry' from 'rtt_rosservice_registry'
+0.080 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_master ...
+0.081 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'soem_master::SoemMasterComponent'
+0.081 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_master/plugins ...
+0.082 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'soem-plugin' from 'soem_plugin'
+0.082 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_beckhoff_drivers ...
+0.082 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_beckhoff_drivers/types ...
 0.102 [ Info   ][TypekitRepository::Import] Loading Typekit ros-soem_beckhoff_drivers.
 0.102 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-soem_beckhoff_drivers' from 'rtt-soem_beckhoff_drivers-typekit'
 0.105 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-soem_beckhoff_drivers.
@@ -100,8 +100,8 @@
 0.105 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/soem_beckhoff_drivers/plugins ...
 0.108 [ Info   ][SoemDriverFactor] Registering driver for EL6022
 0.108 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'libsoem_el6022-gnulinux.so' from 'soem_el6022'
-0.111 [ Info   ][SoemDriverFactor] Registering driver for EL3102
-0.111 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'libsoem_el3102-gnulinux.so' from 'soem_el3102'
+0.110 [ Info   ][SoemDriverFactor] Registering driver for EL3102
+0.110 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'libsoem_el3102-gnulinux.so' from 'soem_el3102'
 0.113 [ Info   ][SoemDriverFactor] Registering driver for EL5101
 0.113 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'libsoem_el5101-gnulinux.so' from 'soem_el5101'
 0.116 [ Info   ][SoemDriverFactor] Registering driver for EL3104
@@ -144,241 +144,243 @@
 0.156 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_std_msgs/types ...
 0.168 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-std_msgs.
 0.168 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-std_msgs-transport' from 'rtt-std_msgs-ros-transport'
-0.259 [ Info   ][TypekitRepository::Import] Loading Typekit ros-std_msgs.
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Bool
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Byte
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/ByteMultiArray
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Char
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/ColorRGBA
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Duration
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Empty
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float32
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float32MultiArray
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float64
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float64MultiArray
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Header
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int16
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int16MultiArray
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int32
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int32MultiArray
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int64
-0.259 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int64MultiArray
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int8
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int8MultiArray
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/MultiArrayDimension
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/MultiArrayLayout
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/String
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Time
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt16
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt16MultiArray
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt32
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt32MultiArray
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt64
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt64MultiArray
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt8
-0.260 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt8MultiArray
-0.260 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-std_msgs' from 'rtt-std_msgs-typekit'
-0.260 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_actionlib_msgs ...
-0.260 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_actionlib_msgs/types ...
-0.262 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-actionlib_msgs.
-0.262 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-actionlib_msgs-transport' from 'rtt-actionlib_msgs-ros-transport'
-0.271 [ Info   ][TypekitRepository::Import] Loading Typekit ros-actionlib_msgs.
-0.271 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalID
-0.271 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalStatus
-0.271 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalStatusArray
-0.271 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-actionlib_msgs' from 'rtt-actionlib_msgs-typekit'
-0.271 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_geometry_msgs ...
-0.271 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_geometry_msgs/types ...
-0.280 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-geometry_msgs.
-0.280 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-geometry_msgs-transport' from 'rtt-geometry_msgs-ros-transport'
-0.350 [ Info   ][TypekitRepository::Import] Loading Typekit ros-geometry_msgs.
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Point
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Point32
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PointStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Polygon
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PolygonStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Pose2D
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Pose
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseArray
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseWithCovariance
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseWithCovarianceStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Quaternion
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/QuaternionStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Transform
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TransformStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Twist
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistStamped
-0.351 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistWithCovariance
-0.352 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistWithCovarianceStamped
-0.352 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Vector3
-0.352 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Vector3Stamped
-0.352 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Wrench
-0.352 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/WrenchStamped
-0.352 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-geometry_msgs' from 'rtt-geometry_msgs-typekit'
-0.352 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs ...
-0.352 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs/types ...
-0.389 [ Info   ][TypekitRepository::Import] Loading Typekit ros-nav_msgs.
-0.390 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-nav_msgs' from 'rtt-nav_msgs-typekit'
-0.395 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-nav_msgs.
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapAction
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionFeedback
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionGoal
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionResult
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapFeedback
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapGoal
-0.395 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapResult
-0.396 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GridCells
-0.396 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/MapMetaData
-0.396 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/OccupancyGrid
-0.396 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/Odometry
-0.396 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/Path
-0.396 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-nav_msgs-transport' from 'rtt-nav_msgs-ros-transport'
-0.396 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs/plugins ...
-0.398 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "nav_msgs/GetMap".
-0.398 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "nav_msgs/GetPlan".
-0.398 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_nav_msgs_ros_service_proxies' from 'rtt_nav_msgs_rosservice_proxies'
-0.398 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs ...
-0.398 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs/types ...
-0.482 [ Info   ][TypekitRepository::Import] Loading Typekit ros-sensor_msgs.
-0.483 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-sensor_msgs' from 'rtt-sensor_msgs-typekit'
-0.496 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-sensor_msgs.
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/CameraInfo
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/ChannelFloat32
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/CompressedImage
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/FluidPressure
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Illuminance
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Image
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Imu
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JointState
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Joy
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JoyFeedback
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JoyFeedbackArray
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/LaserEcho
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/LaserScan
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MagneticField
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MultiDOFJointState
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MultiEchoLaserScan
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/NavSatFix
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/NavSatStatus
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointCloud
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointCloud2
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointField
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Range
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/RegionOfInterest
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/RelativeHumidity
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Temperature
-0.496 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/TimeReference
-0.496 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-sensor_msgs-transport' from 'rtt-sensor_msgs-ros-transport'
-0.496 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs/plugins ...
-0.498 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "sensor_msgs/SetCameraInfo".
-0.498 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_sensor_msgs_ros_service_proxies' from 'rtt_sensor_msgs_rosservice_proxies'
-0.498 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs ...
-0.498 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs/types ...
-0.500 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-diagnostic_msgs.
-0.500 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-diagnostic_msgs-transport' from 'rtt-diagnostic_msgs-ros-transport'
-0.510 [ Info   ][TypekitRepository::Import] Loading Typekit ros-diagnostic_msgs.
-0.511 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/DiagnosticArray
-0.511 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/DiagnosticStatus
-0.511 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/KeyValue
-0.511 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-diagnostic_msgs' from 'rtt-diagnostic_msgs-typekit'
-0.511 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs/plugins ...
-0.512 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "diagnostic_msgs/SelfTest".
-0.512 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_diagnostic_msgs_ros_service_proxies' from 'rtt_diagnostic_msgs_rosservice_proxies'
-0.512 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosgraph_msgs ...
-0.512 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosgraph_msgs/types ...
-0.520 [ Info   ][TypekitRepository::Import] Loading Typekit ros-rosgraph_msgs.
-0.520 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-rosgraph_msgs' from 'rtt-rosgraph_msgs-typekit'
-0.521 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-rosgraph_msgs.
-0.521 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /rosgraph_msgs/Clock
-0.521 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /rosgraph_msgs/Log
-0.521 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-rosgraph_msgs-transport' from 'rtt-rosgraph_msgs-ros-transport'
-0.521 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_amigo_msgs ...
-0.521 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_amigo_msgs/types ...
-0.554 [ Info   ][TypekitRepository::Import] Loading Typekit ros-amigo_msgs.
-0.554 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-amigo_msgs' from 'rtt-amigo_msgs-typekit'
-0.559 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-amigo_msgs.
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/AmigoGripperCommand
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/AmigoGripperMeasurement
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/LaserScannerSignal
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/RGBLightCommand
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/cart_pos
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/people_detect
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/pera_status
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/ref_point
-0.559 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/spindle_setpoint
-0.559 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-amigo_msgs-transport' from 'rtt-amigo_msgs-ros-transport'
-0.559 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_std_srvs ...
-0.559 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_std_srvs/plugins ...
-0.561 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "std_srvs/Empty".
-0.561 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_std_srvs_ros_service_proxies' from 'rtt_std_srvs_rosservice_proxies'
-0.561 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosparam ...
-0.561 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosparam/plugins ...
-0.563 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'rosparam' from 'rtt_rosparam'
-0.563 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_control_components ...
-0.565 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::DoublesToROS'
-0.566 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::Demux'
-0.569 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::RosDiagnostics'
-0.570 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::StepSignal'
-0.572 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOutsPera'
-0.573 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::SineWave'
-0.574 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'CUSTOM::ReporterTrigger'
-0.577 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::DigitalIns'
-0.577 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Gain'
-0.580 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::DoublesToJointState'
-0.581 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sqrt'
-0.583 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ReferenceGenerator'
-0.589 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GripperControl'
-0.591 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::ReadTwistMsg'
-0.593 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsPera'
-0.594 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::SensorTorques'
-0.595 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'DISCONTINUITIES::Deadzone'
-0.598 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsGeneric'
-0.601 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::JointStateAggregator'
-0.605 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::FollowJointTrajectoryActionToDoubles'
-0.608 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::ReadEncoders'
-0.609 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ConstantSignal'
-0.610 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ConstantBool'
-0.612 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOuts'
-0.613 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::FeedForward'
-0.614 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::WeakIntegrators'
-0.615 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::RampSignal'
-0.615 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Addition'
-0.616 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::LeadLags'
-0.619 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::JointStateToDoubles'
-0.620 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::GaussianRandomNumber'
-0.628 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::Supervisor'
-0.631 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::ReadEncodersTimeStamp'
-0.632 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'Signal::Tracing'
-0.643 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GravityTorquesParser'
-0.644 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Derivative'
-0.646 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::RealTimeDerivator'
-0.647 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sign'
-0.648 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::Mux'
-0.650 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsPera2'
-0.651 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::MatrixTransform'
-0.652 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GravityTorques'
-0.654 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::DigitalOuts'
-0.654 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'DISCONTINUITIES::Saturation'
-0.655 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sum'
+0.257 [ Info   ][TypekitRepository::Import] Loading Typekit ros-std_msgs.
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Bool
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Byte
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/ByteMultiArray
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Char
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/ColorRGBA
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Duration
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Empty
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float32
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float32MultiArray
+0.257 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float64
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Float64MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Header
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int16
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int16MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int32
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int32MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int64
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int64MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int8
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Int8MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/MultiArrayDimension
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/MultiArrayLayout
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/String
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/Time
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt16
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt16MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt32
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt32MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt64
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt64MultiArray
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt8
+0.258 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /std_msgs/UInt8MultiArray
+0.258 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-std_msgs' from 'rtt-std_msgs-typekit'
+0.259 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_actionlib_msgs ...
+0.259 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_actionlib_msgs/types ...
+0.260 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-actionlib_msgs.
+0.260 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-actionlib_msgs-transport' from 'rtt-actionlib_msgs-ros-transport'
+0.269 [ Info   ][TypekitRepository::Import] Loading Typekit ros-actionlib_msgs.
+0.269 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalID
+0.269 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalStatus
+0.269 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /actionlib_msgs/GoalStatusArray
+0.269 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-actionlib_msgs' from 'rtt-actionlib_msgs-typekit'
+0.269 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_geometry_msgs ...
+0.269 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_geometry_msgs/types ...
+0.278 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-geometry_msgs.
+0.278 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-geometry_msgs-transport' from 'rtt-geometry_msgs-ros-transport'
+0.347 [ Info   ][TypekitRepository::Import] Loading Typekit ros-geometry_msgs.
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Point
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Point32
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PointStamped
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Polygon
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PolygonStamped
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Pose2D
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Pose
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseArray
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseStamped
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseWithCovariance
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/PoseWithCovarianceStamped
+0.347 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Quaternion
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/QuaternionStamped
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Transform
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TransformStamped
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Twist
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistStamped
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistWithCovariance
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/TwistWithCovarianceStamped
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Vector3
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Vector3Stamped
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/Wrench
+0.348 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /geometry_msgs/WrenchStamped
+0.348 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-geometry_msgs' from 'rtt-geometry_msgs-typekit'
+0.348 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs ...
+0.348 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs/types ...
+0.384 [ Info   ][TypekitRepository::Import] Loading Typekit ros-nav_msgs.
+0.385 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-nav_msgs' from 'rtt-nav_msgs-typekit'
+0.390 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-nav_msgs.
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapAction
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionFeedback
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionGoal
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapActionResult
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapFeedback
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapGoal
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GetMapResult
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/GridCells
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/MapMetaData
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/OccupancyGrid
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/Odometry
+0.391 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /nav_msgs/Path
+0.391 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-nav_msgs-transport' from 'rtt-nav_msgs-ros-transport'
+0.391 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_nav_msgs/plugins ...
+0.393 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "nav_msgs/GetMap".
+0.393 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "nav_msgs/GetPlan".
+0.393 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_nav_msgs_ros_service_proxies' from 'rtt_nav_msgs_rosservice_proxies'
+0.393 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs ...
+0.393 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs/types ...
+0.477 [ Info   ][TypekitRepository::Import] Loading Typekit ros-sensor_msgs.
+0.479 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-sensor_msgs' from 'rtt-sensor_msgs-typekit'
+0.492 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-sensor_msgs.
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/CameraInfo
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/ChannelFloat32
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/CompressedImage
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/FluidPressure
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Illuminance
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Image
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Imu
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JointState
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Joy
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JoyFeedback
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/JoyFeedbackArray
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/LaserEcho
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/LaserScan
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MagneticField
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MultiDOFJointState
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/MultiEchoLaserScan
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/NavSatFix
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/NavSatStatus
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointCloud
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointCloud2
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/PointField
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Range
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/RegionOfInterest
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/RelativeHumidity
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/Temperature
+0.492 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /sensor_msgs/TimeReference
+0.492 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-sensor_msgs-transport' from 'rtt-sensor_msgs-ros-transport'
+0.492 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_sensor_msgs/plugins ...
+0.494 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "sensor_msgs/SetCameraInfo".
+0.494 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_sensor_msgs_ros_service_proxies' from 'rtt_sensor_msgs_rosservice_proxies'
+0.494 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs ...
+0.494 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs/types ...
+0.495 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-diagnostic_msgs.
+0.495 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-diagnostic_msgs-transport' from 'rtt-diagnostic_msgs-ros-transport'
+0.506 [ Info   ][TypekitRepository::Import] Loading Typekit ros-diagnostic_msgs.
+0.506 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/DiagnosticArray
+0.506 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/DiagnosticStatus
+0.506 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /diagnostic_msgs/KeyValue
+0.506 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-diagnostic_msgs' from 'rtt-diagnostic_msgs-typekit'
+0.506 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_diagnostic_msgs/plugins ...
+0.508 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "diagnostic_msgs/SelfTest".
+0.508 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_diagnostic_msgs_ros_service_proxies' from 'rtt_diagnostic_msgs_rosservice_proxies'
+0.508 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosgraph_msgs ...
+0.508 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosgraph_msgs/types ...
+0.515 [ Info   ][TypekitRepository::Import] Loading Typekit ros-rosgraph_msgs.
+0.515 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-rosgraph_msgs' from 'rtt-rosgraph_msgs-typekit'
+0.516 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-rosgraph_msgs.
+0.516 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /rosgraph_msgs/Clock
+0.516 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /rosgraph_msgs/Log
+0.516 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-rosgraph_msgs-transport' from 'rtt-rosgraph_msgs-ros-transport'
+0.517 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_amigo_msgs ...
+0.517 [ Info   ][ComponentLoader::import(path_list)] Loading typekit libraries from directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_amigo_msgs/types ...
+0.549 [ Info   ][TypekitRepository::Import] Loading Typekit ros-amigo_msgs.
+0.549 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'ros-amigo_msgs' from 'rtt-amigo_msgs-typekit'
+0.554 [ Info   ][TypekitRepository::Import] Loading Transport ros://ros-amigo_msgs.
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/AmigoGripperCommand
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/AmigoGripperMeasurement
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/LaserScannerSignal
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/RGBLightCommand
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/cart_pos
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/people_detect
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/pera_status
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/ref_point
+0.554 [ Info   ][TypekitRepository::Import] Registered new 'ros' transport for /amigo_msgs/spindle_setpoint
+0.554 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT TypeKit/Transport 'rtt-ros-amigo_msgs-transport' from 'rtt-amigo_msgs-ros-transport'
+0.555 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_std_srvs ...
+0.555 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_std_srvs/plugins ...
+0.556 [ Info   ][ComponentLoader::import(path_list)] Successfully registered ROS service factory for "std_srvs/Empty".
+0.556 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Plugin 'rtt_std_srvs_ros_service_proxies' from 'rtt_std_srvs_rosservice_proxies'
+0.556 [ Info   ][ComponentLoader::import(path_list)] Importing directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosparam ...
+0.556 [ Info   ][ComponentLoader::import(path_list)] Loading plugin libraries from directory /opt/ros/hydro/lib/orocos/gnulinux/rtt_rosparam/plugins ...
+0.558 [ Info   ][ComponentLoader::import(path_list)] Loaded RTT Service 'rosparam' from 'rtt_rosparam'
+0.558 [ Info   ][ComponentLoader::import(path_list)] Importing directory /home/amigo/ros/hydro/system/devel/lib/orocos/gnulinux/rtt_control_components ...
+0.560 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::DoublesToROS'
+0.562 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::Demux'
+0.565 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::RosDiagnostics'
+0.566 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::StepSignal'
+0.568 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOutsPera'
+0.568 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::SineWave'
+0.569 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'CUSTOM::ReporterTrigger'
+0.570 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::Safety'
+0.573 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::DigitalIns'
+0.574 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Gain'
+0.577 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::DoublesToJointState'
+0.577 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sqrt'
+0.580 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ReferenceGenerator'
+0.585 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GripperControl'
+0.588 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::ReadTwistMsg'
+0.590 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsPera'
+0.590 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::SensorTorques'
+0.591 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'DISCONTINUITIES::Deadzone'
+0.595 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsGeneric'
+0.598 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::JointStateAggregator'
+0.602 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::FollowJointTrajectoryActionToDoubles'
+0.605 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::ReadEncoders'
+0.606 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ConstantSignal'
+0.607 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::ConstantBool'
+0.608 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOuts'
+0.609 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::FeedForward'
+0.610 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::WeakIntegrators'
+0.611 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::RampSignal'
+0.612 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Addition'
+0.612 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::LeadLag'
+0.615 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::JointStateToDoubles'
+0.616 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::GaussianRandomNumber'
+0.624 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::Supervisor'
+0.628 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::ReadEncodersTimeStamp'
+0.628 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'Signal::Tracing'
+0.639 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GravityTorquesParser'
+0.640 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Derivative'
+0.642 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::RealTimeDerivator'
+0.643 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sign'
+0.644 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::Mux'
+0.646 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogInsPera2'
+0.647 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::MatrixTransform'
+0.648 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::GravityTorques'
+0.650 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::DigitalOuts'
+0.654 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'DYNAMIXEL::DynamixelController'
+0.655 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'DISCONTINUITIES::Saturation'
+0.656 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Sum'
 0.656 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ARM::SensorTorquesAutoC3'
 0.657 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'Signal::TracingTimeStamp'
-0.657 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::SecondOrderLowPasses'
+0.658 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::SecondOrderLowPasses'
 0.661 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogIns'
-0.661 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::SawtoothSignal'
+0.662 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::SawtoothSignal'
 0.662 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::ActuatorEnabler'
 0.663 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'CUSTOM::Reporter'
-0.663 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Abs'
-0.664 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::BenchmarkReference'
-0.665 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::FirstOrderLowPass'
+0.664 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Abs'
+0.665 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::BenchmarkReference'
+0.666 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::FirstOrderLowPass'
 0.666 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::AdmittanceControllers'
 0.670 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::SafetyMonitor'
-0.670 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::PulseSignal'
-0.674 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::Homing'
-0.676 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOutsGeneric'
+0.671 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::PulseSignal'
+0.675 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SUPERVISORY::Homing'
+0.677 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOEM::AnalogOutsGeneric'
 0.677 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::AddConstant'
 0.685 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'ROS::PublishOdometry'
-0.685 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::UniformRandomNumber'
+0.686 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SOURCES::UniformRandomNumber'
 0.687 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::Switch'
 0.688 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'Signal::TracingOneSignal'
 0.690 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::Controller'
@@ -386,7 +388,7 @@
 0.692 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::SkewedNotch'
 0.693 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::AdmittanceControllersSpindle'
 0.694 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'SIGNALROUTING::VectorConcatenate'
-0.694 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Equal'
+0.695 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Equal'
 0.695 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Integrator'
 0.696 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Subtraction'
 0.697 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::PID'
@@ -395,123 +397,123 @@
 0.703 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'FILTERS::Polynomials'
 0.703 [ Info   ][ComponentLoader::import(path_list)] Loaded component type 'MATH::Differentiate'
 0.704 [ Info   ][ROSService::import("rtt_control_components")] Loaded plugins from ROS package "rtt_control_components" and its dependencies.
-0.705 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='Soem'
-0.706 [ Info   ][Soem] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2327 ).
+0.706 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='Soem'
+0.706 [ Info   ][Soem] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6780 ).
 0.706 [ Info   ][loadComponent] Adding Soem as new peer:  OK.
-0.706 [ Info   ][Soem] ec_init on eth0 succeeded.
-0.741 [ Info   ][Soem] 3 slaves found and configured.
-0.741 [ Info   ][Soem] Request pre-operational state for all slaves
-0.741 [ Info   ][Soem] Created driver for TUeEC010, with address 4097
-0.741 [ Info   ][Soem] Put configured parameters in the slaves.
-0.741 [ Info   ][Soem] Created driver for TUeES030, with address 4098
-0.741 [ Info   ][Soem] Put configured parameters in the slaves.
-0.741 [ Info   ][Soem] Created driver for TUeES030, with address 4099
-0.741 [ Info   ][Soem] Put configured parameters in the slaves.
-0.777 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='Soem'
-0.777 [ Info   ][Soem] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 2328 ).
-0.778 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse_plus'
-0.778 [ Info   ][REF_Pulse_plus] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2329 ).
-0.779 [ Info   ][loadComponent] Adding REF_Pulse_plus as new peer:  OK.
-0.780 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse_plus'
-0.780 [ Info   ][REF_Pulse_plus] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.0005 (PID= 2330 ).
-0.784 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse_min'
-0.784 [ Info   ][REF_Pulse_min] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2331 ).
-0.784 [ Info   ][loadComponent] Adding REF_Pulse_min as new peer:  OK.
-0.785 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse_min'
-0.785 [ Info   ][REF_Pulse_min] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 2332 ).
-0.790 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse'
-0.790 [ Info   ][REF_Pulse] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2333 ).
-0.790 [ Info   ][loadComponent] Adding REF_Pulse as new peer:  OK.
-0.791 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse'
-0.791 [ Info   ][REF_Pulse] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 2334 ).
-0.793 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Constant'
-0.793 [ Info   ][REF_Constant] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2335 ).
-0.793 [ Info   ][loadComponent] Adding REF_Constant as new peer:  OK.
-0.794 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Constant'
-0.794 [ Info   ][REF_Constant] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 2336 ).
-0.797 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_AnalogOuts'
-0.797 [ Info   ][BASE_AnalogOuts] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2337 ).
-0.797 [ Info   ][loadComponent] Adding BASE_AnalogOuts as new peer:  OK.
-0.798 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_AnalogOuts'
-0.798 [ Info   ][BASE_AnalogOuts] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 2338 ).
-0.801 [ Info   ][ScriptingService] AO: mapping matrix is: [0,0,0,0]
-0.801 [ Info   ][ScriptingService] AO: mapping matrix is: [0,1,0,1]
-0.801 [ Info   ][ScriptingService] AO: mapping matrix is: [0,2,1,0]
-0.801 [ Info   ][ScriptingService] AO: mapping matrix is: [0,3,1,1]
-0.802 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_ConstantOutput'
-0.802 [ Info   ][BASE_ConstantOutput] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2339 ).
-0.802 [ Info   ][loadComponent] Adding BASE_ConstantOutput as new peer:  OK.
-0.802 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_ConstantOutput'
-0.803 [ Info   ][BASE_ConstantOutput] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 2340 ).
-0.804 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_DigitalOuts'
-0.804 [ Info   ][BASE_DigitalOuts] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2341 ).
-0.805 [ Info   ][loadComponent] Adding BASE_DigitalOuts as new peer:  OK.
-0.805 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_DigitalOuts'
-0.806 [ Info   ][BASE_DigitalOuts] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 2342 ).
-0.807 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_to_ros'
-0.808 [ Info   ][REF_to_ros] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2343 ).
-0.808 [ Info   ][loadComponent] Adding REF_to_ros as new peer:  OK.
-0.808 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_to_ros'
-0.809 [ Info   ][REF_to_ros] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.01 (PID= 2344 ).
-0.811 [ Info   ][connect] Connected Port REF_Pulse_plus.out to  REF_Pulse.in_plus.
-0.812 [ Info   ][connect] Connected Port REF_Pulse_min.out to  REF_Pulse.in_minus.
-0.813 [ Info   ][connect] Connected Port REF_Constant.out to  REF_to_ros.in.
-0.815 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='RosPublishActivity'
-0.815 [ Info   ][RosPublishActivity] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2347 ).
-0.815 [ Info   ][ScriptingService] Created output stream for output port out1
-0.817 [ Info   ][ScriptingService] Created output stream for output port out2
-0.819 [ Info   ][ScriptingService] Created output stream for output port out3
-0.821 [ Info   ][ScriptingService] Created output stream for output port out4
-0.821 [ Info   ][connect] Connected Port REF_Constant.out to  BASE_AnalogOuts.in1.
-0.822 [ Info   ][connect] Connected Port BASE_AnalogOuts.out1 to  Soem.Slave_1002.analogOuts.
-0.823 [ Info   ][connect] Connected Port BASE_AnalogOuts.out2 to  Soem.Slave_1003.analogOuts.
-0.824 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  Soem.Slave_1002.enablePort.
-0.825 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  BASE_DigitalOuts.in1.
-0.825 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  BASE_DigitalOuts.in2.
-0.826 [ Info   ][connect] Connected Port BASE_DigitalOuts.digital_out to  Soem.Slave_1002.digitalOuts.
-0.827 [ Info   ][ScriptingService] Request safe-operational state for all slaves
-0.827 [ Info   ][ScriptingService] Safe operational state reached for all slaves.
-0.827 [ Info   ][ScriptingService] Request operational state for all slaves
-0.828 [ Info   ][ScriptingService] Operational state reached for all slaves.
-0.828 [ Warning][Soem] TUeES030 Driver Status:  Power OK
-0.829 [ Warning][Soem] TUeES030 Driver: Waiting for Enable Signal, port_in_enable is not connected
-0.829 [ Warning][ConstantSignal::startHook()] TUeES030 Driver Status:  Power OK
-0.829 [ Warning][Soem] TUeES030 Driver: enable = true -> PWM output enabled
-0.831 [ Warning][Soem] Subtraction::Outputport not connected!
-0.832 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='TaskBrowser'
-0.832 [ Info   ][TaskBrowser] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 2351 ).
-0.832 [ Info   ][Logger] Entering Task Deployer
-26.683 [ Info   ][PulseSignal::updateHook()] Ignoring deployment shutdown function due to missing peer.
-26.683 [ Info   ][stopComponentsGroup] Stopping group 0
-26.683 [ Info   ][stopComponentsGroup] Stopped BASE_AnalogOuts
-26.684 [ Info   ][stopComponentsGroup] Stopped BASE_ConstantOutput
-26.684 [ Info   ][stopComponentsGroup] Stopped BASE_DigitalOuts
-26.684 [ Info   ][Soem] Stopped REF_Constant
-26.684 [ Info   ][Soem] Stopped REF_Pulse
-26.685 [ Info   ][Soem] Stopped REF_Pulse_min
-26.686 [ Info   ][Soem] Stopped REF_Pulse_plus
-26.689 [ Info   ][Soem] Stopped REF_to_ros
-26.689 [ Info   ][Soem] Stopped Soem
-26.690 [ Info   ][cleanupComponentsGroup] Cleaning up group 0
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_AnalogOuts
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_ConstantOutput
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_DigitalOuts
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Constant
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse_min
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse_plus
-26.690 [ Info   ][cleanupComponentsGroup] Cleaned up REF_to_ros
-26.748 [ Info   ][cleanupComponentsGroup] Cleaned up Soem
-26.748 [ Info   ][PulseSignal::updateHook()] Unloading group 0
-26.748 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed BASE_AnalogOuts
-26.749 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed BASE_ConstantOutput
-26.749 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed BASE_DigitalOuts
-26.751 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed REF_Constant
-26.751 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed REF_Pulse
-26.751 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed REF_Pulse_min
-26.752 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed REF_Pulse_plus
-26.755 [ Info   ][RosPublishActivity] RosPublishActivity cleans up: no more work.
-26.759 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed REF_to_ros
-26.760 [ Info   ][PulseSignal::updateHook()] Disconnected and destroyed Soem
-26.760 [ Info   ][PulseSignal::updateHook()] Kick-out of group 0 successful.
-26.760 [ Info   ][PulseSignal::updateHook()] Orocos Logging Deactivated.
+0.710 [ Info   ][Soem] ec_init on eth0 succeeded.
+0.745 [ Info   ][Soem] 3 slaves found and configured.
+0.745 [ Info   ][Soem] Request pre-operational state for all slaves
+0.745 [ Info   ][Soem] Created driver for TUeEC010, with address 4097
+0.745 [ Info   ][Soem] Put configured parameters in the slaves.
+0.745 [ Info   ][Soem] Created driver for TUeES030, with address 4098
+0.745 [ Info   ][Soem] Put configured parameters in the slaves.
+0.746 [ Info   ][Soem] Created driver for TUeES030, with address 4099
+0.746 [ Info   ][Soem] Put configured parameters in the slaves.
+0.781 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='Soem'
+0.781 [ Info   ][Soem] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 6781 ).
+0.782 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse_plus'
+0.782 [ Info   ][REF_Pulse_plus] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6782 ).
+0.783 [ Info   ][loadComponent] Adding REF_Pulse_plus as new peer:  OK.
+0.784 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse_plus'
+0.784 [ Info   ][REF_Pulse_plus] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.0005 (PID= 6783 ).
+0.788 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse_min'
+0.788 [ Info   ][REF_Pulse_min] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6784 ).
+0.788 [ Info   ][loadComponent] Adding REF_Pulse_min as new peer:  OK.
+0.789 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse_min'
+0.789 [ Info   ][REF_Pulse_min] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 6785 ).
+0.794 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Pulse'
+0.794 [ Info   ][REF_Pulse] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6786 ).
+0.794 [ Info   ][loadComponent] Adding REF_Pulse as new peer:  OK.
+0.795 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Pulse'
+0.795 [ Info   ][REF_Pulse] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 6787 ).
+0.797 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_Constant'
+0.797 [ Info   ][REF_Constant] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6788 ).
+0.797 [ Info   ][loadComponent] Adding REF_Constant as new peer:  OK.
+0.798 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_Constant'
+0.798 [ Info   ][REF_Constant] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 6789 ).
+0.800 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_AnalogOuts'
+0.800 [ Info   ][BASE_AnalogOuts] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6790 ).
+0.800 [ Info   ][loadComponent] Adding BASE_AnalogOuts as new peer:  OK.
+0.801 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_AnalogOuts'
+0.801 [ Info   ][BASE_AnalogOuts] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 6791 ).
+0.804 [ Info   ][ScriptingService] AO: mapping matrix is: [0,0,0,0]
+0.804 [ Info   ][ScriptingService] AO: mapping matrix is: [0,1,0,1]
+0.804 [ Info   ][ScriptingService] AO: mapping matrix is: [0,2,1,0]
+0.804 [ Info   ][ScriptingService] AO: mapping matrix is: [0,3,1,1]
+0.805 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_ConstantOutput'
+0.805 [ Info   ][BASE_ConstantOutput] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6792 ).
+0.805 [ Info   ][loadComponent] Adding BASE_ConstantOutput as new peer:  OK.
+0.806 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_ConstantOutput'
+0.806 [ Info   ][BASE_ConstantOutput] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.001 (PID= 6793 ).
+0.807 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='BASE_DigitalOuts'
+0.808 [ Info   ][BASE_DigitalOuts] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6794 ).
+0.808 [ Info   ][loadComponent] Adding BASE_DigitalOuts as new peer:  OK.
+0.808 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='BASE_DigitalOuts'
+0.809 [ Info   ][BASE_DigitalOuts] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0 (PID= 6795 ).
+0.811 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='REF_to_ros'
+0.811 [ Info   ][REF_to_ros] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6796 ).
+0.811 [ Info   ][loadComponent] Adding REF_to_ros as new peer:  OK.
+0.812 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_RT, priority=99, CPU affinity=4294967295, with name='REF_to_ros'
+0.812 [ Info   ][REF_to_ros] Thread created with scheduler type 'ORO_SCHED_RT', priority 99, cpu affinity 255 and period 0.01 (PID= 6797 ).
+0.814 [ Info   ][connect] Connected Port REF_Pulse_plus.out to  REF_Pulse.in_plus.
+0.815 [ Info   ][connect] Connected Port REF_Pulse_min.out to  REF_Pulse.in_minus.
+0.816 [ Info   ][connect] Connected Port REF_Constant.out to  REF_to_ros.in.
+0.818 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='RosPublishActivity'
+0.818 [ Info   ][RosPublishActivity] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6799 ).
+0.818 [ Info   ][ScriptingService] Created output stream for output port out1
+0.820 [ Info   ][ScriptingService] Created output stream for output port out2
+0.822 [ Info   ][ScriptingService] Created output stream for output port out3
+0.824 [ Info   ][ScriptingService] Created output stream for output port out4
+0.825 [ Info   ][connect] Connected Port REF_Constant.out to  BASE_AnalogOuts.in1.
+0.826 [ Info   ][connect] Connected Port BASE_AnalogOuts.out1 to  Soem.Slave_1002.analogOuts.
+0.827 [ Info   ][connect] Connected Port BASE_AnalogOuts.out2 to  Soem.Slave_1003.analogOuts.
+0.828 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  Soem.Slave_1002.enablePort.
+0.828 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  Soem.Slave_1003.enablePort.
+0.829 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  BASE_DigitalOuts.in1.
+0.830 [ Info   ][connect] Connected Port BASE_ConstantOutput.out to  BASE_DigitalOuts.in2.
+0.831 [ Info   ][connect] Connected Port BASE_DigitalOuts.digital_out to  Soem.Slave_1002.digitalOuts.
+0.831 [ Info   ][connect] Connected Port BASE_DigitalOuts.digital_out to  Soem.Slave_1003.digitalOuts.
+0.832 [ Info   ][ScriptingService] Request safe-operational state for all slaves
+0.832 [ Info   ][ScriptingService] Safe operational state reached for all slaves.
+0.832 [ Info   ][ScriptingService] Request operational state for all slaves
+0.833 [ Info   ][ScriptingService] Operational state reached for all slaves.
+0.834 [ Warning][Soem] TUeES030 Driver Status:  Power OK
+0.834 [ Warning][Soem] TUeES030 Driver Status:  Power OK
+0.836 [ Warning][Subtraction::Start] Outputport not connected!
+0.837 [ Info   ][Thread] Creating Thread for scheduler=ORO_SCHED_OTHER, priority=1, CPU affinity=0, with name='TaskBrowser'
+0.837 [ Info   ][TaskBrowser] Thread created with scheduler type 'ORO_SCHED_OTHER', priority 0, cpu affinity 255 and period 0 (PID= 6803 ).
+0.837 [ Info   ][Logger] Entering Task Deployer
+9.439 [ Info   ][Logger] Ignoring deployment shutdown function due to missing peer.
+9.439 [ Info   ][stopComponentsGroup] Stopping group 0
+9.440 [ Info   ][stopComponentsGroup] Stopped BASE_AnalogOuts
+9.440 [ Info   ][stopComponentsGroup] Stopped BASE_ConstantOutput
+9.440 [ Info   ][stopComponentsGroup] Stopped BASE_DigitalOuts
+9.441 [ Info   ][Service::getOperation] Stopped REF_Constant
+9.441 [ Info   ][Service::getOperation] Stopped REF_Pulse
+9.441 [ Info   ][Service::getOperation] Stopped REF_Pulse_min
+9.442 [ Info   ][Service::getOperation] Stopped REF_Pulse_plus
+9.442 [ Info   ][Service::getOperation] Stopped REF_to_ros
+9.443 [ Info   ][Service::getOperation] Stopped Soem
+9.443 [ Info   ][cleanupComponentsGroup] Cleaning up group 0
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_AnalogOuts
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_ConstantOutput
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up BASE_DigitalOuts
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Constant
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse_min
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up REF_Pulse_plus
+9.443 [ Info   ][cleanupComponentsGroup] Cleaned up REF_to_ros
+9.506 [ Info   ][cleanupComponentsGroup] Cleaned up Soem
+9.506 [ Info   ][Logger] Unloading group 0
+9.506 [ Info   ][Logger] Disconnected and destroyed BASE_AnalogOuts
+9.506 [ Info   ][Logger] Disconnected and destroyed BASE_ConstantOutput
+9.506 [ Info   ][Logger] Disconnected and destroyed BASE_DigitalOuts
+9.507 [ Info   ][Logger] Disconnected and destroyed REF_Constant
+9.508 [ Info   ][Logger] Disconnected and destroyed REF_Pulse
+9.509 [ Info   ][Logger] Disconnected and destroyed REF_Pulse_min
+9.509 [ Info   ][Logger] Disconnected and destroyed REF_Pulse_plus
+9.513 [ Info   ][RosPublishActivity] RosPublishActivity cleans up: no more work.
+9.522 [ Info   ][Logger] Disconnected and destroyed REF_to_ros
+9.523 [ Info   ][Logger] Disconnected and destroyed Soem
+9.523 [ Info   ][Logger] Kick-out of group 0 successful.
+9.523 [ Info   ][Logger] Orocos Logging Deactivated.

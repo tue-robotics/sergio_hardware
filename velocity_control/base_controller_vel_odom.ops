@@ -109,6 +109,7 @@ loadComponent("BASE_EncoderToVelocity","MATH::Differentiate")
 addPeer("Supervisor","BASE_EncoderToVelocity")
 setActivity("BASE_EncoderToVelocity",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_EncoderToVelocity.vector_size = 3;
+BASE_EncoderToVelocity.configure
 
 ### VELOCITY TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")
@@ -225,7 +226,7 @@ loadComponent("BASE_AnalogOffset","SOURCES::ConstantSignal")
 addPeer("Supervisor","BASE_AnalogOffset")
 setActivity("BASE_AnalogOffset",Ts,HighestPriority,ORO_SCHED_RT)
 BASE_AnalogOffset.vector_size 	= 4;
-BASE_AnalogOffset.value 		= array (-85.0, -75.0, -105.0, -110.0); 
+BASE_AnalogOffset.value 		= array (-85.0, -77.0, -96.0, -101.0); 
 BASE_AnalogOffset.configure
 
 ### ADD OFFSET ###
@@ -278,6 +279,7 @@ stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
+Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
 Supervisor.AddAllwaysOnPeer ("BASE_Controller")
 Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
@@ -291,6 +293,5 @@ Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # Safety and reference
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
-Supervisor.AddEnabledPeer   ("BASE_VelocityToPosition", BODYNUMBER )
 
 
