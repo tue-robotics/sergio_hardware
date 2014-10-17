@@ -1,25 +1,25 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	wheel 			= 4;			# define wheel
-var int 	dir 			= 1;			# define direction of motion
-var double 	noise_level 	= 0.2;			# 
+var int 	wheel 			= 1;			# define wheel
+var int 	dir 			= 3;			# define direction of motion
+var double 	noise_level 	= 0.6;			# 
 var double	ref_velocity 	= 0.6;			# m/s or rad/s
 var int buffersize 			= 16384*8;
-var string	FILENAME 		= "16-10-14_FRF_vel_wheel_air_notimestamp_highnoise.dat"
+var string	FILENAME 		= "17-10-14_FRF_vel_wheel1_floor.dat"
 #############################################################
 
 # Configure settings
 
 	# all wheels
-var array 	NOISE_MIN 		= array(-noise_level, -noise_level, -noise_level, -noise_level);
-var array 	NOISE_MAX 		= array(noise_level, noise_level, noise_level, noise_level);
+#var array 	NOISE_MIN 		= array(-noise_level, -noise_level, -noise_level, -noise_level);
+#var array 	NOISE_MAX 		= array(noise_level, noise_level, noise_level, noise_level);
 
 	# per wheel
-#var array 	NOISE_MIN 		= array(-0.0, -0.0, -0.0, -0.0);
-#var array 	NOISE_MAX 		= array(0.0, 0.0, 0.0, 0.0);
-#NOISE_MIN[wheel-1] 			= -noise_level;
-#NOISE_MAX[wheel-1] 			= noise_level;
+var array 	NOISE_MIN 		= array(-0.0, -0.0, -0.0, -0.0);
+var array 	NOISE_MAX 		= array(0.0, 0.0, 0.0, 0.0);
+NOISE_MIN[wheel-1] 			= -noise_level;
+NOISE_MAX[wheel-1] 			= noise_level;
 var array	VELOCITY 		= array(0.0, 0.0, 0.0);
 VELOCITY[dir-1] 			= ref_velocity;
 
