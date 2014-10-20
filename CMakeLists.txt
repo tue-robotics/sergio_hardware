@@ -37,4 +37,6 @@ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 ### Specific hardware components for testing torso ###
 orocos_component(MotorTest src/MotorTest.cpp ${HEADER_FILES})
+orocos_component(RefGenerator src/RefGenerator.cpp ${HEADER_FILES})
 target_link_libraries(MotorTest ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
+target_link_libraries(RefGenerator ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})

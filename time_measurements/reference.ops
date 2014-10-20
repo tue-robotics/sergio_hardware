@@ -1,0 +1,64 @@
+
+### VARIABLES
+############ Settings #######################################
+var int buffersize 			= 16384*8;
+var string	FILENAME 		= "18-10-14_odom_linear.dat"
+var double 	v_x  			= 1.0;
+var double 	v_y  			= 1.0;
+var double 	v_p  			= 1.0;
+
+#############################################################
+
+var double HS2				= 0.7071; # 0.5*sqrt(2)
+	# linear
+var array VELOCITY_X   		= array(0.0  ,v_x,0.0,-v_x,0.0,  0.0,0.0, 0.0,0.0,  v_x,0.0,-v_x,0.0);
+var array VELOCITY_Y   		= array(0.0  ,0.0,0.0, 0.0,0.0,  v_y,0.0,-v_y,0.0,  v_y,0.0,-v_y,0.0);
+var array VELOCITY_PHI  	= array(0.0  ,0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0);
+var array DURATION   		= array(1.0  ,3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0);
+	# rotation
+var array VELOCITY_X   		= array(0.0,  0.0,0.0, 0.0,0.0,  v_x,0.0,-v_x,0.0,  0.0,0.0,-0.0,0.0,  v_x,0.0,-v_x,0.0);
+var array VELOCITY_Y   		= array(0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0,-0.0,0.0,  v_y,0.0,-v_y,0.0,  v_y,0.0,-v_y,0.0);
+var array VELOCITY_PHI  	= array(0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0);
+var array DURATION   		= array(1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0);
+
+	# Part settings
+var double 	Ts = 0.001
+var int 	BODYNUMBER 			= 1
+
+#### REFERENCE GENERATOR ###
+loadComponent("REFERENCE","SERGIOCUSTOM::RefGenerator")
+addPeer("Supervisor","REFERENCE")
+setActivity("REFERENCE",Ts,HighestPriority,ORO_SCHED_RT); #Since this component is not triggered, it runs at a higher frequency to make sure every timestep a new random number is available
+REFERENCE.velocity_x = VELOCITY_X
+REFERENCE.velocity_y = VELOCITY_Y
+REFERENCE.velocity_phi = VELOCITY_PHI
+REFERENCE.duration = DURATION
+REFERENCE.Ts = Ts
+REFERENCE.configure
+
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+addPeer("Supervisor","Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+Tracing.vector_sizes = array (3.0, 3.0, 4.0,3.0) 
+Tracing.buffersize = buffersize
+Tracing.filename = "/home/amigo/ros/groovy/rosbuild_ws/tue/user/Ton/time_domain/"+FILENAME;
+Tracing.Ts = Ts
+Tracing.configure
+
+### Disconnect and connect components ###
+BASE_ReadReferences.cmd_vel.disconnect()
+connect ("REFERENCE.out",		"BASE_ReadReferences.cmd_vel", ConnPolicy() )
+
+
+### Connect tracing componenets ###
+	# odom position control
+connect ("BASE_Controller.jointErrors",	"Tracing.in4", ConnPolicy() );
+connect ("BASE_ReadEncoders.out",		"Tracing.in3", ConnPolicy() );
+connect ("BASE_VelocityToPosition.out",	"Tracing.in2", ConnPolicy() );
+connect ("BASE_ReadReferences.out",		"Tracing.in1", ConnPolicy() );
+
+# safety and reference
+Supervisor.AddEnabledPeer  	("REFERENCE",		BODYNUMBER)
+Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
