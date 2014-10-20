@@ -130,7 +130,7 @@ BASE_DigitalOuts.configure
 ### READ REFERENCE VELOCITIES ###
 loadComponent("BASE_ReadReferences","ROS::ReadTwistMsg")
 addPeer("Supervisor","BASE_ReadReferences")
-setActivity("BASE_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
+setActivity("BASE_ReadReferences",Ts,LowestPriority,ORO_SCHED_OTHER)
 BASE_ReadReferences.max_start_vel 	= MAX_START_VEL
 BASE_ReadReferences.max_acc 		= MAX_ACC
 BASE_ReadReferences.max_interval 	= MAX_INTERVAL
@@ -140,7 +140,7 @@ BASE_ReadReferences.configure
 ### DECOUPLE REFERENCE ###
 loadComponent("BASE_JointToMotorSpace","MATH::MatrixTransform")
 addPeer("Supervisor","BASE_JointToMotorSpace")
-setActivity("BASE_JointToMotorSpace",0.0,LowestPriority,ORO_SCHED_OTHER)
+setActivity("BASE_JointToMotorSpace",Ts,LowestPriority,ORO_SCHED_OTHER)
 BASE_JointToMotorSpace.Nrows 		= 4
 BASE_JointToMotorSpace.Ncolumns 	= 3
 BASE_JointToMotorSpace.configure

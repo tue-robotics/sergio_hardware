@@ -1,25 +1,28 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int buffersize 			= 16384*8;
-var string	FILENAME 		= "18-10-14_odom_linear.dat"
-var double 	v_x  			= 1.0;
-var double 	v_y  			= 1.0;
-var double 	v_p  			= 1.0;
+
+var string	FILENAME 		= "18-10-14_odom_vel_angular.dat"
+#var string	FILENAME 		= "18-10-14_odom_angular.dat"
+var double 	v_x  			= 0.75;
+var double 	v_y  			= 0.75;
+var double 	v_p  			= 0.8;
 
 #############################################################
 
 var double HS2				= 0.7071; # 0.5*sqrt(2)
 	# linear
-var array VELOCITY_X   		= array(0.0  ,v_x,0.0,-v_x,0.0,  0.0,0.0, 0.0,0.0,  v_x,0.0,-v_x,0.0);
-var array VELOCITY_Y   		= array(0.0  ,0.0,0.0, 0.0,0.0,  v_y,0.0,-v_y,0.0,  v_y,0.0,-v_y,0.0);
-var array VELOCITY_PHI  	= array(0.0  ,0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0);
-var array DURATION   		= array(1.0  ,3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0);
+#var int buffersize 			= 45000;
+#var array VELOCITY_X   		= array(0.0  ,v_x,0.0,-v_x,0.0,  0.0,0.0, 0.0,0.0,  HS2*v_x,0.0,-HS2*v_x,0.0);
+#var array VELOCITY_Y   		= array(0.0  ,0.0,0.0, 0.0,0.0,  v_y,0.0,-v_y,0.0,  HS2*v_y,0.0,-HS2*v_y,0.0);
+#var array VELOCITY_PHI  	= array(0.0  ,0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0, 0.0,0.0);
+#var array DURATION   		= array(1.0  ,4.0,3.0, 4.0,3.0,  4.0,3.0, 4.0,3.0,  4.0,3.0, 4.0,3.0);
 	# rotation
-var array VELOCITY_X   		= array(0.0,  0.0,0.0, 0.0,0.0,  v_x,0.0,-v_x,0.0,  0.0,0.0,-0.0,0.0,  v_x,0.0,-v_x,0.0);
-var array VELOCITY_Y   		= array(0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0,-0.0,0.0,  v_y,0.0,-v_y,0.0,  v_y,0.0,-v_y,0.0);
+var int buffersize 			= 59000;
+var array VELOCITY_X   		= array(0.0,  0.0,0.0, 0.0,0.0,  v_x,0.0,-v_x,0.0,  0.0,0.0,-0.0,0.0,  HS2*v_x,0.0,-HS2*v_x,0.0);
+var array VELOCITY_Y   		= array(0.0,  0.0,0.0, 0.0,0.0,  0.0,0.0,-0.0,0.0,  v_y,0.0,-v_y,0.0,  HS2*v_y,0.0,-HS2*v_y,0.0);
 var array VELOCITY_PHI  	= array(0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0,  v_p,0.0,-v_p,0.0);
-var array DURATION   		= array(1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0,  3.0,1.0, 3.0,1.0);
+var array DURATION   		= array(1.0,  4.0,3.0, 4.0,3.0,  4.0,3.0, 4.0,3.0,  4.0,3.0, 4.0,3.0,  4.0,3.0, 4.0,3.0);
 
 	# Part settings
 var double 	Ts = 0.001
@@ -41,7 +44,9 @@ REFERENCE.configure
 loadComponent("Tracing","Signal::Tracing")
 addPeer("Supervisor","Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
-Tracing.vector_sizes = array (3.0, 3.0, 4.0,3.0) 
+#Tracing.vector_sizes = array (3.0, 4.0, 3.0, 3.0); # odom position control
+#Tracing.vector_sizes = array (4.0, 4.0, 4.0,3.0, 4.0); # wheel velocity control
+Tracing.vector_sizes = array (3.0, 4.0, 3.0,3.0, 3.0); # odom velocity control
 Tracing.buffersize = buffersize
 Tracing.filename = "/home/amigo/ros/groovy/rosbuild_ws/tue/user/Ton/time_domain/"+FILENAME;
 Tracing.Ts = Ts
@@ -49,15 +54,29 @@ Tracing.configure
 
 ### Disconnect and connect components ###
 BASE_ReadReferences.cmd_vel.disconnect()
-connect ("REFERENCE.out",		"BASE_ReadReferences.cmd_vel", ConnPolicy() )
+connect ("REFERENCE.cmd_vel",		"BASE_ReadReferences.cmd_vel", ConnPolicy() )
 
 
 ### Connect tracing componenets ###
 	# odom position control
-connect ("BASE_Controller.jointErrors",	"Tracing.in4", ConnPolicy() );
-connect ("BASE_ReadEncoders.out",		"Tracing.in3", ConnPolicy() );
-connect ("BASE_VelocityToPosition.out",	"Tracing.in2", ConnPolicy() );
-connect ("BASE_ReadReferences.out",		"Tracing.in1", ConnPolicy() );
+#connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
+#connect ("BASE_ReadEncoders.out",		"Tracing.in2", ConnPolicy() );
+#connect ("BASE_VelocityToPosition.out",	"Tracing.in3", ConnPolicy() );
+#connect ("BASE_ReadReferences.out",		"Tracing.in4", ConnPolicy() );
+
+	# wheel velocity control
+#connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
+#connect ("BASE_ReadEncoders.out",		"Tracing.in2", ConnPolicy() );
+#connect ("BASE_JointToMotorSpace.out",	"Tracing.in3", ConnPolicy() );
+#connect ("BASE_ReadReferences.out",		"Tracing.in4", ConnPolicy() );
+#connect ("BASE_EncoderToVelocity.out",	"Tracing.in5", ConnPolicy() );
+
+	# wheel velocity control
+connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
+connect ("BASE_ReadEncoders.out",		"Tracing.in2", ConnPolicy() );
+connect ("BASE_MotorToJointSpace.out",	"Tracing.in3", ConnPolicy() );
+connect ("BASE_ReadReferences.out",		"Tracing.in4", ConnPolicy() );
+connect ("BASE_EncoderToVelocity.out",	"Tracing.in5", ConnPolicy() );
 
 # safety and reference
 Supervisor.AddEnabledPeer  	("REFERENCE",		BODYNUMBER)

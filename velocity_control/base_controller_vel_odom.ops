@@ -136,7 +136,7 @@ BASE_Safety.configure
 ### READ REFERENCE VELOCITIES ###
 loadComponent("BASE_ReadReferences","ROS::ReadTwistMsg")
 addPeer("Supervisor","BASE_ReadReferences")
-setActivity("BASE_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
+setActivity("BASE_ReadReferences",Ts,LowestPriority,ORO_SCHED_OTHER)
 BASE_ReadReferences.max_start_vel = MAX_START_VEL
 BASE_ReadReferences.max_acc = MAX_ACC
 BASE_ReadReferences.max_vel = MAX_VELOCITIES

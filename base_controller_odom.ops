@@ -32,7 +32,7 @@ var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
 	# Safety
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
-var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
+var array 	MAX_VELOCITIES 		= array (1.0, 1.0, 2.0);	  #AMIGO: (1.8, 1.0, 3.1415)
 var array 	MAX_ERRORS     		= array (0.3, 0.3, 0.3); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
 var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
 var double 	MAX_SATURATION_TIME = 1.0;
@@ -179,7 +179,7 @@ BASE_Safety.configure
 ### READ REFERENCE VELOCITIES ###
 loadComponent("BASE_ReadReferences","ROS::ReadTwistMsg")
 addPeer("Supervisor","BASE_ReadReferences")
-setActivity("BASE_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
+setActivity("BASE_ReadReferences",Ts,LowestPriority,ORO_SCHED_OTHER)
 BASE_ReadReferences.max_start_vel = MAX_START_VEL
 BASE_ReadReferences.max_acc = MAX_ACC
 BASE_ReadReferences.max_vel = MAX_VELOCITIES
