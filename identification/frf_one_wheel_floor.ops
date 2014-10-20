@@ -6,7 +6,7 @@ var int 	dir 			= 3;			# define direction of motion
 var double 	noise_level 	= 0.6;			# 
 var double	ref_velocity 	= 0.6;			# m/s or rad/s
 var int buffersize 			= 16384*8;
-var string	FILENAME 		= "17-10-14_FRF_vel_wheel1_floor.dat"
+var string	FILENAME 		= "17-10-14_FRF_vel_wheel1_floor_timestamp.dat"
 #############################################################
 
 # Configure settings

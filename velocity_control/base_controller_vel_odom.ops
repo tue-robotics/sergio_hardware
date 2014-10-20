@@ -42,8 +42,8 @@ var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
 var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 
-	# Controller test 1 (high gain, x Hz, y 2.08Hz, phi 4.97Hz) STABLE
-	var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
+	# Controller test 1: STABLE
+	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass")
 	var array GAINS                     = array (0.25, 0.25, 0.25)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
 	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
