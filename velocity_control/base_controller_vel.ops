@@ -61,7 +61,7 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 500.0, 500.0)
 #	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
-	 # Controller 3, test: 
+	 # Controller 3, test: STABLE 
 	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
 	var array 	GAINS                     	= array (0.2, 0.2, 0.2, 0.2)
 	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (15.0, 15.0, 15.0, 15.0)
@@ -70,6 +70,12 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 500.0, 500.0)
 	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
+	 # Controller 4, test (bw ~5.4Hz): 
+#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LowPass")
+#	var array 	GAINS                     	= array (0.25, 0.25, 0.25, 0.25)
+#	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (30.0, 30.0, 30.0, 30.0)
+#	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 500.0, 500.0)
+#	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
 
