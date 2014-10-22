@@ -1,0 +1,27 @@
+
+### VARIABLES
+############ Settings #######################################
+
+var string	FILENAME 		= "22-10-14_unstable_position_controller.dat"
+var int buffersize 			= 300000;
+	# Part settings
+var double 	Ts = 0.001
+var int 	BODYNUMBER 			= 1
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+addPeer("Supervisor","Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+Tracing.vector_sizes = array (3.0, 4.0, 3.0,3.0, 3.0); 
+Tracing.buffersize = buffersize
+Tracing.filename = "/home/amigo/ros/groovy/rosbuild_ws/tue/user/Ton/"+FILENAME;
+Tracing.Ts = Ts
+Tracing.configure
+
+# tracing
+connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
+connect ("BASE_Controller.out",		"Tracing.in2", ConnPolicy() );
+connect ("BASE_VelocityToPosition.out",		"Tracing.in3", ConnPolicy() );
+
+# safety and reference
+Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
