@@ -92,7 +92,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
 #	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 	
-	# Controller test 1 (high gain, x Hz, y 2.08Hz, phi 4.97Hz) STABLE
+	# Controller test 1 ( x 1.85Hz, y 1.19Hz, phi 2.92Hz) STABLE
 	var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
 	var array GAINS                     = array (3.0, 3.0, 2.1)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (0.5, 0.5, 0.5)
