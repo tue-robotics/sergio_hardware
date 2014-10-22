@@ -44,13 +44,13 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 # Controller parameters
 	 # Weak controller:
-	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-	var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
-	var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
-	var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
-	var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
-	var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0, 50.0)
-	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
+#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+#	var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
+#	var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
+#	var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
+#	var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
+#	var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0, 50.0)
+#	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
 
 	 # Controller test instability 1:
 #	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
@@ -61,14 +61,14 @@ var double 	MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #	var array 	LOWPASS_FREQUENCY         	= array (200.0, 200.0, 200.0, 200.0)
 #	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
-	 # Controller test instability 2:
-#	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
-#	var array 	GAINS                     	= array (20.0, 20.0, 20.0, 20.0)
-#	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
-#	var array 	LEAD_FREQUENCY            	= array (10.0, 10.0, 10.0, 10.0)
-#	var array 	LAG_FREQUENCY             	= array (100.0, 100.0, 100.0, 100.0)
-#	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 500.0, 500.0)
-#	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
+	 # Controller test instability 2: stable
+	var strings CONTROLLERS 				= strings ("WeakIntegrator","LeadLag","LowPass")
+	var array 	GAINS                     	= array (20.0, 20.0, 20.0, 20.0)
+	var array 	INTEGRATOR_ZERO_FREQUENCY 	= array (0.1, 0.1, 0.1, 0.1)
+	var array 	LEAD_FREQUENCY            	= array (10.0, 10.0, 10.0, 10.0)
+	var array 	LAG_FREQUENCY             	= array (100.0, 100.0, 100.0, 100.0)
+	var array 	LOWPASS_FREQUENCY         	= array (500.0, 500.0, 500.0, 500.0)
+	var array 	LOWPASS_DAMPING           	= array (0.7, 0.7, 0.7, 0.7)
 
 
 ### NameBodyPart ###

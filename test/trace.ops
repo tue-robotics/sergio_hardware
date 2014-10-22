@@ -2,7 +2,7 @@
 ### VARIABLES
 ############ Settings #######################################
 
-var string	FILENAME 		= "22-10-14_unstable_position_controller.dat"
+var string	FILENAME 		= "22-10-14_unstable_position_odom_controller.dat"
 var int buffersize 			= 300000;
 	# Part settings
 var double 	Ts = 0.001
@@ -12,16 +12,47 @@ var int 	BODYNUMBER 			= 1
 loadComponent("Tracing","Signal::Tracing")
 addPeer("Supervisor","Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
-Tracing.vector_sizes = array (3.0, 4.0, 3.0,3.0, 3.0); 
+Tracing.vector_sizes = array (3.0, 3.0, 3.0); 
 Tracing.buffersize = buffersize
 Tracing.filename = "/home/amigo/ros/groovy/rosbuild_ws/tue/user/Ton/"+FILENAME;
 Tracing.Ts = Ts
 Tracing.configure
 
+### Doubles to ros ###
+loadComponent("publish_to_ros","ROS::DoublesToROS")
+addPeer("Supervisor","publish_to_ros")
+setActivity("publish_to_ros",0.01,HighestPriority,ORO_SCHED_RT)
+publish_to_ros.NumberOfDoublesInVector = 3;
+publish_to_ros.configure
+
+### Doubles to ros ###
+loadComponent("publish_to_ros2","ROS::DoublesToROS")
+addPeer("Supervisor","publish_to_ros2")
+setActivity("publish_to_ros2",0.01,HighestPriority,ORO_SCHED_RT)
+publish_to_ros2.NumberOfDoublesInVector = 3;
+publish_to_ros2.configure
+
+# publish error
+connect ("BASE_Controller.jointErrors","publish_to_ros.in", ConnPolicy() )
+stream ("publish_to_ros.out1", ros.topic("/sergio/err1"));
+stream ("publish_to_ros.out2", ros.topic("/sergio/err2"));
+stream ("publish_to_ros.out3", ros.topic("/sergio/err3"));
+#stream ("publish_to_ros.out4", ros.topic("/sergio/err4"));
+
+# publish error
+connect ("BASE_Controller.out","publish_to_ros2.in", ConnPolicy() )
+stream ("publish_to_ros2.out1", ros.topic("/sergio/C1"));
+stream ("publish_to_ros2.out2", ros.topic("/sergio/C2"));
+stream ("publish_to_ros2.out3", ros.topic("/sergio/C3"));
+#stream ("publish_to_ros2.out4", ros.topic("/sergio/C4"));
+
+
 # tracing
 connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
-connect ("BASE_Controller.out",		"Tracing.in2", ConnPolicy() );
-connect ("BASE_VelocityToPosition.out",		"Tracing.in3", ConnPolicy() );
+connect ("BASE_Controller.out",			"Tracing.in2", ConnPolicy() );
+connect ("BASE_VelocityToPosition.out",	"Tracing.in3", ConnPolicy() );
 
-# safety and reference
+# start components
+Supervisor.AddEnabledPeer  	("publish_to_ros",			BODYNUMBER )
+Supervisor.AddEnabledPeer  	("publish_to_ros2",			BODYNUMBER )
 Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
