@@ -27,14 +27,6 @@ var double USER_INTERVAL = 0.5;
 Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
 
 ### Loading Components ###
-#Reading Encoders
-loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
-addPeer("Supervisor","TORSO_ReadEncoders")
-setActivity("TORSO_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
-TORSO_ReadEncoders.encoderbits = ENCODERBITS
-TORSO_ReadEncoders.enc2SI = ENC2POS 
-TORSO_ReadEncoders.configure
-
 # Get user input
 loadComponent("TORSO_ReadUserInput","ROS::ReadTwistMsg")
 addPeer("Supervisor","TORSO_ReadUserInput")
@@ -155,8 +147,6 @@ stream ("TORSO_BoolToRos.bool_out3", ros.topic("/sergio/torso/brake_1"));
 stream ("TORSO_BoolToRos.bool_out4", ros.topic("/sergio/torso/brake_2"));
 
 #### START COMPONENTS ####
-# Data from pera
-Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
 
 # Input to pera
 Supervisor.AddAllwaysOnPeer("TORSO_InputToMotor")
