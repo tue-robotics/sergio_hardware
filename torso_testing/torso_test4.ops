@@ -9,7 +9,7 @@
 
 #### DECLARATION OF PARAMETERS ####
 # Global parameters
-var double Ts = 0.001
+var double Ts 			= 0.001
 var int BODYNUMBER 		= 2
 var string BODYNAME 	= "torso"
 var bool HOMEABLE 		= false
