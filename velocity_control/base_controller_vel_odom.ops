@@ -43,13 +43,29 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 
 	# Controller test 1: STABLE
-	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass")
-	var array GAINS                     = array (0.25, 0.25, 0.25)
-	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
-	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
-	#var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)
-	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
-	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
+#	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass")
+#	var array GAINS                     = array (0.25, 0.25, 0.25)
+#	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
+#	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
+#	#var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)
+#	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
+#	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
+	
+		# Controller test 2 (double notch):
+	var strings CONTROLLERS 			= strings ("WeakIntegrator","Notch")
+	var array GAINS                     = array (0.5, 0.5, 0.6)
+	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 6.0)
+	#var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
+	#var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
+	var array NOTCH_ZERO_FREQ2			= array (100.0, 100.0, 100.0)
+	var array NOTCH_ZERO_DAMP2			= array (0.2, 0.2, 0.2)
+	var array NOTCH_POLE_FREQ2			= array (75.0, 75.0, 75.0)
+	var array NOTCH_POLE_DAMP2			= array (0.2, 0.2, 0.2)
+	var array NOTCH_ZERO_FREQ			= array (38.0, 38.0, 38.0)
+	var array NOTCH_ZERO_DAMP			= array (0.2, 0.2, 0.2)
+	var array NOTCH_POLE_FREQ			= array (38.0, 38.0, 38.0)
+	var array NOTCH_POLE_DAMP			= array (1.0, 1.0, 1.0)
+	
 	
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
@@ -83,13 +99,25 @@ BASE_Controller.gains = GAINS;
 BASE_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 #BASE_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
 #BASE_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
-#BASE_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
-#BASE_Controller.zero_damp_Notch = NOTCH_ZERO_DAMP;
-#BASE_Controller.pole_freq_Notch = NOTCH_POLE_FREQ;
-#BASE_Controller.pole_damp_Notch = NOTCH_POLE_DAMP;
-BASE_Controller.pole_freq_LowPass = LOWPASS_FREQUENCY;
-BASE_Controller.pole_damp_LowPass = LOWPASS_DAMPING;
+BASE_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
+BASE_Controller.zero_damp_Notch = NOTCH_ZERO_DAMP;
+BASE_Controller.pole_freq_Notch = NOTCH_POLE_FREQ;
+BASE_Controller.pole_damp_Notch = NOTCH_POLE_DAMP;
+#BASE_Controller.pole_freq_LowPass = LOWPASS_FREQUENCY;
+#BASE_Controller.pole_damp_LowPass = LOWPASS_DAMPING;
 BASE_Controller.configure
+
+### NOTCH 2 ####
+loadComponent("BASE_Notch","FILTERS::SkewedNotch")
+addPeer("Supervisor","BASE_Notch")
+setActivity("BASE_Notch",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_Notch.vector_size = 3;
+BASE_Notch.sampling_time = Ts;
+BASE_Notch.zero_frequency = NOTCH_ZERO_FREQ2;
+BASE_Notch.zero_damping = NOTCH_ZERO_DAMP2;
+BASE_Notch.pole_frequency = NOTCH_POLE_FREQ2;
+BASE_Notch.pole_damping = NOTCH_POLE_DAMP2;
+BASE_Notch.configure
 
 ### CONTROL ODOM TO WHEEL ###
 loadComponent("BASE_JointToMotorSpace","MATH::MatrixTransform")
@@ -192,7 +220,8 @@ BASE_AddOffset.configure
 connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
 connect ("BASE_MotorToJointSpace.out",	"BASE_EncoderToVelocity.in", ConnPolicy() ); #[m \n m \n rad]
 connect ("BASE_EncoderToVelocity.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
-connect ("BASE_Controller.out",			"BASE_JointToMotorSpace.in", ConnPolicy() )
+connect ("BASE_Controller.out",			"BASE_Notch.in", ConnPolicy() )
+connect ("BASE_Notch.out",				"BASE_JointToMotorSpace.in", ConnPolicy() )
 connect ("BASE_JointToMotorSpace.out",	"BASE_SI2Bits.in", ConnPolicy() )
 connect ("BASE_SI2Bits.out", 			"BASE_AddOffset.in1_ev", 	ConnPolicy() );
 connect ("BASE_AnalogOffset.out", 		"BASE_AddOffset.in2", 		ConnPolicy() );
@@ -231,6 +260,7 @@ stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
 Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
 Supervisor.AddAllwaysOnPeer ("BASE_Controller")
+Supervisor.AddAllwaysOnPeer ("BASE_Notch")
 Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
