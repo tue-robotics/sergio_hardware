@@ -12,10 +12,12 @@ import("soem_master")
 import("soem_beckhoff_drivers")
 import("tue_ethercat_drivers")
 import("sergio_hardware")
+import("amigo_hardware")
 ros.import("rtt_control_components")
 
 #### DECLARATION OF PARAMETERS ####
 var double Ts = 0.001
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1002"; # torso motors
 
 var int ENCODERBITS = 65536;							# ?????????????????
 var double GEARBOX = 13/3; # Motor to drive train
@@ -40,27 +42,21 @@ addPeer("Supervisor","Soem")
 Soem.configure
 #Set a realtime priority to this component and run it every 1ms.
 setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
-connect ("Soem.Slave_1002.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;#ToDo: replace serialrunning port?
+connect (TORSO_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;#ToDo: replace serialrunning port?
 
 #### LOAD COMPONENT TO ENABLE ANALOG INS ###
-loadComponent("AnalogIns","SOEM::AnalogInsPera2");
+loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","AnalogIns")
-AnalogIns.number_boards = 1;
+AnalogIns.numberofinports = 2;
+AnalogIns.input_sizes = array(3.0, 3.0)
+AnalogIns.numberofoutports = 1;
+AnalogIns.output_sizes = array(6.0)
+AnalogIns.input_positions = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+AnalogIns.direct_to_ROS = false
 AnalogIns.configure
 setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
-connect ("AnalogIns.in_for1","Soem.Slave_1002.forceSensors", ConnPolicy() );
-connect ("AnalogIns.in_pos1","Soem.Slave_1002.positionSensors", ConnPolicy() );
-#connect ("AnalogIns.in_for2","Soem.Slave_1003.forceSensors", ConnPolicy() );
-#connect ("AnalogIns.in_pos2","Soem.Slave_1003.positionSensors", ConnPolicy() );
-
-#### LOAD COMPONENT TO STREAM ANALOG INS DATA TO ROS ###
-loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
-addPeer("Supervisor", "AnalogInsFToRos")
-setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
-AnalogInsFToRos.NumberOfDoublesInVector = 6;
-AnalogInsFToRos.configure;
-#connect ("AnalogIns.out_for", "AnalogInsFToRos.in", ConnPolicy() )
-#stream("AnalogInsFToRos.out4", ros.topic("/sergio/battery_value"))
+connect ("AnalogIns.in1",TORSO_SLAVE_1 +".forceSensors", ConnPolicy() );
+connect ("AnalogIns.in2",TORSO_SLAVE_1 +".positionSensors", ConnPolicy() );
 
 #Reading Encoders
 loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
@@ -70,9 +66,11 @@ TORSO_ReadEncoders.encoderbits = ENCODERBITS
 TORSO_ReadEncoders.enc2SI = ENC2POS 
 TORSO_ReadEncoders.configure
 
+connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
+connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
+
 #### START COMPONENTS ####
 Supervisor.AddAllwaysOnPeer ("Soem")
 Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("AnalogIns")
-Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
 Supervisor.start()
