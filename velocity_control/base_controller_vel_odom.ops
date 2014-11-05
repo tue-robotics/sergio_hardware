@@ -33,9 +33,9 @@ var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
 var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
-var array 	MAX_ERRORS     		= array (0.3, 0.3, 0.8); # m/s
+var array 	MAX_ERRORS     		= array (0.5, 0.4, 1.0); # m/s r/s
 var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
-var double 	MAX_SATURATION_TIME = 1.0;
+var double 	MAX_SATURATION_TIME = 2.0;
 	# Reference
 var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
 var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
@@ -51,25 +51,10 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
 	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 	
-		# Controller test 2 (double notch):
+		# Controller test 2 (double notch): unstable
 #	var strings CONTROLLERS 			= strings ("WeakIntegrator","Notch")
 #	var array GAINS                     = array (0.5, 0.5, 0.6)
 #	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 6.0)
-	#var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
-	#var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
-#	var array NOTCH_ZERO_FREQ2			= array (100.0, 100.0, 100.0)
-#	var array NOTCH_ZERO_DAMP2			= array (0.2, 0.2, 0.2)
-#	var array NOTCH_POLE_FREQ2			= array (75.0, 75.0, 75.0)
-#	var array NOTCH_POLE_DAMP2			= array (0.2, 0.2, 0.2)
-#	var array NOTCH_ZERO_FREQ			= array (38.0, 38.0, 38.0)
-#	var array NOTCH_ZERO_DAMP			= array (0.2, 0.2, 0.2)
-#	var array NOTCH_POLE_FREQ			= array (38.0, 38.0, 38.0)
-#	var array NOTCH_POLE_DAMP			= array (1.0, 1.0, 1.0)
-	
-			# Controller test 3 (double notch):
-#	var strings CONTROLLERS 			= strings ("WeakIntegrator","Notch")
-#	var array GAINS                     = array (0.35, 0.35, 0.4)
-#	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 5.0)
 	#var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
 	#var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
 #	var array NOTCH_ZERO_FREQ2			= array (100.0, 100.0, 100.0)

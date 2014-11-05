@@ -2,10 +2,10 @@
 ### VARIABLES
 ############ Settings #######################################
 
-var string	FILENAME 		= "18-10-14_odom_vel_angular.dat"
+var string	FILENAME 		= "18-10-14_odom_vel_angular_torso.dat"
 #var string	FILENAME 		= "18-10-14_odom_angular.dat"
-var double 	v_x  			= 0.75;
-var double 	v_y  			= 0.75;
+var double 	v_x  			= 0.6; #0.75
+var double 	v_y  			= 0.6; #0.75
 var double 	v_p  			= 0.8;
 
 #############################################################
