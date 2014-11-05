@@ -66,6 +66,20 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #	var array NOTCH_POLE_FREQ			= array (38.0, 38.0, 38.0)
 #	var array NOTCH_POLE_DAMP			= array (1.0, 1.0, 1.0)
 	
+			# Controller test 3 (double notch):
+#	var strings CONTROLLERS 			= strings ("WeakIntegrator","Notch")
+#	var array GAINS                     = array (0.35, 0.35, 0.4)
+#	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 5.0)
+	#var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
+	#var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
+#	var array NOTCH_ZERO_FREQ2			= array (100.0, 100.0, 100.0)
+#	var array NOTCH_ZERO_DAMP2			= array (0.2, 0.2, 0.2)
+#	var array NOTCH_POLE_FREQ2			= array (75.0, 75.0, 75.0)
+#	var array NOTCH_POLE_DAMP2			= array (0.2, 0.2, 0.2)
+#	var array NOTCH_ZERO_FREQ			= array (38.0, 38.0, 38.0)
+#	var array NOTCH_ZERO_DAMP			= array (0.2, 0.2, 0.2)
+#	var array NOTCH_POLE_FREQ			= array (38.0, 38.0, 38.0)
+#	var array NOTCH_POLE_DAMP			= array (1.0, 1.0, 1.0)
 	
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
