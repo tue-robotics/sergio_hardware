@@ -1,0 +1,68 @@
+
+### VARIABLES
+############ Settings #######################################
+var int 	spindle 	    = 2;			# define wheel
+var double 	noise_level 	= 45.0;			# 
+var int buffersize 			= 60*1000;
+var string	FILENAME 		= "06-11-14_FRF_upper07.dat"
+#############################################################
+
+# Configure settings
+
+	# all wheels
+#var array 	NOISE_MIN 		= array(-noise_level, -noise_level, -noise_level, -noise_level);
+#var array 	NOISE_MAX 		= array(noise_level, noise_level, noise_level, noise_level);
+
+	# per wheel
+var array 	NOISE_MIN 		= array(-0.0, -0.0);
+var array 	NOISE_MAX 		= array(0.0, 0.0);
+NOISE_MIN[spindle-1] 		= -noise_level;
+NOISE_MAX[spindle-1] 		= noise_level;
+
+	# Part settings
+var double 	Ts = 0.001
+var int 	BODYNUMBER 			= 1
+
+#### NOISE COMPONENT ###
+loadComponent("IDENTIFICATION_Noise","SOURCES::UniformRandomNumber")
+addPeer("Supervisor","IDENTIFICATION_Noise")
+setActivity("IDENTIFICATION_Noise",0.5*Ts,HighestPriority,ORO_SCHED_RT); #Since this component is not triggered, it runs at a higher frequency to make sure every timestep a new random number is available
+IDENTIFICATION_Noise.vector_size = 2
+IDENTIFICATION_Noise.minimum = NOISE_MIN; 
+IDENTIFICATION_Noise.maximum = NOISE_MAX;
+IDENTIFICATION_Noise.configure
+
+### ADD Noise component ###
+loadComponent("IDENTIFICATION_AddNoise","MATH::Addition")
+addPeer("Supervisor","IDENTIFICATION_AddNoise")
+IDENTIFICATION_AddNoise.vectorsize = 2
+IDENTIFICATION_AddNoise.numberofinputs = 2
+setActivity("IDENTIFICATION_AddNoise",0.0,HighestPriority,ORO_SCHED_RT)
+IDENTIFICATION_AddNoise.configure
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+addPeer("Supervisor","Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
+Tracing.buffersize = buffersize
+Tracing.filename = "/home/amigo/ros/data/Ton_data/torso_frf/"+FILENAME;
+Tracing.Ts = Ts
+Tracing.configure
+
+### Disconnect and connect components ###
+TORSO_Controller.out.disconnect();
+connect ("IDENTIFICATION_AddNoise.out","TORSO_ControlToRos.in", ConnPolicy() )
+connect ("TORSO_Controller.out",			"IDENTIFICATION_AddNoise.in1_ev", ConnPolicy() );
+connect ("IDENTIFICATION_Noise.out",	"IDENTIFICATION_AddNoise.in2", ConnPolicy() );
+connect ("IDENTIFICATION_AddNoise.out",	"TORSO_SI2Bits.in", ConnPolicy() );
+
+### Connect tracing componenets ###
+connect ("TORSO_Controller.jointErrors",	"Tracing.in3", ConnPolicy() );
+connect ("TORSO_Controller.out",			"Tracing.in2", ConnPolicy() );
+connect ("IDENTIFICATION_AddNoise.out",	    "Tracing.in1", ConnPolicy() );
+
+# safety and reference
+Supervisor.AddEnabledPeer  	("IDENTIFICATION_Noise",	BODYNUMBER )
+Supervisor.AddAllwaysOnPeer ("IDENTIFICATION_AddNoise")
+Supervisor.AddEnabledPeer  	("Tracing",					BODYNUMBER )
