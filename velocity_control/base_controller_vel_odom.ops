@@ -270,7 +270,7 @@ Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # Safety and reference
-Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
+Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 
 

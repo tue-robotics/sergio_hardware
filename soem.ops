@@ -26,6 +26,8 @@ var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
 var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
 var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
 
+var ints SMALLER = ints(1, 1, 1, 1, 1, 1)
+
 #### LOAD SUPERVISOR ###
 loadComponent("Supervisor","SUPERVISORY::Supervisor")
 Supervisor.configure
@@ -79,14 +81,14 @@ EmergencyToRos.numberofinports = 1;
 EmergencyToRos.numberofoutports = 6;
 EmergencyToRos.input_sizes = array(6.0);
 EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 1.0, 3.5, 3.5);
-EmergencyToRos.smaller = bools(true, true, true, true, true, true);
+EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 1.0, 5.5, 3.5);
+EmergencyToRos.smaller = SMALLER;
 EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
 connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
-stream("EmergencyToRos.out5", ros.topic("/sergio/emergency_switch"))
-stream("EmergencyToRos.out6", ros.topic("/sergio/runstop"))
+stream("EmergencyToRos.outmsg6", ros.topic("/sergio/runstop"))
+stream("EmergencyToRos.outmsg5", ros.topic("/sergio/emergency_switch"))
 
 
 ### READ WHEEL ENCODERS ###
@@ -112,4 +114,5 @@ Supervisor.AddAllwaysOnPeer ("Soem")
 Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("AnalogIns")
 Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
+Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
 Supervisor.start()
