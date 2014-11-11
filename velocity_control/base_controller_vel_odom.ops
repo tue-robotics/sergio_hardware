@@ -43,7 +43,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	# Control
 
 	# Controller test 1: STABLE
-	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass")
+	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass");
 	var array GAINS                     = array (0.25, 0.25, 0.25)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
 	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
@@ -258,7 +258,6 @@ stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
 Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
-Supervisor.AddAllwaysOnPeer ("BASE_Controller")
 #Supervisor.AddAllwaysOnPeer ("BASE_Notch")
 Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
@@ -270,6 +269,7 @@ Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # Safety and reference
+Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
 Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 

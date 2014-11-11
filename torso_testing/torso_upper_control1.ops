@@ -226,7 +226,6 @@ stream ("TORSO_ENCToRos.out2", ros.topic("/sergio/torso/enc_2"));
 
 #### START COMPONENTS ####
 # Control
-Supervisor.AddAllwaysOnPeer("TORSO_Controller")
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
 
@@ -246,6 +245,7 @@ Supervisor.AddAllwaysOnPeer("TORSO_ControlToRos")
 Supervisor.AddAllwaysOnPeer("TORSO_ENCToRos")
 
 # enable
+Supervisor.AddEnabledPeer 	 ("TORSO_Controller", 		BODYNUMBER)
 Supervisor.AddEnabledPeer    ("TORSO_Safety",             BODYNUMBER)
 
 

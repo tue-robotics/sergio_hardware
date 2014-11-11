@@ -242,7 +242,6 @@ stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
-Supervisor.AddAllwaysOnPeer ("BASE_Controller")
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits")
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AddOffset")
@@ -253,6 +252,7 @@ Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # safety and reference
+Supervisor.AddEnabledPeer 	("BASE_Controller", 		BODYNUMBER)
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER)
 Supervisor.AddEnabledPeer  	("BASE_ReadReferences",		BODYNUMBER )
 Supervisor.AddEnabledPeer  	("BASE_JointToMotorSpace",	BODYNUMBER )
