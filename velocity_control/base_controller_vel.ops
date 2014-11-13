@@ -186,7 +186,7 @@ loadComponent("BASE_AnalogOffset","SOURCES::ConstantSignal")
 addPeer("Supervisor","BASE_AnalogOffset")
 setActivity("BASE_AnalogOffset",Ts,HighestPriority,ORO_SCHED_RT)
 BASE_AnalogOffset.vector_size 	= 4;
-BASE_AnalogOffset.value 		= array (-108.0, -105.0, -70.0, -70.0); 
+BASE_AnalogOffset.value 		= array (-18.0, -14.0, -8.0, -8.0); 
 BASE_AnalogOffset.configure
 
 ### ADD OFFSET ###

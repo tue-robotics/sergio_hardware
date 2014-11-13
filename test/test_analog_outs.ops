@@ -74,7 +74,9 @@ loadComponent("REF_Constant","SOURCES::ConstantSignal")
 #addPeer("Supervisor","REF_Constant")
 setActivity("REF_Constant",Ts,HighestPriority,ORO_SCHED_RT)
 REF_Constant.vector_size = 4;
-REF_Constant.value = array ( -108.0, -105.0, -70.0, -70.0); #(-108.0, -105.0, -70.0, -70.0)
+REF_Constant.value = array ( -18.0, -14.0, -8.0, -8.0); 
+# value with 5 volt correction chip 	( -18.0, -14.0, -8.0, -8.0)
+# value without 5 volt correction chip	(-108.0, -105.0, -70.0, -70.0)
 REF_Constant.configure
 
 ### AnalogOuts ###
@@ -89,10 +91,10 @@ BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 1.0, 1.0)
 BASE_AnalogOuts.configure;
 
 ### Enable signal                                      #
-loadComponent("BASE_ConstantOutput", "SOURCES::ConstantBool");        #
-setActivity("BASE_ConstantOutput", Ts,HighestPriority, ORO_SCHED_RT); #							#
-BASE_ConstantOutput.value = true;				#
-BASE_ConstantOutput.configure;
+loadComponent("TEST_true", "SOURCES::ConstantBool");        #
+setActivity("TEST_true", Ts,HighestPriority, ORO_SCHED_RT); #							#
+TEST_true.value = true;				#
+TEST_true.configure;
 
 ### DigitalOuts ###
 loadComponent("BASE_DigitalOuts", "SOEM::DigitalOuts")
@@ -126,17 +128,17 @@ connect ("BASE_AnalogOuts.out1","Soem.Slave_1002.analogOuts", ConnPolicy() )
 connect ("BASE_AnalogOuts.out2","Soem.Slave_1003.analogOuts", ConnPolicy() )
 
 # Safety
-connect ("BASE_ConstantOutput.out", "Soem.Slave_1002.enablePort", ConnPolicy() ); 
-connect ("BASE_ConstantOutput.out", "Soem.Slave_1003.enablePort", ConnPolicy() ); 
-connect ("BASE_ConstantOutput.out", "BASE_DigitalOuts.in1", ConnPolicy() ); 
-connect ("BASE_ConstantOutput.out", "BASE_DigitalOuts.in2", ConnPolicy() ); 
+connect ("TEST_true.out", "Soem.Slave_1002.enablePort", ConnPolicy() ); 
+connect ("TEST_true.out", "Soem.Slave_1003.enablePort", ConnPolicy() ); 
+connect ("TEST_true.out", "BASE_DigitalOuts.in1", ConnPolicy() ); 
+connect ("TEST_true.out", "BASE_DigitalOuts.in2", ConnPolicy() ); 
 connect ("BASE_DigitalOuts.digital_out", "Soem.Slave_1002.digitalOuts", ConnPolicy() ); 
 connect ("BASE_DigitalOuts.digital_out", "Soem.Slave_1003.digitalOuts", ConnPolicy() ); 
 
 
 ### Start components ###
 Soem.start()
-BASE_ConstantOutput.start()
+TEST_true.start()
 REF_Constant.start()
 BASE_DigitalOuts.start()
 BASE_AnalogOuts.start()

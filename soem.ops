@@ -63,7 +63,7 @@ connect ("AnalogIns.in2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
 connect ("AnalogIns.in3",BASE_SLAVE_1 +".positionSensors", ConnPolicy() );
 connect ("AnalogIns.in4",BASE_SLAVE_2 +".positionSensors", ConnPolicy() );
 
-#### LOAD COMPONENT TO STREAM ANALOG INS DATA TO ROS ###
+#### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
 loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
 addPeer("Supervisor", "AnalogInsFToRos")
 setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
@@ -71,7 +71,8 @@ AnalogInsFToRos.NumberOfDoublesInVector = 6;
 AnalogInsFToRos.configure;
 
 connect ("AnalogIns.out1", "AnalogInsFToRos.in", ConnPolicy() )
-stream("AnalogInsFToRos.out4", ros.topic("/sergio/battery_value"))
+stream("AnalogInsFToRos.out1", ros.topic("/sergio/battery_value"))
+
 
 #### LOAD COMPONENT TO SEND EMERGENCY SWITCH STATUS TO ROS ###
 loadComponent("EmergencyToRos", "MATH::SmallerLarger");
@@ -81,14 +82,15 @@ EmergencyToRos.numberofinports = 1;
 EmergencyToRos.numberofoutports = 6;
 EmergencyToRos.input_sizes = array(6.0);
 EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 1.0, 5.5, 3.5);
+EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 2.5, 2.5, 2.5);
 EmergencyToRos.smaller = SMALLER;
 EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
 connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
-stream("EmergencyToRos.outmsg6", ros.topic("/sergio/runstop"))
-stream("EmergencyToRos.outmsg5", ros.topic("/sergio/emergency_switch"))
+stream("EmergencyToRos.outmsg6", ros.topic("/sergio/emergency_switch"))
+stream("EmergencyToRos.outmsg5", ros.topic("/sergio/enable_switch"))
+stream("EmergencyToRos.outmsg4", ros.topic("/sergio/runstop"))
 
 
 ### READ WHEEL ENCODERS ###
