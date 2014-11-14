@@ -1,0 +1,120 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+import("rtt_rosnode")
+import("rtt_roscomm")
+import("soem_master")
+import("soem_beckhoff_drivers")
+import("tue_ethercat_drivers")
+import("sergio_hardware")
+import("amigo_hardware")
+ros.import("rtt_control_components")
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts = 0.001
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1003"; # Wheel 3 and 4
+
+var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
+var double 	TWOPI 			= 2.0*3.141592
+var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
+var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
+var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
+
+var ints SMALLER = ints(1, 1, 1, 1, 1, 1)
+
+#### LOAD SUPERVISOR ###
+loadComponent("Supervisor","SUPERVISORY::Supervisor")
+Supervisor.configure
+setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
+stream("Supervisor.rosemergency", ros.topic("/sergio/emergency_switch"));
+stream("Supervisor.rosshutdown", ros.topic("/sergio/etherCAT_shutdown")); 
+stream("Supervisor.rosetherCATenabled", ros.topic("/sergio/etherCAT_enabled")); 
+stream("Supervisor.hardware_status", ros.topic("/sergio/hardware_status")); 
+stream("Supervisor.dashboardCmd", ros.topic("/sergio/dashboard_ctrlcmds")); 
+
+### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
+loadComponent("Soem","soem_master::SoemMasterComponent")
+addPeer("Supervisor","Soem")
+Soem.configure
+setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
+
+connect (BASE_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
+
+#### LOAD COMPONENT TO ENABLE ANALOG INS ###
+loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
+addPeer("Supervisor","AnalogIns")
+AnalogIns.numberofinports = 4;
+AnalogIns.input_sizes = array(3.0, 3.0, 3.0, 3.0)
+AnalogIns.numberofoutports = 2;
+AnalogIns.output_sizes = array(6.0, 6.0)
+AnalogIns.input_positions = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+AnalogIns.direct_to_ROS = false
+AnalogIns.configure
+setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
+
+connect ("AnalogIns.in1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
+connect ("AnalogIns.in2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
+connect ("AnalogIns.in3",BASE_SLAVE_1 +".positionSensors", ConnPolicy() );
+connect ("AnalogIns.in4",BASE_SLAVE_2 +".positionSensors", ConnPolicy() );
+
+#### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
+loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
+addPeer("Supervisor", "AnalogInsFToRos")
+setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
+AnalogInsFToRos.NumberOfDoublesInVector = 6;
+AnalogInsFToRos.configure;
+
+connect ("AnalogIns.out1", "AnalogInsFToRos.in", ConnPolicy() )
+stream("AnalogInsFToRos.out1", ros.topic("/sergio/battery_value"))
+
+
+#### LOAD COMPONENT TO SEND EMERGENCY SWITCH STATUS TO ROS ###
+loadComponent("EmergencyToRos", "MATH::SmallerLarger");
+addPeer("Supervisor", "EmergencyToRos")
+setActivity("EmergencyToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
+EmergencyToRos.numberofinports = 1;
+EmergencyToRos.numberofoutports = 6;
+EmergencyToRos.input_sizes = array(6.0);
+EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 2.5, 2.5, 2.5);
+EmergencyToRos.smaller = SMALLER;
+EmergencyToRos.direct_to_ROS = true;
+EmergencyToRos.configure;
+
+connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
+stream("EmergencyToRos.outmsg6", ros.topic("/sergio/emergency_switch"))
+stream("EmergencyToRos.outmsg5", ros.topic("/sergio/enable_switch"))
+stream("EmergencyToRos.outmsg4", ros.topic("/sergio/runstop"))
+
+
+### READ WHEEL ENCODERS ###
+loadComponent("BASE_ReadEncoders","SOEM::ReadEncodersTimeStamp")
+addPeer("Supervisor","BASE_ReadEncoders")
+setActivity("BASE_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
+BASE_ReadEncoders.encoderbits = ENCODERBITS;
+BASE_ReadEncoders.enc2SI = array (ENC2RAD, ENC2RAD, ENC2RAD, ENC2RAD)
+BASE_ReadEncoders.timestep = 0.000000256
+BASE_ReadEncoders.timebits = 65536
+BASE_ReadEncoders.time2enc = array(2.0, 2.0)
+BASE_ReadEncoders.configure
+
+connect (BASE_SLAVE_1+".encoder1","BASE_ReadEncoders.enc1_in", ConnPolicy() ); #enc1[-]
+connect (BASE_SLAVE_1+".encoder2","BASE_ReadEncoders.enc2_in", ConnPolicy() ); #enc2[-]
+connect (BASE_SLAVE_2+".encoder1","BASE_ReadEncoders.enc3_in", ConnPolicy() ); #enc3[-]
+connect (BASE_SLAVE_2+".encoder2","BASE_ReadEncoders.enc4_in", ConnPolicy() ); #enc4[-]
+connect (BASE_SLAVE_1+".timeStamp","BASE_ReadEncoders.time1_in", ConnPolicy() ); #time1[-]
+connect (BASE_SLAVE_2+".timeStamp","BASE_ReadEncoders.time2_in", ConnPolicy() ); #time2[-]
+
+#### START COMPONENTS ####
+Supervisor.AddAllwaysOnPeer ("Soem")
+Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
+Supervisor.AddAllwaysOnPeer ("AnalogIns")
+Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
+Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
+Supervisor.start()

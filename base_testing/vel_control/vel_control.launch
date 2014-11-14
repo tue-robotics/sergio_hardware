@@ -1,8 +1,8 @@
 <launch>
   <include file="$(find rtt_ros)/launch/deployer.launch">
     <arg name="DEPLOYER_ARGS" value="gnulinux
-    -s $(find sergio_hardware)/soem.ops
-    -s $(find sergio_hardware)/velocity_control/base_controller_vel_odom.ops
+    -s $(find sergio_hardware)/base_testing/soem.ops
+    -s $(find sergio_hardware)/base_testing/vel_control/base_controller_vel_odom.ops
     -s $(find sergio_hardware)/test/trace_always_odom.ops
     "/>
     <arg name="LOG_LEVEL" value="Warning"/>
