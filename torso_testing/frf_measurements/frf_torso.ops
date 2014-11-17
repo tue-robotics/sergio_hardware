@@ -1,11 +1,21 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	spindle 	    = 2;			# define wheel
-var double 	noise_level 	= 45.0;			# 
+var int 	spindle 	    = 1;			# define 
+var double 	noise_level 	= 35.0;			# 
 var int buffersize 			= 60*1000;
-var string	FILENAME 		= "06-11-14_FRF_upper07.dat"
+var string	FILENAME 		= "17-11-14_FRF_up_do_s1.dat"
 #############################################################
+
+
+
+var array AMP 			= array(1.0, 1.0);
+AMP[spindle-1] 			= 20000.0;
+
+TORSO_Sine.frequency    = array(0.3, 0.2);
+TORSO_Sine.amplitude    = AMP;
+TORSO_Sine.phase        = array(0.0, 0.0);
+TORSO_Sine.bias         = array(0.0, 0.0);
 
 # Configure settings
 
