@@ -17,7 +17,7 @@ var bool 	HOMEABLE 			= false
 var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
 var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
 	# System properties
-var double 	WHEELRAD 			= 0.075*0.9825; 	# Corrected for effective wheel radius
+var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
 var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	BITS2CURRENT 		= 25.0/2046.0; 		# Bit value to current value (check is it 15 or 25?)
