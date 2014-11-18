@@ -15,10 +15,12 @@ var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
 var string 	BODYPARTNAME 			= "base"
 var bool 	HOMEABLE 			= false
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+#var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
+#var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
 	# System properties
-var double 	WHEELRAD 			= 0.075*0.9825; 	# Corrected for effective wheel radius
+var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
 var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	BITS2CURRENT 		= 25.0/2046.0; 		# Bit value to current value (check is it 15 or 25?)
@@ -46,7 +48,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 
 	# Controller test 1: STABLE
 	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass");
-	var array GAINS                     = array (0.25, 0.25, 0.25)
+	var array GAINS                     = array (0.20, 0.20, 0.20)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
 	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
 	#var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)

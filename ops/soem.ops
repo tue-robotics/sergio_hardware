@@ -88,9 +88,11 @@ EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
 connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
-stream("EmergencyToRos.outmsg6", ros.topic("/sergio/emergency_switch"))
-stream("EmergencyToRos.outmsg5", ros.topic("/sergio/enable_switch"))
-stream("EmergencyToRos.outmsg4", ros.topic("/sergio/runstop"))
+# 6 wireles, 4 hardware, 5 safe
+# this works for now, should be modified for communication with ROS
+stream("EmergencyToRos.outmsg5", ros.topic(ROBOT+"/emergency_switch")); 
+stream("EmergencyToRos.outmsg6", ros.topic(ROBOT+"/enable_switch"))
+stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/runstop"))
 
 
 ### READ WHEEL ENCODERS ###
