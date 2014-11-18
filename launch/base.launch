@@ -3,6 +3,7 @@
     <arg name="DEPLOYER_ARGS" value="gnulinux
     -s $(find sergio_hardware)/ops/soem.ops
     -s $(find sergio_hardware)/ops/base_controller.ops
+    -s $(find sergio_hardware)/base_testing/test/trace_always_odom.ops
     "/>
     <arg name="LOG_LEVEL" value="Warning"/>
     <arg name="DEBUG" value="false"/>

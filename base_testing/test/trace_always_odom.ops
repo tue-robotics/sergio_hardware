@@ -10,7 +10,7 @@ var int 	BODYNUMBER 		= 1
 
 ### TRACING COMPONENT ###
 loadComponent("Tracing","Signal::TraceCrash")
-#addPeer("Supervisor","Tracing")
+addPeer("Supervisor","Tracing")
 setActivity("Tracing",Ts,HighestPriority,ORO_SCHED_RT)
 Tracing.vector_sizes = array (3.0, 3.0, 4.0); 
 Tracing.buffersize = buffersize
@@ -26,4 +26,4 @@ connect ("BASE_Controller.out",			"Tracing.in2", ConnPolicy() );
 connect ("BASE_ReadEncoders.out",		"Tracing.in3", ConnPolicy() );
 
 # start components
-#Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
+Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
