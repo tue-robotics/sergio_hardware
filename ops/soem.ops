@@ -19,6 +19,7 @@ ros.import("rtt_control_components")
 var double 	Ts = 0.001
 var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
 var string 	BASE_SLAVE_2 	= "Soem.Slave_1003"; # Wheel 3 and 4
+var string  ROBOT 			= "/sergio";
 
 var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	TWOPI 			= 2.0*3.141592
@@ -88,10 +89,11 @@ EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
 connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
-stream("EmergencyToRos.outmsg6", ros.topic("/sergio/emergency_switch"))
-stream("EmergencyToRos.outmsg5", ros.topic("/sergio/enable_switch"))
-stream("EmergencyToRos.outmsg4", ros.topic("/sergio/runstop"))
-
+# 6 wireles, 4 hardware, 5 safe
+# this works for now, should be modified for communication with ROS
+stream("EmergencyToRos.outmsg5", ros.topic(ROBOT+"/emergency_switch")); 
+stream("EmergencyToRos.outmsg6", ros.topic(ROBOT+"/enable_switch"))
+stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/runstop"))
 
 ### READ WHEEL ENCODERS ###
 loadComponent("BASE_ReadEncoders","SOEM::ReadEncodersTimeStamp")
