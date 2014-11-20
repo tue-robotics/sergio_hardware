@@ -14,7 +14,7 @@ addPeer("Supervisor","Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
 Tracing.vector_sizes = array (4.0, 4.0, 4.0); 
 Tracing.buffersize = buffersize
-Tracing.filename = "/home/amigo/ros/data/Ton_data/"+FILENAME;
+Tracing.filename = "/home/amigo/ros/data/Ton_data/trace_always/"+FILENAME;
 Tracing.Ts = Ts
 Tracing.configure
 

@@ -19,6 +19,7 @@ ros.import("rtt_control_components")
 var double 	Ts = 0.001
 var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
 var string 	BASE_SLAVE_2 	= "Soem.Slave_1003"; # Wheel 3 and 4
+var string  ROBOT 			= "/sergio";
 
 var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	TWOPI 			= 2.0*3.141592
