@@ -220,6 +220,24 @@ BASE_AddOffset.numberofinputs 	= 2
 setActivity("BASE_AddOffset",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_AddOffset.configure
 
+### THERMAL SENSOR ###
+loadComponent("BASE_ThermalSensor","FILTERS::Polynomials")
+addPeer("Supervisor","BASE_ThermalSensor")
+setActivity("BASE_ThermalSensor",0.1,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalSensor.vector_size = 1
+var uint32[] ORDER = 1;
+ORDER[0] = 2;
+BASE_ThermalSensor.orders = ORDER;
+BASE_ThermalSensor.configure
+BASE_ThermalSensor.coefficients1 	= array(128.1, -36.73, 1.465);
+
+### THERMAL SENSOR TO ROS ###
+loadComponent("BASE_ThermalToROS", "ROS::DoublesToROS");
+addPeer("Supervisor", "BASE_ThermalToROS")
+setActivity("BASE_ThermalToROS",0.1,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalToROS.NumberOfDoublesInVector = 1;
+BASE_ThermalToROS.configure;
+
 #### CONNECT COMPONENTS ####
 # Control loop
 connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
@@ -259,6 +277,10 @@ connect ("BASE_Controller.jointErrors", "BASE_Diagnostics.vec2", ConnPolicy() )
 connect ("BASE_SI2Bits.out", 			"BASE_Diagnostics.vec3", ConnPolicy() )
 stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 
+# Thermal sensor
+connect ("AnalogIns.out2", "BASE_ThermalSensor.in", ConnPolicy() )
+connect ("BASE_ThermalSensor.out", "BASE_ThermalToROS.in", ConnPolicy() )
+stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 
 #### START COMPONENTS ####
 # Control loop
@@ -275,6 +297,8 @@ Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # Safety and reference
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
 Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
 Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
