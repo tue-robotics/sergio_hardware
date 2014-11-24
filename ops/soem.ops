@@ -27,7 +27,6 @@ var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
 var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
 var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
 
-var ints SMALLER = ints(1, 1, 1, 1, 1, 1)
 
 #### LOAD SUPERVISOR ###
 loadComponent("Supervisor","SUPERVISORY::Supervisor")
@@ -38,6 +37,10 @@ stream("Supervisor.rosshutdown", ros.topic("/sergio/etherCAT_shutdown"));
 stream("Supervisor.rosetherCATenabled", ros.topic("/sergio/etherCAT_enabled")); 
 stream("Supervisor.hardware_status", ros.topic("/sergio/hardware_status")); 
 stream("Supervisor.dashboardCmd", ros.topic("/sergio/dashboard_ctrlcmds")); 
+
+#### Create Robot Object ####
+var strings DEFAULT_PART_NAMES = strings("base"); #,"torso","left_arm", "right_arm", "head")
+Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
 loadComponent("Soem","soem_master::SoemMasterComponent")
@@ -84,7 +87,7 @@ EmergencyToRos.numberofoutports = 3;
 EmergencyToRos.input_sizes = array(3.0);
 EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0);
 EmergencyToRos.bound_values = array(2.5, 2.5, 2.5);
-EmergencyToRos.smaller = SMALLER;
+EmergencyToRos.smaller = ints(1, 1, 1);
 EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
