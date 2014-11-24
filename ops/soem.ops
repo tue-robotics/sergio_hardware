@@ -27,7 +27,6 @@ var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
 var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
 var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
 
-var ints SMALLER = ints(1, 1, 1, 1, 1, 1)
 
 #### LOAD SUPERVISOR ###
 loadComponent("Supervisor","SUPERVISORY::Supervisor")
@@ -39,6 +38,10 @@ stream("Supervisor.rosetherCATenabled", ros.topic("/sergio/etherCAT_enabled"));
 stream("Supervisor.hardware_status", ros.topic("/sergio/hardware_status")); 
 stream("Supervisor.dashboardCmd", ros.topic("/sergio/dashboard_ctrlcmds")); 
 
+#### Create Robot Object ####
+var strings DEFAULT_PART_NAMES = strings("base"); #,"torso","left_arm", "right_arm", "head")
+Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
+
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
 loadComponent("Soem","soem_master::SoemMasterComponent")
 addPeer("Supervisor","Soem")
@@ -47,28 +50,28 @@ setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 
 connect (BASE_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
 
-#### LOAD COMPONENT TO ENABLE ANALOG INS ###
+#### LOAD COMPONENT TO ENABLE ANALOG INS (only force sensors are used)###
 loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","AnalogIns")
-AnalogIns.numberofinports = 4;
-AnalogIns.input_sizes = array(3.0, 3.0, 3.0, 3.0)
-AnalogIns.numberofoutports = 2;
-AnalogIns.output_sizes = array(6.0, 6.0)
-AnalogIns.input_positions = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+AnalogIns.numberofinports = 2;
+AnalogIns.input_sizes = array(3.0, 3.0)
+AnalogIns.numberofoutports = 3;
+AnalogIns.output_sizes = array(1.0, 1.0, 3.0); # battery[1], thermal[2], emergency[4,5,6]
+AnalogIns.input_positions = array(1.0, 1.0, 0.0, 1.0, 1.0, 1.0)
 AnalogIns.direct_to_ROS = false
 AnalogIns.configure
 setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
 
 connect ("AnalogIns.in1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
 connect ("AnalogIns.in2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
-connect ("AnalogIns.in3",BASE_SLAVE_1 +".positionSensors", ConnPolicy() );
-connect ("AnalogIns.in4",BASE_SLAVE_2 +".positionSensors", ConnPolicy() );
+#connect ("AnalogIns.in3",BASE_SLAVE_1 +".positionSensors", ConnPolicy() );
+#connect ("AnalogIns.in4",BASE_SLAVE_2 +".positionSensors", ConnPolicy() );
 
 #### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
 loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
 addPeer("Supervisor", "AnalogInsFToRos")
 setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
-AnalogInsFToRos.NumberOfDoublesInVector = 6;
+AnalogInsFToRos.NumberOfDoublesInVector = 1;
 AnalogInsFToRos.configure;
 
 connect ("AnalogIns.out1", "AnalogInsFToRos.in", ConnPolicy() )
@@ -80,20 +83,21 @@ loadComponent("EmergencyToRos", "MATH::SmallerLarger");
 addPeer("Supervisor", "EmergencyToRos")
 setActivity("EmergencyToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
 EmergencyToRos.numberofinports = 1;
-EmergencyToRos.numberofoutports = 6;
-EmergencyToRos.input_sizes = array(6.0);
-EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-EmergencyToRos.bound_values = array(1.0, 1.0, 1.0, 2.5, 2.5, 2.5);
-EmergencyToRos.smaller = SMALLER;
+EmergencyToRos.numberofoutports = 3;
+EmergencyToRos.input_sizes = array(3.0);
+EmergencyToRos.output_sizes = array(1.0, 1.0, 1.0);
+EmergencyToRos.bound_values = array(2.5, 2.5, 2.5);
+EmergencyToRos.smaller = ints(1, 1, 1);
 EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
-connect ("AnalogIns.out1", "EmergencyToRos.in1", ConnPolicy() )
+connect ("AnalogIns.out3", "EmergencyToRos.in1", ConnPolicy() )
 # 6 wireles, 4 hardware, 5 safe
 # this works for now, should be modified for communication with ROS
-stream("EmergencyToRos.outmsg5", ros.topic(ROBOT+"/emergency_switch")); 
-stream("EmergencyToRos.outmsg6", ros.topic(ROBOT+"/enable_switch"))
-stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/runstop"))
+stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/emergency_switch")); 
+stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/enable_switch"))
+stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/runstop"))
+
 
 ### READ WHEEL ENCODERS ###
 loadComponent("BASE_ReadEncoders","SOEM::ReadEncodersTimeStamp")
