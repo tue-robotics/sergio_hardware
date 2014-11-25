@@ -12,13 +12,13 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var int 	BODYNUMBER 			= 1
-var string 	BODYPARTNAME 			= "base"
-var bool 	HOMEABLE 			= false
-#var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-#var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
-var string 	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
-var string 	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
+var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var int BODYNUMBER 			= 1
+var string BODYPARTNAME 	= "base"
+var bool HOMEABLE 			= false
+var bool HOMINGMANDATORY	= false
+var bool RESETTABLE			= true
 	# System properties
 var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
@@ -37,9 +37,9 @@ var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
 var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
-var array 	MAX_ERRORS     		= array (0.5, 0.4, 1.0); # m/s r/s
+var array 	MAX_ERRORS     		= array (0.8, 0.8, 1.0); # m/s r/s
 var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
-var double 	MAX_SATURATION_TIME = 2.0;
+var double 	MAX_SATURATION_TIME = 1.0;
 	# Reference
 var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
 var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
@@ -70,8 +70,8 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 #	var array NOTCH_POLE_FREQ			= array (38.0, 38.0, 38.0)
 #	var array NOTCH_POLE_DAMP			= array (1.0, 1.0, 1.0)
 	
-### NameBodyPart ###
-Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
+### AddBodyPart ###
+Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
 
 ### ENCODER TO VELOCITY ###
 loadComponent("BASE_EncoderToVelocity","MATH::Differentiate")
@@ -222,6 +222,26 @@ BASE_AddOffset.numberofinputs 	= 2
 setActivity("BASE_AddOffset",0.0,HighestPriority,ORO_SCHED_RT)
 BASE_AddOffset.configure
 
+### THERMAL SENSOR ###
+loadComponent("BASE_ThermalSensor","FILTERS::Polynomials")
+addPeer("Supervisor","BASE_ThermalSensor")
+setActivity("BASE_ThermalSensor",0.1,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalSensor.vector_size = 1
+var uint32[] ORDER = 1;
+ORDER[0] = 2;
+BASE_ThermalSensor.orders = ORDER;
+BASE_ThermalSensor.configure
+BASE_ThermalSensor.coefficients1 	= array(128.1, -36.73, 1.465);
+
+### THERMAL SENSOR TO ROS ###
+loadComponent("BASE_ThermalToROS", "ROS::DoublesToROS");
+addPeer("Supervisor", "BASE_ThermalToROS")
+setActivity("BASE_ThermalToROS",0.1,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalToROS.NumberOfDoublesInVector = 1;
+BASE_ThermalToROS.configure;
+
+
+
 #### CONNECT COMPONENTS ####
 # Control loop
 connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
@@ -261,6 +281,10 @@ connect ("BASE_Controller.jointErrors", "BASE_Diagnostics.vec2", ConnPolicy() )
 connect ("BASE_SI2Bits.out", 			"BASE_Diagnostics.vec3", ConnPolicy() )
 stream ("BASE_Diagnostics.diagnostics", ros.topic("/sergio/base_diagnostics"));
 
+# Thermal sensor
+connect ("AnalogIns.out2", "BASE_ThermalSensor.in", ConnPolicy() )
+connect ("BASE_ThermalSensor.out", "BASE_ThermalToROS.in", ConnPolicy() )
+stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 
 #### START COMPONENTS ####
 # Control loop
@@ -277,6 +301,8 @@ Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
 # Safety and reference
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
 Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
 Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
