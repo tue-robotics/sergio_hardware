@@ -9,8 +9,10 @@
 #### DECLARATION OF PARAMETERS ####
 var double TS 				= 0.001
 var int BODYNUMBER 			= 5
-var string BODYPARTNAME 	= "head"; # for now, because all dynamixels are connected
+var string BODYPARTNAME 	= "head"
 var bool HOMEABLE 			= false
+var bool HOMINGOBLIGATORY	= false
+var bool RESETTABLE			= false
 var string DYNAMIXEL_SLAVE	= "Soem.Slave_1005"
 var string ROBOT 			= "/sergio"
 
@@ -33,8 +35,8 @@ var int TILT_MIN 		= -97	; # -0.5 *RAD_TO_STEP
 var int TILT_MAX 		= 171	; #  0.88*RAD_TO_STEP
 var int TILT_SPEED 	 	= 25
 
-### NameBodyPart ###
-Supervisor.NameBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE)
+### AddBodyPart ###
+Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
 
 ## Dynamixel controller
 loadComponent("DYNAMIXEL_Controller", "DYNAMIXEL::DynamixelController")
