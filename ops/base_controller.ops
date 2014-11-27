@@ -157,6 +157,16 @@ BASE_AnalogOuts.output_sizes 				= array (2.0, 2.0)
 BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 1.0, 1.0)
 BASE_AnalogOuts.configure;
 
+### ERROR FILTER (used to filter out missed encoder counts) ###
+loadComponent("BASE_ErrorFilter","FILTERS::SecondOrderLowPasses")
+addPeer("Supervisor","BASE_ErrorFilter")
+setActivity("BASE_ErrorFilter",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_ErrorFilter.vector_size	= 4
+BASE_ErrorFilter.sampling_time	= Ts
+BASE_ErrorFilter.pole_frequency	= array(100.0, 	100.0, 	100.0, 	100.0);
+BASE_ErrorFilter.pole_damping	= array(0.7, 	0.7, 	0.7, 	0.7);
+BASE_ErrorFilter.configure
+
 ### Safety ###
 loadComponent("BASE_Safety","SUPERVISORY::Safety")
 addPeer("Supervisor","BASE_Safety")
@@ -257,7 +267,8 @@ connect ("BASE_AnalogOuts.out1", 		BASE_SLAVE_1 +".analogOuts", ConnPolicy() );
 connect ("BASE_AnalogOuts.out2", 		BASE_SLAVE_2 +".analogOuts", ConnPolicy() );
 
 # Safety
-connect ("BASE_Controller.jointErrors",	"BASE_Safety.jointErrors", 	ConnPolicy() ); # jointerrors
+connect ("BASE_Controller.jointErrors",			"BASE_ErrorFilter.in", 			ConnPolicy() ); # jointerrors
+connect ("BASE_ErrorFilter.out",				"BASE_Safety.jointErrors", 		ConnPolicy() ); # jointerrors
 connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
 connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable",			"BASE_Controller.enable", 	ConnPolicy() ); # error
@@ -289,22 +300,23 @@ stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
-Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
-#Supervisor.AddAllwaysOnPeer ("BASE_Notch")
-Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
+Supervisor.AddEnabledPeer 	("BASE_EncoderToVelocity",	BODYNUMBER))
+Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
+Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpace", 	BODYNUMBER)
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AddOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOuts")
+# Reference
+Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
+# Safety 
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
+Supervisor.AddEnabledPeer  	("BASE_ErrorFilter", 		BODYNUMBER)
+Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER)
 # Diagnostics
 Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
-# Safety and reference
-Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
-Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
-Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
-Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
-Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 
 
