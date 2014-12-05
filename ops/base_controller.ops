@@ -12,13 +12,16 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+#var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
+#var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var string 	BASE_SLAVE_1 		= "Soem.Slave_1006"
+var string 	BASE_SLAVE_2 		= "Soem.Slave_1007"
 var int BODYNUMBER 			= 1
 var string BODYPARTNAME 	= "base"
 var bool HOMEABLE 			= false
 var bool HOMINGMANDATORY	= false
 var bool RESETTABLE			= true
+
 	# System properties
 var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
@@ -33,6 +36,7 @@ var double 	ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
 var double 	DISTBETWEENFRONTANDREARWHEELS = 0.530; 
 var double 	DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;  
 var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
+
 	# Safety
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
@@ -40,6 +44,7 @@ var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.141
 var array 	MAX_ERRORS     		= array (0.8, 0.8, 1.0); # m/s r/s
 var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
 var double 	MAX_SATURATION_TIME = 1.0;
+var double	MAX_TEMPERATURE 	= 30.0; 			# Temperature of the motor (set to 30 to see if the motors heat up at all!!)
 	# Reference
 var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
 var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
@@ -176,6 +181,7 @@ BASE_Safety.NM					= N_MOTORS
 BASE_Safety.maxJointErrors		= MAX_ERRORS
 BASE_Safety.motorSaturations	= MAX_OUTPUT
 BASE_Safety.maxConSatTime		= MAX_SATURATION_TIME
+BASE_Safety.additional_safeties = strings("motor_temperature");
 BASE_Safety.configure
 
 ### READ REFERENCE VELOCITIES ###
@@ -250,6 +256,17 @@ setActivity("BASE_ThermalToROS",0.1,LowestPriority,ORO_SCHED_OTHER)
 BASE_ThermalToROS.NumberOfDoublesInVector = 1;
 BASE_ThermalToROS.configure;
 
+#### THERMAL SENSOR TO SAFETY ###
+loadComponent("BASE_ThermalToSafety", "MATH::SmallerLarger");
+addPeer("Supervisor", "BASE_ThermalToSafety")
+setActivity("BASE_ThermalToSafety",0.0,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalToSafety.numberofinports = 1;
+BASE_ThermalToSafety.input_sizes = array(1.0);
+BASE_ThermalToSafety.bound_values = array(30.0);
+BASE_ThermalToSafety.smaller = ints(1);
+BASE_ThermalToSafety.direct_to_ROS = false;
+BASE_ThermalToSafety.configure;
+
 
 
 #### CONNECT COMPONENTS ####
@@ -270,6 +287,8 @@ connect ("BASE_AnalogOuts.out2", 		BASE_SLAVE_2 +".analogOuts", ConnPolicy() );
 connect ("BASE_Controller.jointErrors",			"BASE_ErrorFilter.in", 			ConnPolicy() ); # jointerrors
 connect ("BASE_ErrorFilter.out",				"BASE_Safety.jointErrors", 		ConnPolicy() ); # jointerrors
 connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
+connect ("BASE_ThermalSensor.out",	"BASE_ThermalToSafety.in1",ConnPolicy() )
+connect ("BASE_ThermalToSafety.out1",	"BASE_Safety.motor_temperature",ConnPolicy() )
 connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable",			"BASE_Controller.enable", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable", 			BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
@@ -300,7 +319,7 @@ stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
-Supervisor.AddEnabledPeer 	("BASE_EncoderToVelocity",	BODYNUMBER))
+Supervisor.AddEnabledPeer 	("BASE_EncoderToVelocity",	BODYNUMBER)
 Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
 Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpace", 	BODYNUMBER)
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
@@ -312,6 +331,7 @@ Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
 # Safety 
 Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
 Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToSafety")
 Supervisor.AddEnabledPeer  	("BASE_ErrorFilter", 		BODYNUMBER)
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER)
 # Diagnostics
