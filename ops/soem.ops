@@ -34,12 +34,12 @@ loadComponent("Supervisor","SUPERVISORY::Supervisor")
 Supervisor.ebuttonorder	= strings("Wireless","Wired","Endswitch","Reset")
 Supervisor.configure
 setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
-#stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
-stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/runstop")); # to be removed
+stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
+#stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/runstop")); # to be removed
 stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
 stream("Supervisor.ebuttonEndswitch", ros.topic(ROBOT+"/ebuttonEndswitch"));
-#stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/ebuttonReset"));
-stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/emergency_switch"));  # to be removed
+stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/ebuttonReset"));
+#stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/emergency_switch"));  # to be removed
 stream("Supervisor.rosshutdown", ros.topic(ROBOT+"/etherCAT_shutdown")); 
 stream("Supervisor.rosetherCATenabled", ros.topic(ROBOT+"/etherCAT_enabled")); 
 stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status")); 
@@ -99,8 +99,8 @@ EmergencyToRos.configure;
 connect ("AnalogIns.out3", "EmergencyToRos.in1", ConnPolicy() )
 stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/ebuttonEndswitch"))
 stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/ebuttonWired")); 
-#stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/ebuttonReset"))
-#stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/ebuttonWireless"))
+stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/ebuttonReset"))
+stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/ebuttonWireless"))
 
 # remove following connections when dashboard is implemented
 stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/emergency_switch"))
