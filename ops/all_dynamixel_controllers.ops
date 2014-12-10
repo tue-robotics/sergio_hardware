@@ -31,8 +31,8 @@ var int PAN_SPEED 		= 50;
 # head tilt joint					(range 190~570)
 var int TILT_ID 		= 2 ; 		# Dynamixel id
 var int TILT_OFFSET 	= 380; 		# Center tilt dynamixel
-var int TILT_MIN 		= -190; 	# -2.154 *RAD_TO_STEP
-var int TILT_MAX 		= 190; 		#  2.154*RAD_TO_STEP
+var int TILT_MIN 		= -190; 	# -0.973 *RAD_TO_STEP
+var int TILT_MAX 		= 190; 		#  0.973*RAD_TO_STEP
 var int TILT_SPEED 	 	= 25;
 
 # laser tilt joint
