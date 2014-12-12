@@ -2,7 +2,7 @@
 ### VARIABLES
 ############ Settings #######################################
 
-var string	FILENAME 		= "data.dat"
+var string	FILENAME 		= "sergio.dat"
 var int buffersize 			= 10000;
 	# Part settings
 var double 	Ts 				= 0.001
