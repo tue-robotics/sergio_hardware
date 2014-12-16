@@ -12,10 +12,10 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
-#var string 	BASE_SLAVE_1 		= "Soem.Slave_1006"
-#var string 	BASE_SLAVE_2 		= "Soem.Slave_1007"
+#var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
+#var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var string 	BASE_SLAVE_1 		= "Soem.Slave_1006"
+var string 	BASE_SLAVE_2 		= "Soem.Slave_1007"
 var int BODYNUMBER 			= 1
 var string BODYPARTNAME 	= "base"
 var bool HOMEABLE 			= false
@@ -78,16 +78,16 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 ### AddBodyPart ###
 Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
 
-### ENCODER TO VELOCITY ###
-loadComponent("BASE_EncoderToVelocity","MATH::Differentiate")
-addPeer("Supervisor","BASE_EncoderToVelocity")
-setActivity("BASE_EncoderToVelocity",0.0,HighestPriority,ORO_SCHED_RT)
-BASE_EncoderToVelocity.vector_size = 3;
-BASE_EncoderToVelocity.sampling_time = Ts;
-BASE_EncoderToVelocity.use_time_check = true;
-BASE_EncoderToVelocity.allowed_variation_Ts = Ts*0.4;
-BASE_EncoderToVelocity.use_discrete = true;
-BASE_EncoderToVelocity.configure
+### POSITION TO ODOM ###
+loadComponent("BASE_MotorToJointSpacePos","MATH::MatrixTransform")
+addPeer("Supervisor","BASE_MotorToJointSpacePos")
+setActivity("BASE_MotorToJointSpacePos",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_MotorToJointSpacePos.Nrows = 3
+BASE_MotorToJointSpacePos.Ncolumns = 4
+BASE_MotorToJointSpacePos.configure
+BASE_MotorToJointSpacePos.function1 = array (-0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpacePos.function2 = array ( 0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpacePos.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR)
 
 ### VELOCITY TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")
@@ -271,9 +271,8 @@ BASE_ThermalToSafety.configure;
 
 #### CONNECT COMPONENTS ####
 # Control loop
-connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
-connect ("BASE_MotorToJointSpace.out",	"BASE_EncoderToVelocity.in", ConnPolicy() ); #[m \n m \n rad]
-connect ("BASE_EncoderToVelocity.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
+connect ("BASE_ReadEncoders.vel",	"BASE_MotorToJointSpace.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpace.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
 connect ("BASE_Controller.out",			"BASE_JointToMotorSpace.in", ConnPolicy() )
 #connect ("BASE_Notch.out",				"BASE_JointToMotorSpace.in", ConnPolicy() )
 connect ("BASE_JointToMotorSpace.out",	"BASE_SI2Bits.in", ConnPolicy() )
@@ -303,7 +302,8 @@ stream ("BASE_ReadReferences.cmd_vel", 	ros.topic("/sergio/base/references"));
 connect ("BASE_ReadReferences.out",		"BASE_Controller.ref_in", ConnPolicy() );
 
 # Diagnostics
-connect ("BASE_MotorToJointSpace.out", 	"BASE_OdometryPublisher.pos", ConnPolicy() );
+connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpacePos.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpacePos.out", 	"BASE_OdometryPublisher.pos", ConnPolicy() );
 stream ("BASE_OdometryPublisher.odom", 	ros.topic("/sergio/base/measurements"));
 stream ("BASE_OdometryPublisher.reset", ros.topic("/sergio/base/reset_odometry"));
 connect ("BASE_ReadReferences.out", 	"BASE_Diagnostics.vec1", ConnPolicy() )
@@ -319,7 +319,6 @@ stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
-Supervisor.AddEnabledPeer 	("BASE_EncoderToVelocity",	BODYNUMBER)
 Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
 Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpace", 	BODYNUMBER)
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
@@ -335,6 +334,7 @@ Supervisor.AddAllwaysOnPeer ("BASE_ThermalToSafety")
 Supervisor.AddEnabledPeer  	("BASE_ErrorFilter", 		BODYNUMBER)
 Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER)
 # Diagnostics
+Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpacePos")
 Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")

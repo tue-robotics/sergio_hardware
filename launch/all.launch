@@ -2,8 +2,10 @@
   <include file="$(find rtt_ros)/launch/deployer.launch" ns="sergio">
     <arg name="DEPLOYER_ARGS" value="gnulinux
     HARDWARE
-    -s $(find sergio_hardware)/ops/soem.ops
+    -s $(find sergio_hardware)/ops/soem_base_torso.ops
     -s $(find sergio_hardware)/ops/base_controller.ops
+	-s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
+	-s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops
     
     "/>
     <arg name="NAME" value = "hardware"/>

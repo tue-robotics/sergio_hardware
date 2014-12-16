@@ -23,7 +23,7 @@ Tracing.configure
 connect ("BASE_Controller.jointErrors",	"Tracing.in1", ConnPolicy() );
 connect ("BASE_Controller.out",			"Tracing.in2", ConnPolicy() );
 #connect ("BASE_Notch.out",			"Tracing.in1", ConnPolicy() );
-connect ("BASE_ReadEncoders.out",		"Tracing.in3", ConnPolicy() );
+connect ("BASE_ReadEncoders.vel",		"Tracing.in3", ConnPolicy() );
 
 # start components
 Supervisor.AddEnabledPeer  	("Tracing",			BODYNUMBER )
