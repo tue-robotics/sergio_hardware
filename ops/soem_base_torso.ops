@@ -16,10 +16,11 @@ import("amigo_hardware")
 ros.import("rtt_control_components")
 
 #### DECLARATION OF PARAMETERS ####
-var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
-var string 	BASE_SLAVE_2 	= "Soem.Slave_1003"; # Wheel 3 and 4
+var double 	Ts 				= 0.001
 var string  ROBOT 			= "/sergio";
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
 
 var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
 var double 	TWOPI 			= 2.0*3.141592
@@ -39,7 +40,7 @@ stream("Supervisor.hardware_status", ros.topic("/sergio/hardware_status"));
 stream("Supervisor.dashboardCmd", ros.topic("/sergio/dashboard_ctrlcmds")); 
 
 #### Create Robot Object ####
-var strings DEFAULT_PART_NAMES = strings("base"); #,"torso","left_arm", "right_arm", "head")
+var strings DEFAULT_PART_NAMES = strings("torso"); #,"torso","left_arm", "right_arm", "head")
 Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
@@ -50,7 +51,7 @@ setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 
 connect (BASE_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
 
-#### LOAD COMPONENT TO ENABLE ANALOG INS (only force sensors are used)###
+#### LOAD COMPONENT TO ENABLE ANALOG INS BASE (only force sensors are used)###
 loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","AnalogIns")
 AnalogIns.numberofinports = 2;
@@ -117,9 +118,24 @@ connect (BASE_SLAVE_2+".encoder2","BASE_ReadEncoders.enc4_in", ConnPolicy() ); #
 connect (BASE_SLAVE_1+".timeStamp","BASE_ReadEncoders.time1_in", ConnPolicy() ); #time1[-]
 connect (BASE_SLAVE_2+".timeStamp","BASE_ReadEncoders.time2_in", ConnPolicy() ); #time2[-]
 
+### READ TORSO ENCODERS ###
+var double GEARBOX = 13/3; # Motor to drive train
+
+loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
+addPeer("Supervisor","TORSO_ReadEncoders")
+setActivity("TORSO_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_ReadEncoders.encoderbits = 65536
+TORSO_ReadEncoders.enc2SI = array(1.0, 1.0); 
+TORSO_ReadEncoders.configure
+
+connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
+connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
+
+
 #### START COMPONENTS ####
 Supervisor.AddAllwaysOnPeer ("Soem")
 Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
+Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("AnalogIns")
 Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
 Supervisor.AddAllwaysOnPeer ("EmergencyToRos")

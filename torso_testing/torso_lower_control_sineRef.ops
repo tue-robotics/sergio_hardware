@@ -30,52 +30,45 @@ var strings JOINT_NAMES         = strings( "torso_lower_spindle","torso_upper_sp
 var array MINPOS                = array(-140000.0, -150000.0); # safety range:
 var array MAXPOS                = array(140000.0, 150000.0);   #   TODO update with linear sensor!
 var array MAXVEL                = array(80000.0, 80000.0); #range ~400000 bit
-var array MAXACC                = array(40000.0, 40000.0); # 2 secs to full speed
+var array MAXACC                = array(60000.0, 40000.0); # 2 secs to full speed
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
 #var array   MAX_VELOCITIES      = array (0.0, 0.0)
-var array   MAX_ERRORS          = array (40000.0, 40000.0); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
-var array   MAX_OUTPUT          = array (10.0, 200.0);
-var double  MAX_SATURATION_TIME = 1.0;
+var array   MAX_ERRORS          = array (80000.0, 40000.0); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
+var array   MAX_OUTPUT          = array (1000.0, 200.0);
+var double  MAX_SATURATION_TIME = 2.0;
 
-# Cotroller parameters used for frf measurement
-#    var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
-#    var array   GAINS                       = array (0.0, 0.0025)
-#    var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 0.01)
-#    var array   LEAD_FREQUENCY              = array (0.0, 1.0)
-#    var array   LAG_FREQUENCY               = array (0.0, 10.0)
-    #var array   LOWPASS_FREQUENCY           = array (500.0, 500.0, 500.0, 500.0)
-    #var array   LOWPASS_DAMPING             = array (0.7, 0.7, 0.7, 0.7)
-
- # Controller, stable (~7.5 Hz)
+# Cotroller parameters
+#    var strings CONTROLLERS                 = strings ("LeadLag"); #"LeadLag","WeakIntegrator")
+#    var array   GAINS                       = array (0.05, 0.0)
+#    #var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 0.0)
+#    var array   LEAD_FREQUENCY              = array (1.0, 0.0)
+#    var array   LAG_FREQUENCY               = array (10.0, 0.0)
+#	#var array   LOWPASS_FREQUENCY           = array (500.0, 500.0, 500.0, 500.0)
+#	#var array   LOWPASS_DAMPING             = array (0.7, 0.7, 0.7, 0.7)
+	
+ # from bode 
 var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
-var array   GAINS                       = array (0.0, 0.025)
-var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 2.0)
-var array   LEAD_FREQUENCY              = array (0.0, 3.33)
-var array   LAG_FREQUENCY               = array (0.0, 30.0)
-#var array   LOWPASS_FREQUENCY           = array (500.0, 500.0, 500.0, 500.0)
-#var array   LOWPASS_DAMPING             = array (0.7, 0.7, 0.7, 0.7)
+var array   GAINS                       = array (0.03, 0.0)
+var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 0.0)
+var array   LEAD_FREQUENCY              = array (3.33, 0.0)
+var array   LAG_FREQUENCY               = array (30.0, 0.0)
  
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
 
 ### Loading Components ###
-
 ### SOURCES ###
-#loadComponent("TORSO_Constant","SOURCES::ConstantSignal")
-#addPeer("Supervisor","TORSO_Constant")
-#setActivity("TORSO_Constant",Ts,HighestPriority,ORO_SCHED_RT)
-#TORSO_Constant.value = array(0.0, 0.0);
-#TORSO_Constant.vector_size = 2;
-#TORSO_Constant.configure
-
-#Reading spindle setpoints
-loadComponent("TORSO_ReadReferences","ROS::JointStateToDoubles")
-addPeer("Supervisor","TORSO_ReadReferences")
-setActivity("TORSO_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
-TORSO_ReadReferences.vector_size          = N_JOINTS
-TORSO_ReadReferences.configure
+loadComponent("TORSO_Sine","SOURCES::SineWave")
+addPeer("Supervisor","TORSO_Sine")
+setActivity("TORSO_Sine",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Sine.frequency    = array(0.1, 0.1);
+TORSO_Sine.amplitude    = array(120000.0, 1.0);
+TORSO_Sine.phase        = array(0.0, 0.0);
+TORSO_Sine.bias         = array(0.0, 0.0);
+TORSO_Sine.vector_size  = 2;
+TORSO_Sine.configure
 
 #Loading Reference Generator
 loadComponent("TORSO_ReferenceGenerator","SOURCES::ReferenceGenerator")
@@ -184,8 +177,10 @@ TORSO_False.configure
 
 #### CONNECT COMPONENTS ####
 # disable lower torso
-connect ("TORSO_False.out","TORSO_EnableDO.in1", ConnPolicy() )
-connect ("TORSO_False.out","TORSO_BrakeDO.in1", ConnPolicy() )
+#connect ("TORSO_False.out","TORSO_EnableDO.in1", ConnPolicy() )
+#connect ("TORSO_False.out","TORSO_BrakeDO.in1", ConnPolicy() )
+connect ("TORSO_False.out","TORSO_EnableDO.in2", ConnPolicy() )
+connect ("TORSO_False.out","TORSO_BrakeDO.in2", ConnPolicy() )
 
 # control loop
 connect ("TORSO_ReadEncoders.out","TORSO_Controller.pos_in", ConnPolicy())
@@ -199,17 +194,16 @@ connect ("TORSO_SI2Bits.out",               "TORSO_Safety.controlEffort", ConnPo
 connect ("TORSO_Safety.error",              "Supervisor.base_error",    ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             "TORSO_Controller.enable",   ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             TORSO_SLAVE_1+".enablePort", ConnPolicy() )
-connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in2", ConnPolicy() )
-connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in2", ConnPolicy() )
+connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in1", ConnPolicy() )
+connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in1", ConnPolicy() )
+#connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in2", ConnPolicy() )
+#connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in2", ConnPolicy() )
 connect ("TORSO_EnableDO.digital_out",      TORSO_SLAVE_1+".digitalOuts", ConnPolicy() )
 connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() )
 
 ## References 
-    # contstant
-#connect ("TORSO_Constant.out","TORSO_Controller.ref_in", ConnPolicy())
     # reference generator
-stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
-connect ("TORSO_ReadReferences.pos_out",        "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+connect ("TORSO_Sine.out",                  "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 connect ("TORSO_ReadEncoders.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
 connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in",                ConnPolicy() ); # Reference
 
@@ -227,6 +221,7 @@ stream ("TORSO_ENCToRos.out2", ros.topic("/sergio/torso/enc_2"));
 
 #### START COMPONENTS ####
 # Control
+Supervisor.AddEnabledPeer("TORSO_Controller",             BODYNUMBER)
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
 
@@ -236,8 +231,7 @@ Supervisor.AddAllwaysOnPeer("TORSO_BrakeDO")
 Supervisor.AddAllwaysOnPeer("TORSO_False")
 
 # reference
-#Supervisor.AddAllwaysOnPeer  ("TORSO_Constant")
-Supervisor.AddEnabledPeer    ("TORSO_ReadReferences",             BODYNUMBER)
+Supervisor.AddEnabledPeer    ("TORSO_Sine",             BODYNUMBER)
 Supervisor.AddEnabledPeer    ("TORSO_ReferenceGenerator",             BODYNUMBER)
 
 # dataflow to ros
@@ -246,7 +240,6 @@ Supervisor.AddAllwaysOnPeer("TORSO_ControlToRos")
 Supervisor.AddAllwaysOnPeer("TORSO_ENCToRos")
 
 # enable
-Supervisor.AddEnabledPeer 	 ("TORSO_Controller", 		BODYNUMBER)
 Supervisor.AddEnabledPeer    ("TORSO_Safety",             BODYNUMBER)
 
 
