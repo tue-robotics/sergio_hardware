@@ -13,8 +13,9 @@ var double Ts 			= 0.001
 var int BODYNUMBER 		= 1
 var string BODYNAME 	= "base"
 var bool HOMEABLE 		= false
-var string  TORSO_SLAVE_1   = "Soem.Slave_1002"; # torso fpga, motors
-var string 	TORSO_SLAVE_2 	= "Soem.Slave_1003"; # brakes
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
 var int ENCODERBITS = 65536;							# ?????????????????
@@ -39,13 +40,20 @@ var array   MAX_OUTPUT          = array (10.0, 200.0);
 var double  MAX_SATURATION_TIME = 1.0;
 
 # Cotroller parameters
-var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
-var array   GAINS                       = array (0.0, 0.0025)
-var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 0.01)
-var array   LEAD_FREQUENCY              = array (0.0, 1.0)
-var array   LAG_FREQUENCY               = array (0.0, 10.0)
+#var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
+#var array   GAINS                       = array (0.0, 0.0025)
+#var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 0.01)
+#var array   LEAD_FREQUENCY              = array (0.0, 1.0)
+#var array   LAG_FREQUENCY               = array (0.0, 10.0)
 #var array   LOWPASS_FREQUENCY           = array (500.0, 500.0, 500.0, 500.0)
 #var array   LOWPASS_DAMPING             = array (0.7, 0.7, 0.7, 0.7)
+
+# Controller parameters based on bode
+var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
+var array   GAINS                       = array (0.0, 0.025)
+var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.0, 2.0)
+var array   LEAD_FREQUENCY              = array (0.0, 3.33)
+var array   LAG_FREQUENCY               = array (0.0, 30.0)
  
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
@@ -85,7 +93,7 @@ TORSO_Controller.vector_size = 2;
 TORSO_Controller.sampling_time = Ts;
 TORSO_Controller.controllers = CONTROLLERS;
 TORSO_Controller.gains = GAINS;
-#TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
+TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 TORSO_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
 TORSO_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
 #TORSO_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
@@ -209,7 +217,7 @@ stream ("TORSO_ENCToRos.out2", ros.topic("/sergio/torso/enc_2"));
 
 #### START COMPONENTS ####
 # Control
-Supervisor.AddAllwaysOnPeer("TORSO_Controller")
+Supervisor.AddEnabledPeer("TORSO_Controller",             BODYNUMBER)
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
 

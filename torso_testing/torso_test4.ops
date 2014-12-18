@@ -13,7 +13,9 @@ var double Ts 			= 0.001
 var int BODYNUMBER 		= 2
 var string BODYNAME 	= "torso"
 var bool HOMEABLE 		= false
-var string 	TORSO_SLAVE_1 	= "Soem.Slave_1002"; # torso motors
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
 var int ENCODERBITS = 65536;							# ?????????????????
@@ -121,7 +123,7 @@ connect ("TORSO_Outputs.brake2","TORSO_BrakeDO.in2", ConnPolicy() )
 connect ("TORSO_True.out",TORSO_SLAVE_1+".enablePort", ConnPolicy() )
 connect ("TORSO_MotorAO.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 connect ("TORSO_EnableDO.digital_out",TORSO_SLAVE_1+".digitalOuts", ConnPolicy() )
-connect ("TORSO_BrakeDO.digital_out","Soem.Slave_1003.bits", ConnPolicy() )
+connect ("TORSO_BrakeDO.digital_out",TORSO_SLAVE_2+".bits", ConnPolicy() )
 
 # output from pera
 connect ("TORSO_ReadEncoders.out","TORSO_Outputs.enc", ConnPolicy() )
