@@ -5,6 +5,7 @@
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <rtt/Logger.hpp>
+#include <sensor_msgs/JointState.h>
 
 using namespace std;
 
@@ -24,9 +25,9 @@ namespace SERGIOCUSTOM
 /**
    * @brief A Component that converts spindle lenth to joint angles or vice versa.
    *
-   * The component takes two inputs (angles or lengths) and results in two
-   * outputs (angles or lengths). When the output are angles an additional
-   * output conataining 3 joint angles can be used.
+   * The component converts 2 spindle length inputs to 2 angle outputs and
+   * optional an extra 3 angle outputs. The component can also be used to
+   * convert 3 angle inputs to 2 spindle lengt outputs.
    *
    * @param * spindle_to_angle [true] - input length to output angle
    *        * output_knee_angle [false] - use additional output with 3 joint angles
@@ -40,15 +41,15 @@ namespace SERGIOCUSTOM
         // Declaring input- and output_ports
         InputPort<doubles> inport;
         OutputPort<doubles> outport;
-        OutputPort<doubles> outport_angles;
+        OutputPort<sensor_msgs::JointState> outport_joints;
 
         // Declaring properties
         bool spindle_to_angle;
-        bool output_knee_angle;
+        bool output_joint_states;
 
         // Declaring messages
         doubles output;
-        doubles output_angles;
+        sensor_msgs::JointState out_msg;
 
         // Declaring global variables
         double X1; // BG(q0)
