@@ -83,7 +83,7 @@ void ConversionSpindleAngle::updateHook()
         if (spindle_to_angle && input.size() == 2){
             // calculate ankle and hip angles
             output[0] = acos((input[0]*input[0]-C1)/C2)-C3;
-            output[1] = acos((input[1]*input[1]-C4)/C5)-C6;
+            output[1] = acos((input[1]*input[1]-C4)/C5)+C6;
 
             if( output_joint_states ){
                 // set the ankle and hip angles
@@ -105,7 +105,7 @@ void ConversionSpindleAngle::updateHook()
             output[0] = sqrt(C1+C2*cos(input[0]+C3));
             output[1] = sqrt(C4+C5*cos(input[2]-C6));
         } else {
-            log(Error)<< "ConversionSpindleAngle: Wrong size of vector in input, size should be 2!"<< endlog();
+            log(Error)<< "ConversionSpindleAngle: Wrong size of vector in input, size should be 2 for spindle and 3 for angle!"<< endlog();
         }
 
         // write output
