@@ -9,12 +9,12 @@ InitCalipherToSpindle::InitCalipherToSpindle(const string& name) :
     offset_caliphers(2,0.0)
 {
     // Ports
-    addPort( "calipher", inport_caliphers ).doc("Inport to recieve the calipher data as an AnalogMsg");
+    addPort( "in_calipher", inport_caliphers ).doc("Inport to recieve the calipher data as an AnalogMsg");
     addPort( "out_reset", out_reset ).doc("Port that sends the reset value to the spindle");
     addPort( "out_safe", out_safe ).doc("Sends bool true when reset command is send");
 
     // Properties
-    addProperty( "offset_calipher1", offset_caliphers).doc("doubles, offset of the calipher, distance from calipher 0 to spring length 0");
+    addProperty( "offset_caliphers", offset_caliphers).doc("doubles, offset of the calipher, distance from calipher 0 to spring length 0");
 
 }
 
