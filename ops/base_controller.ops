@@ -104,8 +104,11 @@ BASE_MotorToJointSpace.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELR
 loadComponent("BASE_Controller","FILTERS::Controller")
 addPeer("Supervisor","BASE_Controller")
 setActivity("BASE_Controller",0.0,HighestPriority,ORO_SCHED_RT)
-BASE_Controller.vector_size = 3;
-BASE_Controller.sampling_time = Ts;
+BASE_Controller.vector_size 				= 3;
+BASE_Controller.sampling_time 				= Ts;
+BASE_Controller.number_of_refports         	= 1
+BASE_Controller.refinport_sizes             = ints (3)
+BASE_Controller.number_of_ffwports          = 0
 BASE_Controller.controllers = CONTROLLERS;
 BASE_Controller.gains = GAINS;
 BASE_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
