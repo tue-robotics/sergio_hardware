@@ -302,7 +302,7 @@ connect ("BASE_DigitalOuts.digital_out", BASE_SLAVE_2+".digitalOuts", ConnPolicy
 
 # Reference signal
 stream ("BASE_ReadReferences.cmd_vel", 	ros.topic("/sergio/base/references"));
-connect ("BASE_ReadReferences.out",		"BASE_Controller.ref_in", ConnPolicy() );
+connect ("BASE_ReadReferences.out",		"BASE_Controller.ref_in1", ConnPolicy() );
 
 # Diagnostics
 connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpacePos.in", ConnPolicy() )
