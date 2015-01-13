@@ -18,11 +18,17 @@ var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
 var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
-var int ENCODERBITS = 65536;							# ?????????????????
-var double GEARBOX = 13/3; # Motor to drive train
-var array ENC2POS = array(1.0, 1.0);	# ?????????????????
-var int NBITS = 8; # number of bits to the backhoff stack
-var array SI2BITS = array(-1.0, -1.0)
+var double 	TWOPI 			= 2.0*3.141592
+var int ENCODERBITS 		= 65536;					# Max encoderbits (16 bits)
+var int ENCODERCOUNTS		= 500;						# Counts per cycle
+var double GEARBOX_LOWER 	= 2.0/5.0; 						# Motor to drive train
+var double GEARBOX_UPPER 	= 3.0/13.0; 					# Motor to drive train
+var double METER2RAD		= 500.0*TWOPI;				# translation to rotation (rad/m)
+var array ENC2METER			= array(TWOPI/ENCODERCOUNTS*GEARBOX_LOWER/METER2RAD, 
+								TWOPI/ENCODERCOUNTS*GEARBOX_UPPER/METER2RAD);
+var int NBITS 				= 8; 						# number of bits to the backhoff stack (Brake)
+var array SI2BITS 			= array(-1.0,-1.0);
+var array VOLT2BITS 		= array(-5.0/1023.0, -5.0/1023.0) 
 
     # Refrence generator
 var int N_JOINTS                = 2;
@@ -42,7 +48,8 @@ var double  MAX_SATURATION_TIME = 2.0;
 
  # from bode 
 var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
-var array   GAINS                       = array (0.03, 0.025)
+# var array 	GAINS 						= array (3836249.0, 5541250.0) # position to volt
+var array   GAINS                       = array (0.03, 0.025) # encoder to bits
 var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
 var array   LEAD_FREQUENCY              = array (3.33, 3.33)
 var array   LAG_FREQUENCY               = array (30.0, 30.0)

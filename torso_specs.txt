@@ -1,0 +1,22 @@
+
+- Lower drive train:
+	- Motor Maxon, art.nr. 323890
+	- Brake Maxon, art.nr. 228387
+	- Gearing, 2/5 reduction
+	- Encoder, HED5540
+	- Lead Screw, skf spindle SD 12X2
+	- Ratios:
+		- Encodercounts/round = 500 
+		- Rotations spindle/rotations motor = 2/5
+		- Rotations spindle/translation spindle = 1000*pi rad/m
+
+- Upper drive train:
+	- Motor Maxon, art.nr. 323890
+	- Brake Maxon, art.nr. 228387
+	- Gearbox Maxon, atr.nr. 203114
+	- Encoder, HED5540
+	- Lead Screw, skf spindle SD 12X2
+	- Ratios:
+		- Encodercounts/round = 500 
+		- Rotations spindle/rotations motor = 3/13
+		- Rotations spindle/translation spindle = 1000*pi rad/m
