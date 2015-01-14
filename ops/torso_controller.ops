@@ -10,12 +10,15 @@
 #### DECLARATION OF PARAMETERS ####
 # Global parameters
 var double Ts 			= 0.001
-var int BODYNUMBER 		= 1
-var string BODYNAME 	= "base"
-var bool HOMEABLE 		= false
-var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
-var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
-var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+var int BODYNUMBER 			= 2
+var string BODYPARTNAME 	= "torso"
+var bool HOMEABLE 			= false
+var bool HOMINGMANDATORY	= false
+var bool RESETTABLE			= true
+
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1002"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1003"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1004"; # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
 var double 	TWOPI 			= 2.0*3.141592
@@ -56,6 +59,7 @@ var array   LAG_FREQUENCY               = array (30.0, 30.0)
  
 ### NameBodyPart ###
 Supervisor.NameBodyPart( BODYNUMBER, BODYNAME, HOMEABLE)
+Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
 
 ### Loading Components ###
 
@@ -195,7 +199,7 @@ connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 # Safety
 connect ("TORSO_Controller.jointErrors",    "TORSO_Safety.jointErrors", ConnPolicy() )
 connect ("TORSO_SI2Bits.out",               "TORSO_Safety.controlEffort", ConnPolicy() )
-connect ("TORSO_Safety.error",              "Supervisor.base_error",    ConnPolicy() ); # error
+connect ("TORSO_Safety.error",              "Supervisor.torso_error",    ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             "TORSO_Controller.enable",   ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             TORSO_SLAVE_1+".enablePort", ConnPolicy() )
 connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in1", ConnPolicy() )

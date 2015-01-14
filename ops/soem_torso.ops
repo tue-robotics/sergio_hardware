@@ -1,0 +1,121 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+import("rtt_rosnode")
+import("rtt_roscomm")
+import("soem_master")
+import("soem_beckhoff_drivers")
+import("tue_ethercat_drivers")
+import("sergio_hardware")
+import("amigo_hardware")
+ros.import("rtt_control_components")
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts 				= 0.001
+var string  ROBOT 			= "/sergio";
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1002"; # torso motors
+
+var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
+var double 	TWOPI 			= 2.0*3.141592
+var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
+var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
+var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
+
+
+#### LOAD SUPERVISOR ###
+loadComponent("Supervisor","SUPERVISORY::Supervisor")
+Supervisor.ebuttonorder	= strings("Wireless","Wired")
+Supervisor.configure
+setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
+#stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
+stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/runstop")); # to be removed
+stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
+#stream("Supervisor.ebuttonEndswitch", ros.topic(ROBOT+"/ebuttonEndswitch"));
+#stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/ebuttonReset"));
+#stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/emergency_switch"));  # to be removed
+stream("Supervisor.rosshutdown", ros.topic(ROBOT+"/etherCAT_shutdown")); 
+stream("Supervisor.rosetherCATenabled", ros.topic(ROBOT+"/etherCAT_enabled")); 
+stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status")); 
+stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds")); 
+
+
+#### Create Robot Object ####
+var strings DEFAULT_PART_NAMES = strings("torso"); #,"torso","left_arm", "right_arm", "head")
+Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
+
+### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
+loadComponent("Soem","soem_master::SoemMasterComponent")
+addPeer("Supervisor","Soem")
+Soem.configure
+setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
+
+connect (TORSO_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
+
+# Dummy 5 volt publisher, tobe removed
+loadComponent("DummyEmergency", "SOURCES::ConstantSignal")
+addPeer("Supervisor", "DummyEmergency")
+setActivity("DummyEmergency", Ts, HighestPriority, ORO_SCHED_RT)
+DummyEmergency.value = array(5.0, 5.0);
+DummyEmergency.vector_size = 2;
+DummyEmergency.configure
+
+#### LOAD COMPONENT TO SEND EMERGENCY SWITCH STATUS TO ROS ###
+loadComponent("EmergencyToRos", "MATH::SmallerLarger");
+addPeer("Supervisor", "EmergencyToRos")
+setActivity("EmergencyToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
+EmergencyToRos.numberofinports = 1;
+EmergencyToRos.input_sizes = array(2.0);
+EmergencyToRos.bound_values = array(2.5, 2.5);
+EmergencyToRos.smaller = ints(1, 1);
+EmergencyToRos.direct_to_ROS = true;
+EmergencyToRos.configure;
+
+connect ("DummyEmergency.out", "EmergencyToRos.in1", ConnPolicy() )
+# 6 wireles, 4 hardware, 5 safe
+# this works for now, should be modified for communication with ROS
+stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/ebuttonWired")); 
+#stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/enable_switch"))
+stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/runstop"))
+
+
+### READ TORSO ENCODERS ###
+var double GEARBOX = 13/3; # Motor to drive train
+
+loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
+addPeer("Supervisor","TORSO_ReadEncoders")
+setActivity("TORSO_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_ReadEncoders.encoderbits = 65536
+TORSO_ReadEncoders.enc2SI = array(1.0, 1.0); 
+TORSO_ReadEncoders.configure
+
+connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
+connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
+
+#### READ_CALIPHERS ###
+loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");
+addPeer("Supervisor","CaliphersIn")
+CaliphersIn.numberofinports = 1;
+CaliphersIn.input_sizes = array(2.0)
+CaliphersIn.numberofoutports = 2;
+CaliphersIn.output_sizes = array(1.0, 1.0); 
+CaliphersIn.input_positions = array(1.0, 1.0)
+CaliphersIn.direct_to_ROS = true
+CaliphersIn.configure
+setActivity("CaliphersIn",1.0,HighestPriority,ORO_SCHED_RT)
+
+connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.in1", ConnPolicy() );
+stream("CaliphersIn.outmsg1", ros.topic(ROBOT+"/calipher1"))
+stream("CaliphersIn.outmsg2", ros.topic(ROBOT+"/calipher2"))
+
+#### START COMPONENTS ####
+Supervisor.AddAllwaysOnPeer ("Soem")
+#Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
+Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
+Supervisor.AddAllwaysOnPeer ("CaliphersIn")
+Supervisor.AddAllwaysOnPeer ("DummyEmergency")
+Supervisor.start()
