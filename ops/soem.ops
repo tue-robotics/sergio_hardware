@@ -82,7 +82,7 @@ AnalogInsFToRos.NumberOfDoublesInVector = 1;
 AnalogInsFToRos.configure;
 
 connect ("AnalogIns.out1", "AnalogInsFToRos.in", ConnPolicy() )
-stream("AnalogInsFToRos.out1", ros.topic("/sergio/battery_value"))
+stream("AnalogInsFToRos.out1", ros.topic(ROBOT+"/battery_value"))
 
 
 #### LOAD COMPONENT TO SEND EMERGENCY SWITCH STATUS TO ROS ###

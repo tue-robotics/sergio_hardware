@@ -267,7 +267,7 @@ BASE_ThermalToSafety.numberofinports = 1;
 BASE_ThermalToSafety.input_sizes = array(1.0);
 BASE_ThermalToSafety.bound_values = array(30.0);
 BASE_ThermalToSafety.smaller = ints(1);
-BASE_ThermalToSafety.direct_to_ROS = false;
+BASE_ThermalToSafety.direct_to_ROS = true;
 BASE_ThermalToSafety.configure;
 
 
@@ -290,7 +290,7 @@ connect ("BASE_Controller.jointErrors",			"BASE_ErrorFilter.in", 			ConnPolicy()
 connect ("BASE_ErrorFilter.out",				"BASE_Safety.jointErrors", 		ConnPolicy() ); # jointerrors
 connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
 connect ("BASE_ThermalSensor.out",	"BASE_ThermalToSafety.in1",ConnPolicy() )
-connect ("BASE_ThermalToSafety.out1",	"BASE_Safety.motor_temperature",ConnPolicy() )
+connect ("BASE_ThermalToSafety.outmsg1",	"BASE_Safety.motor_temperature",ConnPolicy() )
 connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable",			"BASE_Controller.enable", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable", 			BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
