@@ -1,11 +1,28 @@
 <launch>
+  
+  <arg name="base" default="false"/>
+  <arg name="torso" default="false"/>
+  <arg name="rightarm" default="false"/>
+  <arg name="leftarm" default="false"/>
+
+  <arg name="ops_list" value="
+    -s $(find sergio_hardware)/ops/base_controller.ops
+    -s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
+    -s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops"/>
+
+  <arg if="$(arg base)" name="ops_list" value="
+    -s $(find sergio_hardware)/ops/base_controller.ops"
+    name="parts" value="base"/>
+
+  
+  <arg name="parts" default="torso"/>
+  <env name="parts_env" value="$(arg parts)"/>
+
   <include file="$(find rtt_ros)/launch/deployer.launch" ns="sergio">
     <arg name="DEPLOYER_ARGS" value="gnulinux
     HARDWARE
     -s $(find sergio_hardware)/ops/soem_base_torso.ops
-    -s $(find sergio_hardware)/ops/base_controller.ops
-	-s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
-	-s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops
+    $(arg wbc_ops)
     
     "/>
     <arg name="NAME" value = "hardware"/>

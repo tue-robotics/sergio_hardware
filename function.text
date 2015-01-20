@@ -1,0 +1,43 @@
+#!/bin/bash
+
+function thardware {
+    if [ -z "$1" ]; then
+        echo "start hardware, arms not yet implemented"
+        'screen -x -L -R -S shardware roslaunch sergio_hardware all.launch'
+        return
+    fi
+    if [ $1 = "info" ]; then
+		echo "No inputs assumes the complete hardware is connected and starts all."
+		echo "Input: base       only base hardware is available"
+		echo "       torso      base and torso hardware available"
+		echo "       leftarm    base, torso and leftarm available"
+		echo "       rightarm   base, torso and rightarm available"
+		return
+	fi
+	
+    if [ $1 = "base" ]; then
+		echo "start base"
+        'screen -x -L -R -S shardware roslaunch sergio_hardware all.launch parts:="base"'
+		return
+	fi
+    if [ $1 = "torso" ]; then
+		echo "start base and torso"
+        'screen -x -L -R -S shardware roslaunch sergio_hardware all.launch parts:="torso"'
+		return
+	fi
+    if [ $1 = "leftarm" ]; then
+		echo "start base, torso, leftarm: to be implemented"
+		return
+	fi
+    if [ $1 = "rightarm" ]; then
+		echo "start base,torso, rightarm: to be implemented"
+		return
+	fi
+	
+	echo "Incorect input arguments."
+	echo "No inputs assumes the complete hardware is connected and starts all."
+	echo "Input: base       only base hardware is available"
+	echo "       torso      base and torso hardware available"
+	echo "       leftarm    base, torso and leftarm available"
+	echo "       rightarm   base, torso and rightarm available"
+}

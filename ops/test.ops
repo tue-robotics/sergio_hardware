@@ -1,0 +1,49 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+ros.import("sergio_hardware")
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts 				= 0.001
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+
+var double constant = 0.0;
+var string x = "arm";
+loadService("HARDWARE","os")
+x = os.getenv("parts_env")
+
+os.setenv("HENK",x)
+if (x == "base") then {
+	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+	constant = 1.0;
+} else if (x == "torso") then {
+	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+	constant = 2.0;
+}
+
+### SOURCES ###
+loadComponent("TORSO_Constant","SOURCES::ConstantSignal")
+#addPeer("Supervisor","TORSO_Constant")
+setActivity("TORSO_Constant",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Constant.value = array(constant);
+TORSO_Constant.vector_size = 1;
+TORSO_Constant.configure
+
+TORSO_Constant.start();

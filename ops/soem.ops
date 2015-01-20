@@ -6,20 +6,16 @@
 
 #### IMPORT PACKAGE ####
 import("rtt_ros")
-#import("rtt_rosnode")
-#import("rtt_roscomm")
-#import("soem_master")
-#import("soem_beckhoff_drivers")
-#import("tue_ethercat_drivers")
-#import("sergio_hardware")
-#import("amigo_hardware")
-#ros.import("rtt_control_components")
 ros.import("sergio_hardware")
 
 #### DECLARATION OF PARAMETERS ####
-var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
-var string 	BASE_SLAVE_2 	= "Soem.Slave_1003"; # Wheel 3 and 4
+var double 	Ts 				= 0.001
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1006"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1007"; # Wheel 3 and 4
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+
 var string  ROBOT 			= "/sergio";
 
 var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C

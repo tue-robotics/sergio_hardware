@@ -1,0 +1,17 @@
+<launch>
+  
+  <arg name="parts" default="torso"/>
+  <env name="parts_env" value="$(arg parts)"/>
+  <include file="$(find rtt_ros)/launch/deployer.launch" ns="sergio">
+    <arg name="DEPLOYER_ARGS" value="gnulinux
+    HARDWARE
+    -s $(find sergio_hardware)/ops/test.ops
+    
+    "/>
+    <arg name="NAME" value = "hardware"/>
+    <arg name="LOG_LEVEL" value="Warning"/>
+    <arg name="DEBUG" value="false"/>
+  </include>
+</launch>
+<!---s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops-->
+<!---s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops -->
