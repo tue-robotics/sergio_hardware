@@ -12,8 +12,8 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var string 	BASE_SLAVE_1 		= "Soem.Slave_1001"
+var string 	BASE_SLAVE_2 		= "Soem.Slave_1002"
 #var string 	BASE_SLAVE_1 		= "Soem.Slave_1006"
 #var string 	BASE_SLAVE_2 		= "Soem.Slave_1007"
 var int BODYNUMBER 			= 1
@@ -246,9 +246,10 @@ loadComponent("BASE_ThermalSensor","FILTERS::Polynomials")
 addPeer("Supervisor","BASE_ThermalSensor")
 setActivity("BASE_ThermalSensor",0.1,LowestPriority,ORO_SCHED_OTHER)
 BASE_ThermalSensor.vector_size = 1
-var uint32[] ORDER = 1;
-ORDER[0] = 2;
-BASE_ThermalSensor.orders = ORDER;
+#var uint32[] ORDER = 1;
+#ORDER[0] = 2;
+
+BASE_ThermalSensor.orders = ints(2);
 BASE_ThermalSensor.configure
 BASE_ThermalSensor.coefficients1 	= array(128.1, -36.73, 1.465);
 
