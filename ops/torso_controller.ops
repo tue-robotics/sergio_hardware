@@ -11,14 +11,14 @@
 # Global parameters
 var double Ts 			= 0.001
 var int BODYNUMBER 			= 2
-var string BODYPARTNAME 	= "torso"
+var string BODYPARTNAME 	= "spindle"
 var bool HOMEABLE 			= false
 var bool HOMINGMANDATORY	= false
 var bool RESETTABLE			= true
 
-var string 	TORSO_SLAVE_1 	= "Soem.Slave_1002"; # torso motors
-var string 	TORSO_SLAVE_2 	= "Soem.Slave_1003"; # torso beckhoff digital outs
-var string 	TORSO_SLAVE_3 	= "Soem.Slave_1004"; # torso beckhoff dynamixel
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
 var double 	TWOPI 			= 2.0*3.141592
@@ -36,14 +36,18 @@ var array VOLT2BITS 		= array(-5.0/1023.0, -5.0/1023.0)
     # Refrence generator
 var int N_JOINTS                = 2;
 var strings JOINT_NAMES         = strings( "torso_lower_spindle","torso_upper_spindle" )
-var array MINPOS                = array(-140000.0, -150000.0); # safety range:
-var array MAXPOS                = array(140000.0, 150000.0);   #   TODO update with linear sensor!
-var array MAXVEL                = array(80000.0, 80000.0); #range ~400000 bit
-var array MAXACC                = array(40000.0, 40000.0); # 2 secs to full speed
+#var array MINPOS                = array(-140000.0, -150000.0); # safety range:
+#var array MAXPOS                = array(140000.0, 150000.0);   #   TODO update with linear sensor!
+#var array MAXVEL                = array(80000.0, 80000.0); #range ~400000 bit
+#var array MAXACC                = array(40000.0, 40000.0); # 2 secs to full speed
+var array MINPOS                = array(-0.4, -0.4); # safety range:
+var array MAXPOS                = array(0.4, 0.4);   #   TODO update with linear sensor!
+var array MAXVEL                = array(0.025, 0.025); #range ~400000 bit
+var array MAXACC                = array(0.05, 0.05); # 2 secs to full speed
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
-var array   MAX_ERRORS          = array (70000.0, 40000.0); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
+var array   MAX_ERRORS          = array (0.02, 0.02); #AMIGO:( 2.2, 2.2, 2.2, 2.2 )
 var array   MAX_OUTPUT          = array (1000.0, 1000.0);
 var double  MAX_SATURATION_TIME = 2.0;
 
@@ -51,8 +55,8 @@ var double  MAX_SATURATION_TIME = 2.0;
 
  # from bode 
 var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
-# var array 	GAINS 						= array (3836249.0, 5541250.0) # position to volt
-var array   GAINS                       = array (0.03, 0.025); # encoder to bits
+var array 	GAINS 						= array (3836249.0, 5541250.0); # position to volt
+# var array   GAINS                       = array (0.03, 0.025); # encoder to bits
 var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
 var array   LEAD_FREQUENCY              = array (3.33, 3.33)
 var array   LAG_FREQUENCY               = array (30.0, 30.0)
@@ -99,6 +103,9 @@ setActivity("TORSO_Controller",0.0,HighestPriority,ORO_SCHED_RT)
 TORSO_Controller.vector_size = 2;
 TORSO_Controller.sampling_time = Ts;
 TORSO_Controller.controllers = CONTROLLERS;
+TORSO_Controller.number_of_ffwports = 0;
+TORSO_Controller.number_of_refports = 1;
+TORSO_Controller.refinport_sizes = ints(2);
 TORSO_Controller.gains = GAINS;
 TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 TORSO_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
@@ -127,7 +134,8 @@ loadComponent("TORSO_SI2Bits","MATH::Gain")
 addPeer("Supervisor","TORSO_SI2Bits")
 setActivity("TORSO_SI2Bits",0.0,HighestPriority,ORO_SCHED_RT)
 TORSO_SI2Bits.vectorsize 	= 2;
-TORSO_SI2Bits.gain 			= SI2BITS
+#TORSO_SI2Bits.gain 			= SI2BITS
+TORSO_SI2Bits.gain 			= VOLT2BITS
 TORSO_SI2Bits.configure
 
 # PWM out
@@ -198,7 +206,7 @@ connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 # Safety
 connect ("TORSO_Controller.jointErrors",    "TORSO_Safety.jointErrors", ConnPolicy() )
 connect ("TORSO_SI2Bits.out",               "TORSO_Safety.controlEffort", ConnPolicy() )
-connect ("TORSO_Safety.error",              "Supervisor.torso_error",    ConnPolicy() ); # error
+connect ("TORSO_Safety.error",              "Supervisor.spindle_error",    ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             "TORSO_Controller.enable",   ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             TORSO_SLAVE_1+".enablePort", ConnPolicy() )
 connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in1", ConnPolicy() )
@@ -215,11 +223,11 @@ connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() 
 stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
 connect ("TORSO_ReadReferences.pos_out",        "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 connect ("TORSO_ReadEncoders.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
-connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in",                ConnPolicy() ); # Reference
+connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",                ConnPolicy() ); # Reference
 
 
 # data to ros
-connect ("TORSO_ReferenceGenerator.posout","TORSO_RefToRos.in", ConnPolicy() )
+connect ("TORSO_Controller.jointErrors","TORSO_RefToRos.in", ConnPolicy() )
 stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/ref_1"));
 stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/ref_2"));
 connect ("TORSO_Controller.out","TORSO_ControlToRos.in", ConnPolicy() )
