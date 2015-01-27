@@ -10,8 +10,8 @@
 #### DECLARATION OF PARAMETERS ####
 # Global parameters
 var double Ts 			= 0.001
-var int BODYNUMBER 			= 2
-var string BODYPARTNAME 	= "torso"
+var int BODYNUMBER 			= 1
+var string BODYPARTNAME 	= "base"
 var bool HOMEABLE 			= false
 var bool HOMINGMANDATORY	= false
 var bool RESETTABLE			= true
@@ -99,6 +99,9 @@ setActivity("TORSO_Controller",0.0,HighestPriority,ORO_SCHED_RT)
 TORSO_Controller.vector_size = 2;
 TORSO_Controller.sampling_time = Ts;
 TORSO_Controller.controllers = CONTROLLERS;
+TORSO_Controller.number_of_ffwports = 0;
+TORSO_Controller.number_of_refports = 1;
+TORSO_Controller.refinport_sizes = ints(2);
 TORSO_Controller.gains = GAINS;
 TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 TORSO_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
@@ -198,7 +201,7 @@ connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 # Safety
 connect ("TORSO_Controller.jointErrors",    "TORSO_Safety.jointErrors", ConnPolicy() )
 connect ("TORSO_SI2Bits.out",               "TORSO_Safety.controlEffort", ConnPolicy() )
-connect ("TORSO_Safety.error",              "Supervisor.torso_error",    ConnPolicy() ); # error
+connect ("TORSO_Safety.error",              "Supervisor.base_error",    ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             "TORSO_Controller.enable",   ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             TORSO_SLAVE_1+".enablePort", ConnPolicy() )
 connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in1", ConnPolicy() )
@@ -215,11 +218,11 @@ connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() 
 stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
 connect ("TORSO_ReadReferences.pos_out",        "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 connect ("TORSO_ReadEncoders.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
-connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in",                ConnPolicy() ); # Reference
+connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",                ConnPolicy() ); # Reference
 
 
 # data to ros
-connect ("TORSO_ReferenceGenerator.posout","TORSO_RefToRos.in", ConnPolicy() )
+connect ("TORSO_Controller.jointErrors","TORSO_RefToRos.in", ConnPolicy() )
 stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/ref_1"));
 stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/ref_2"));
 connect ("TORSO_Controller.out","TORSO_ControlToRos.in", ConnPolicy() )
