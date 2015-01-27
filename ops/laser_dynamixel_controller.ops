@@ -13,7 +13,7 @@ var string BODYPARTNAME 	= "head"
 var bool HOMEABLE 			= false
 var bool HOMINGOBLIGATORY	= false
 var bool RESETTABLE			= false
-var string DYNAMIXEL_SLAVE	= "Soem.Slave_1005"
+var string DYNAMIXEL_SLAVE	= os.getenv("TORSO_SLAVE_3");
 var string ROBOT 			= "/sergio"
 
 

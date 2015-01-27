@@ -12,10 +12,8 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1001"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1002"
-#var string 	BASE_SLAVE_1 		= "Soem.Slave_1006"
-#var string 	BASE_SLAVE_2 		= "Soem.Slave_1007"
+var string 	BASE_SLAVE_1 		= os.getenv("BASE_SLAVE_1");
+var string 	BASE_SLAVE_2 		= os.getenv("BASE_SLAVE_2");
 var int BODYNUMBER 			= 1
 var string BODYPARTNAME 	= "base"
 var bool HOMEABLE 			= false
