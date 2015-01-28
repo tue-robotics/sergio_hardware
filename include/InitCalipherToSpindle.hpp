@@ -7,6 +7,7 @@
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <rtt/Logger.hpp>
+#include <std_msgs/Bool.h>
 
 #include <soem_beckhoff_drivers/AnalogMsg.h>
 
@@ -42,7 +43,7 @@ namespace SERGIOCUSTOM
     private:
 
         // Declaring input- and output_ports
-        OutputPort<bool> out_safe;
+        OutputPort<std_msgs::Bool> out_safe;
         OutputPort<doubles> out_reset;
         InputPort<soem_beckhoff_drivers::AnalogMsg>  inport_caliphers;
 
@@ -53,6 +54,7 @@ namespace SERGIOCUSTOM
         soem_beckhoff_drivers::AnalogMsg caliphers_msg;
         doubles output;
         bool safe;
+        std_msgs::Bool safe_msg;
 
         // Declaring global variables
         bool output_written;    // used to wait 1 update hook to go to safety

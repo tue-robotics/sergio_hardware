@@ -261,7 +261,7 @@ connect ("TORSO_InitEncoder.out_safe",    	"TORSO_Safety.calibration", ConnPolic
 # Safety
 connect ("TORSO_Controller.jointErrors",    "TORSO_Safety.jointErrors", ConnPolicy() )
 connect ("TORSO_SI2Bits.out",               "TORSO_Safety.controlEffort", ConnPolicy() )
-connect ("TORSO_Safety.error",              "Supervisor.base_error",    ConnPolicy() ); # error
+connect ("TORSO_Safety.error",              "Supervisor.spindle_error",    ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             "TORSO_Controller.enable",   ConnPolicy() ); # error
 connect ("TORSO_Safety.enable",             TORSO_SLAVE_1+".enablePort", ConnPolicy() )
 connect ("TORSO_Safety.enable",             "TORSO_EnableDO.in1", ConnPolicy() )
@@ -276,7 +276,7 @@ stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/referen
 connect ("TORSO_ReadReferences.pos_out",        "TORSO_RefAngleToSpindle.in",        ConnPolicy() ); # RefGoal
 connect ("TORSO_RefAngleToSpindle.out",        	"TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 connect ("TORSO_ReadEncoders.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
-connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in",                ConnPolicy() ); # Reference
+connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",                ConnPolicy() ); # Reference
 
 # Ros communication 
 connect( "TORSO_ReadEncoders.out", 					"TORSO_ENCSpindleToAngle.in", 			ConnPolicy() ); # Position

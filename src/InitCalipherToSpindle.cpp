@@ -57,7 +57,8 @@ bool InitCalipherToSpindle::startHook()
     // initialize safe outport to false
     safe = false;
     output_written = false;
-    out_safe.write(safe);
+    safe_msg.data = safe;
+    out_safe.write(safe_msg);
 
     return true;
 }
@@ -88,7 +89,8 @@ void InitCalipherToSpindle::updateHook()
         safe = true;
     }
 
-    out_safe.write(safe);
+	safe_msg.data = safe;
+    out_safe.write(safe_msg);
 }
 
 ORO_CREATE_COMPONENT(SERGIOCUSTOM::InitCalipherToSpindle)
