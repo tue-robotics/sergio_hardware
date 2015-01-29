@@ -193,18 +193,6 @@ TORSO_ENCSpindleToAngle.output_joint_states = true
 TORSO_ENCSpindleToAngle.JointNames 			= JOINT_NAMES
 TORSO_ENCSpindleToAngle.configure
 
-#### LOAD JOINTSTATEAGGREGATOR ####
-loadComponent("JointStateAggregator","ROS::JointStateAggregator")
-addPeer("Supervisor","JointStateAggregator")
-setActivity("JointStateAggregator",0.02,LowestPriority, ORO_SCHED_OTHER)
-JointStateAggregator.configure
-stream("JointStateAggregator.out", ros.topic("/amigo/joint_states"))
-Supervisor.AddAllwaysOnPeer("JointStateAggregator")
-
-#### SETTING UP JOINTSTATE AGGREGATOR ####
-JointStateAggregator.addJointNames(JOINT_NAMES)
-JointStateAggregator.addAggregationPort("torso")
-
 ######################################################
 ############  Start Used for testing #################  
 # Reference to ros
@@ -281,8 +269,8 @@ connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",     
 
 # Ros communication 
 connect( "TORSO_ReadEncoders.out", 					"TORSO_ENCSpindleToAngle.in", 			ConnPolicy() ); # Position
-connect ("TORSO_ENCSpindleToAngle.out_joints",		"JointStateAggregator.torso", 				ConnPolicy() ); # JointState 
 stream ("TORSO_ENCSpindleToAngle.out_joints",		ros.topic(ROBOT+"/torso/measurements"));
+stream ("TORSO_ENCSpindleToAngle.out_joints",		ros.topic(ROBOT+"/joint_states"));
 
 # diagnostics
 connect ("TORSO_ReferenceGenerator.posout", 		"TORSO_Diagnostics.vec1", 				ConnPolicy() ); # Reference
