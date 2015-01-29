@@ -27,6 +27,7 @@ os.setenv("TORSO_SLAVE_2",	TORSO_SLAVE_2)
 os.setenv("TORSO_SLAVE_3",	TORSO_SLAVE_3)
 
 #### LOAD SUPERVISOR ###
+# TODO correct ports if dashboard is adjusted
 loadComponent("Supervisor","SUPERVISORY::Supervisor")
 Supervisor.ebuttonorder	= strings("Wireless","Wired","Endswitch","Reset")
 Supervisor.configure
@@ -43,7 +44,7 @@ stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status"));
 stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds")); 
 
 #### Create Robot Object ####
-var strings DEFAULT_PART_NAMES = strings("base","spindle"); #,"torso","left_arm", "right_arm", "head")
+var strings DEFAULT_PART_NAMES = strings("base","spindle","head"); #,"torso","left_arm", "right_arm", "head")
 Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
@@ -52,7 +53,7 @@ addPeer("Supervisor","Soem")
 Soem.configure
 setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 
-connect (BASE_SLAVE_1+".encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
+connect ("Soem.Slave_1001.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
 
 #### LOAD COMPONENT TO ENABLE ANALOG INS (only force sensors are used)###
 loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
@@ -68,8 +69,6 @@ setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
 
 connect ("AnalogIns.in1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
 connect ("AnalogIns.in2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
-#connect ("AnalogIns.in3",BASE_SLAVE_1 +".positionSensors", ConnPolicy() );
-#connect ("AnalogIns.in4",BASE_SLAVE_2 +".positionSensors", ConnPolicy() );
 
 #### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
 loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
@@ -99,7 +98,7 @@ stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/ebuttonWired"));
 #stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/ebuttonReset"))
 #stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/ebuttonWireless"))
 
-# remove following connections when dashboard is implemented
+# TODO remove following connections when dashboard is implemented
 stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/emergency_switch"))
 stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/runstop"))
 
@@ -116,22 +115,17 @@ addPeer("Supervisor","BASE_ReadEncoders")
 setActivity("BASE_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
 BASE_ReadEncoders.encoderbits = ENCODERBITS;
 BASE_ReadEncoders.enc2SI = array (ENC2RAD, ENC2RAD, ENC2RAD, ENC2RAD)
-#BASE_ReadEncoders.timestep = 0.000000256
-#BASE_ReadEncoders.timebits = 65536
-#BASE_ReadEncoders.time2enc = array(2.0, 2.0)
 BASE_ReadEncoders.configure
 
 connect (BASE_SLAVE_1+".encoder1","BASE_ReadEncoders.enc1_in", ConnPolicy() ); #enc1[-]
 connect (BASE_SLAVE_1+".encoder2","BASE_ReadEncoders.enc2_in", ConnPolicy() ); #enc2[-]
 connect (BASE_SLAVE_2+".encoder1","BASE_ReadEncoders.enc3_in", ConnPolicy() ); #enc3[-]
 connect (BASE_SLAVE_2+".encoder2","BASE_ReadEncoders.enc4_in", ConnPolicy() ); #enc4[-]
-#connect (BASE_SLAVE_1+".timeStamp","BASE_ReadEncoders.time1_in", ConnPolicy() ); #time1[-]
-#connect (BASE_SLAVE_2+".timeStamp","BASE_ReadEncoders.time2_in", ConnPolicy() ); #time2[-]
 
 
 ### READ TORSO ENCODERS ###
 var int ENCODERBITS_T 		= 65536;					# Max encoderbits (16 bits)
-var int ENCODERCOUNTS_T		= 500;						# Counts per cycle
+var int ENCODERCOUNTS_T		= 500*4;						# Counts per cycle
 var double GEARBOX_LOWER 	= 2.0/5.0; 						# Motor to drive train
 var double GEARBOX_UPPER 	= 3.0/13.0; 					# Motor to drive train
 var double METER2RAD		= 500.0*TWOPI;				# translation to rotation (rad/m)
@@ -142,14 +136,13 @@ loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
 addPeer("Supervisor","TORSO_ReadEncoders")
 setActivity("TORSO_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
 TORSO_ReadEncoders.encoderbits = ENCODERBITS_T
-#TORSO_ReadEncoders.enc2SI = array(1.0, 1.0); 
 TORSO_ReadEncoders.enc2SI = ENC2METER; 
 TORSO_ReadEncoders.configure
 
 connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
 connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
 
-#### READ_CALIPHERS ###
+#### READ_CALIPHERS ### TODO: remove when torso controller is finished
 loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","CaliphersIn")
 CaliphersIn.numberofinports = 1;
