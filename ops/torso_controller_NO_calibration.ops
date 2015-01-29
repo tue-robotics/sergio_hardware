@@ -7,10 +7,6 @@
 #                                                                      #
 ########################################################################
 
-# TODO
-#	- move init spindle to soem.ops
-#	- move jointstateaggregator to soem.ops
-
 #### DECLARATION OF PARAMETERS ####
 # Global parameters
 var double Ts 			= 0.001
@@ -20,15 +16,14 @@ var bool HOMEABLE 			= false
 var bool HOMINGMANDATORY	= false
 var bool RESETTABLE			= true
 
-var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
-var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
-var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
-var string  ROBOT 			= "/sergio";
+var string 	TORSO_SLAVE_1 	= os.getenv("TORSO_SLAVE_1"); # torso motors
+var string 	TORSO_SLAVE_2 	= os.getenv("TORSO_SLAVE_2"); # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= os.getenv("TORSO_SLAVE_3"); # torso beckhoff dynamixel
 
 # Motor, gearbox and encoder specs
 var double 	TWOPI 			= 2.0*3.141592
 var int ENCODERBITS 		= 65536;					# Max encoderbits (16 bits)
-var int ENCODERCOUNTS		= 500*4;						# Counts per cycle
+var int ENCODERCOUNTS		= 500*4;;						# Counts per cycle
 var double GEARBOX_LOWER 	= 2.0/5.0; 						# Motor to drive train
 var double GEARBOX_UPPER 	= 3.0/13.0; 					# Motor to drive train
 var double METER2RAD		= 500.0*TWOPI;				# translation to rotation (rad/m)
@@ -37,16 +32,14 @@ var array ENC2METER			= array(TWOPI/ENCODERCOUNTS*GEARBOX_LOWER/METER2RAD,
 var int NBITS 				= 8; 						# number of bits to the backhoff stack (Brake)
 var array SI2BITS 			= array(-1.0,-1.0);
 var array VOLT2BITS 		= array(-5.0/1023.0, -5.0/1023.0) 
-var array OFFSET_CALIPHERS 	= array(-0.23116, -0.22321);
 
     # Refrence generator
 var int N_JOINTS                = 2;
-var strings JOINT_NAMES         = strings( "ankle_joint","knee_joint","hip_joint" )
-# reference are specified in spindle length [m], speed [m/s], acceleration [m/s2]
-var array MINPOS                = array(0.244, 0.360); # min spindle length [m]
-var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
-var array MAXVEL                = array(0.037, 0.024); # spindle vel [m/s] (4 secs. over full range)
-var array MAXACC                = array(0.037, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+var strings JOINT_NAMES         = strings( "torso_lower_spindle","torso_upper_spindle" )
+var array MINPOS                = array(-0.4, -0.4); # safety range:
+var array MAXPOS                = array(0.4, 0.4);   #   TODO update with linear sensor!
+var array MAXVEL                = array(0.025, 0.025); #range ~400000 bit
+var array MAXACC                = array(0.05, 0.05); # 2 secs to full speed
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
@@ -58,7 +51,6 @@ var double  MAX_SATURATION_TIME = 2.0;
 
  # from bode 
 var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
-#var array 	GAINS 						= array (3836249.0, 5541250.0); # position to volt
 var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
 # var array   GAINS                       = array (0.03, 0.025); # encoder to bits
 var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
@@ -70,19 +62,20 @@ Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RES
 
 ### Loading Components ###
 
-### READ ANGLE REFERENCES ###
+### SOURCES ###
+#loadComponent("TORSO_Constant","SOURCES::ConstantSignal")
+#addPeer("Supervisor","TORSO_Constant")
+#setActivity("TORSO_Constant",Ts,HighestPriority,ORO_SCHED_RT)
+#TORSO_Constant.value = array(0.0, 0.0);
+#TORSO_Constant.vector_size = 2;
+#TORSO_Constant.configure
+
+#Reading spindle setpoints
 loadComponent("TORSO_ReadReferences","ROS::JointStateToDoubles")
 addPeer("Supervisor","TORSO_ReadReferences")
 setActivity("TORSO_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
-TORSO_ReadReferences.vector_size          = 3
+TORSO_ReadReferences.vector_size          = N_JOINTS
 TORSO_ReadReferences.configure
-
-### CONVERT ANGLE REFERENCE TO SPINDLE REFERENCE ###
-loadComponent("TORSO_RefAngleToSpindle","SERGIOCUSTOM::ConversionSpindleAngle")
-addPeer("Supervisor","TORSO_RefAngleToSpindle")
-setActivity("TORSO_RefAngleToSpindle",0.01,LowestPriority,ORO_SCHED_OTHER)
-TORSO_RefAngleToSpindle.spindle_to_angle 	= false
-TORSO_RefAngleToSpindle.configure
 
 #Loading Reference Generator
 loadComponent("TORSO_ReferenceGenerator","SOURCES::ReferenceGenerator")
@@ -120,6 +113,17 @@ TORSO_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
 #TORSO_Controller.pole_freq_LowPass = LOWPASS_FREQUENCY;
 #TORSO_Controller.pole_damp_LowPass = LOWPASS_DAMPING;
 TORSO_Controller.configure
+	
+### Safety ###
+loadComponent("TORSO_Safety","SUPERVISORY::Safety")
+addPeer("Supervisor","TORSO_Safety")
+setActivity("TORSO_Safety",0.0,HighestPriority,ORO_SCHED_RT)
+TORSO_Safety.NJ                  = N_JOINTS
+TORSO_Safety.NM                  = N_MOTORS
+TORSO_Safety.maxJointErrors      = MAX_ERRORS
+TORSO_Safety.motorSaturations    = MAX_OUTPUT
+TORSO_Safety.maxConSatTime       = MAX_SATURATION_TIME
+TORSO_Safety.configure
 
 # SI2BITS 
 loadComponent("TORSO_SI2Bits","MATH::Gain")
@@ -141,75 +145,20 @@ TORSO_MotorPWM.output_sizes 			= array (3.0)
 TORSO_MotorPWM.output_positions			= array (1.0, 1.0, 0.0 )
 TORSO_MotorPWM.configure
 
-### Safety ###
-loadComponent("TORSO_Safety","SUPERVISORY::Safety")
-addPeer("Supervisor","TORSO_Safety")
-setActivity("TORSO_Safety",0.0,HighestPriority,ORO_SCHED_RT)
-TORSO_Safety.NJ                  = N_JOINTS
-TORSO_Safety.NM                  = N_MOTORS
-TORSO_Safety.maxJointErrors      = MAX_ERRORS
-TORSO_Safety.motorSaturations    = MAX_OUTPUT
-TORSO_Safety.maxConSatTime       = MAX_SATURATION_TIME
-TORSO_Safety.additional_safeties = strings("calibration")
-TORSO_Safety.configure
-
-### DIGITAL OUTS ENABLE ###
+# Digital outs enable
 loadComponent("TORSO_EnableDO", "SOEM::DigitalOuts")
 addPeer("Supervisor", "TORSO_EnableDO")
 setActivity("TORSO_EnableDO", 0.0, HighestPriority, ORO_SCHED_RT)
 TORSO_EnableDO.configure
 
-### DIGITAL OUTS BRAKE ###
+# Digital outs brake
 loadComponent("TORSO_BrakeDO", "SOEM::DigitalOuts")
 addPeer("Supervisor", "TORSO_BrakeDO")
 setActivity("TORSO_BrakeDO", 0.0, HighestPriority, ORO_SCHED_RT)
 TORSO_BrakeDO.number_of_bits = NBITS;
 TORSO_BrakeDO.configure
 
-### ENCODER CALIBRATION COMPONENT ###
-loadComponent("TORSO_InitEncoder", "SERGIOCUSTOM::InitCalipherToSpindle")
-addPeer("Supervisor", "TORSO_InitEncoder")
-setActivity("TORSO_InitEncoder",0.1,LowestPriority,ORO_SCHED_OTHER)
-TORSO_InitEncoder.offset_caliphers = OFFSET_CALIPHERS;
-TORSO_InitEncoder.configure
-
-#### LOAD COMPONENT TO PUBLISH DIAGNOSTICS ###
-loadComponent("TORSO_Diagnostics","ROS::RosDiagnostics")
-addPeer("Supervisor","TORSO_Diagnostics")
-setActivity("TORSO_Diagnostics",1.0,LowestPriority,ORO_SCHED_OTHER)
-TORSO_Diagnostics.statusname 			= BODYPARTNAME+"_Controller"
-TORSO_Diagnostics.NumberOfVectorPorts 	= 3
-TORSO_Diagnostics.NumberOfBoolPorts 	= 1
-TORSO_Diagnostics.configure
-TORSO_Diagnostics.vecname1 				= "Reference"
-TORSO_Diagnostics.vecname2 				= "Error"
-TORSO_Diagnostics.vecname3 				= "ControlEffort"
-TORSO_Diagnostics.boolname1 			= "Safe"
-
-### CONVERT SPINDLE LENGTH TO JOINT ANGLES ###
-loadComponent("TORSO_ENCSpindleToAngle","SERGIOCUSTOM::ConversionSpindleAngle")
-addPeer("Supervisor","TORSO_ENCSpindleToAngle")
-setActivity("TORSO_ENCSpindleToAngle",0.01,LowestPriority,ORO_SCHED_OTHER)
-TORSO_ENCSpindleToAngle.spindle_to_angle 	= true
-TORSO_ENCSpindleToAngle.output_joint_states = true
-TORSO_ENCSpindleToAngle.JointNames 			= JOINT_NAMES
-TORSO_ENCSpindleToAngle.configure
-
-#### LOAD JOINTSTATEAGGREGATOR ####
-loadComponent("JointStateAggregator","ROS::JointStateAggregator")
-addPeer("Supervisor","JointStateAggregator")
-setActivity("JointStateAggregator",0.02,LowestPriority, ORO_SCHED_OTHER)
-JointStateAggregator.configure
-stream("JointStateAggregator.out", ros.topic("/amigo/joint_states"))
-Supervisor.AddAllwaysOnPeer("JointStateAggregator")
-
-#### SETTING UP JOINTSTATE AGGREGATOR ####
-JointStateAggregator.addJointNames(JOINT_NAMES)
-JointStateAggregator.addAggregationPort("torso")
-
-######################################################
-############  Start Used for testing #################  
-# Reference to ros
+# Encoder to ros
 loadComponent("TORSO_RefToRos","ROS::DoublesToROS")
 addPeer("Supervisor","TORSO_RefToRos")
 setActivity("TORSO_RefToRos",0.25,LowestPriority,ORO_SCHED_OTHER)
@@ -237,29 +186,18 @@ setActivity("TORSO_False", Ts, HighestPriority, ORO_SCHED_RT)
 TORSO_False.value = false;
 TORSO_False.configure
 
+#### CONNECT COMPONENTS ####
 # disable lower torso
 #connect ("TORSO_False.out","TORSO_EnableDO.in1", ConnPolicy() )
 #connect ("TORSO_False.out","TORSO_BrakeDO.in1", ConnPolicy() )
 #connect ("TORSO_False.out","TORSO_EnableDO.in2", ConnPolicy() )
 #connect ("TORSO_False.out","TORSO_BrakeDO.in2", ConnPolicy() )
 
-
-############  End Used for testing #################  
-####################################################
-
-
-#### CONNECT COMPONENTS ####
 # control loop
 connect ("TORSO_ReadEncoders.out","TORSO_Controller.pos_in", ConnPolicy())
 connect ("TORSO_Controller.out","TORSO_SI2Bits.in", ConnPolicy())
 connect ("TORSO_SI2Bits.out","TORSO_MotorPWM.in1", ConnPolicy())
 connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
-
-# Initialize encoders
-connect (TORSO_SLAVE_1+".caliphers",    	"TORSO_InitEncoder.in_calipher", ConnPolicy() )
-connect ("TORSO_InitEncoder.out_reset",    	"TORSO_ReadEncoders.in_init", ConnPolicy() )
-connect ("TORSO_InitEncoder.out_safe",    	"TORSO_Safety.calibration", ConnPolicy() )
-
 
 # Safety
 connect ("TORSO_Controller.jointErrors",    "TORSO_Safety.jointErrors", ConnPolicy() )
@@ -274,29 +212,18 @@ connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in2", ConnPolicy() )
 connect ("TORSO_EnableDO.digital_out",      TORSO_SLAVE_1+".digitalOuts", ConnPolicy() )
 connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() )
 
-# References 
+## References 
+    # contstant
+#connect ("TORSO_Constant.out","TORSO_Controller.ref_in", ConnPolicy())
+    # reference generator
 stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
-connect ("TORSO_ReadReferences.pos_out",        "TORSO_RefAngleToSpindle.in",        ConnPolicy() ); # RefGoal
-connect ("TORSO_RefAngleToSpindle.out",        	"TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+connect ("TORSO_ReadReferences.pos_out",        "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 connect ("TORSO_ReadEncoders.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
 connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",                ConnPolicy() ); # Reference
 
-# Ros communication 
-connect( "TORSO_ReadEncoders.out", 					"TORSO_ENCSpindleToAngle.in", 			ConnPolicy() ); # Position
-connect ("TORSO_ENCSpindleToAngle.out_joints",		"JointStateAggregator.torso", 				ConnPolicy() ); # JointState 
-stream ("TORSO_ENCSpindleToAngle.out_joints",		ros.topic(ROBOT+"/torso/measurements"));
 
-# diagnostics
-connect ("TORSO_ReferenceGenerator.posout", 		"TORSO_Diagnostics.vec1", 				ConnPolicy() ); # Reference
-connect ("TORSO_Controller.jointErrors", 			"TORSO_Diagnostics.vec2", 				ConnPolicy() ); # JointErrors
-connect ("TORSO_Controller.out", 					"TORSO_Diagnostics.vec3", 				ConnPolicy() ); # ControlEffort
-connect ("TORSO_Safety.enable",						"TORSO_Diagnostics.bool1", 				ConnPolicy() ); # Enable
-stream ("TORSO_Diagnostics.diagnostics",			ros.topic(ROBOT+"/diagnostics"));
-
-######################################################
-############  Start Used for testing #################  
 # data to ros
-connect ("TORSO_ReferenceGenerator.posout","TORSO_RefToRos.in", ConnPolicy() )
+connect ("TORSO_Controller.jointErrors","TORSO_RefToRos.in", ConnPolicy() )
 stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/ref_1"));
 stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/ref_2"));
 connect ("TORSO_Controller.out","TORSO_ControlToRos.in", ConnPolicy() )
@@ -305,39 +232,29 @@ stream ("TORSO_ControlToRos.out2", ros.topic("/sergio/torso/control_2"));
 connect ("TORSO_ReadEncoders.out","TORSO_ENCToRos.in", ConnPolicy() )
 stream ("TORSO_ENCToRos.out1", ros.topic("/sergio/torso/enc_1"));
 stream ("TORSO_ENCToRos.out2", ros.topic("/sergio/torso/enc_2"));
-############  End Used for testing #################  
-####################################################
 
 #### START COMPONENTS ####
 # Control
-Supervisor.AddEnabledPeer(	"TORSO_Controller", BODYNUMBER)
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
-
-# initialize encoders
-Supervisor.AddAllwaysOnPeer("TORSO_InitEncoder")
 
 # safety
 Supervisor.AddAllwaysOnPeer("TORSO_EnableDO")
 Supervisor.AddAllwaysOnPeer("TORSO_BrakeDO")
-Supervisor.AddEnabledPeer(	"TORSO_Safety", BODYNUMBER)
+Supervisor.AddAllwaysOnPeer("TORSO_False")
 
 # reference
-Supervisor.AddEnabledPeer(	"TORSO_ReadReferences", BODYNUMBER)
-Supervisor.AddEnabledPeer(	"TORSO_RefAngleToSpindle", BODYNUMBER)
-Supervisor.AddEnabledPeer(	"TORSO_ReferenceGenerator", BODYNUMBER)
+#Supervisor.AddAllwaysOnPeer  ("TORSO_Constant")
+Supervisor.AddEnabledPeer    ("TORSO_ReadReferences",             BODYNUMBER)
+Supervisor.AddEnabledPeer    ("TORSO_ReferenceGenerator",             BODYNUMBER)
 
-# diagnostics
-Supervisor.AddAllwaysOnPeer("TORSO_Diagnostics")
-Supervisor.AddAllwaysOnPeer("TORSO_ENCSpindleToAngle")
-
-
-##### Used for testing #############
 # dataflow to ros
 Supervisor.AddAllwaysOnPeer("TORSO_RefToRos")
 Supervisor.AddAllwaysOnPeer("TORSO_ControlToRos")
 Supervisor.AddAllwaysOnPeer("TORSO_ENCToRos")
-# bool false
-Supervisor.AddAllwaysOnPeer("TORSO_False")
+
+# enable
+Supervisor.AddEnabledPeer 	 ("TORSO_Controller", 		BODYNUMBER)
+Supervisor.AddEnabledPeer    ("TORSO_Safety",             BODYNUMBER)
 
 

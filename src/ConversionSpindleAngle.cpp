@@ -120,7 +120,7 @@ void ConversionSpindleAngle::updateHook()
         outport.write(output);
 
     } else {
-        log(Debug)<<"ConversionSpindleAngle: No new data recieved"<<endlog();
+        //log(Debug)<<"ConversionSpindleAngle: No new data recieved"<<endlog();
     }
 
 }
