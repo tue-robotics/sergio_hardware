@@ -68,13 +68,20 @@ bool InitCalipherToSpindle::startHook()
 void InitCalipherToSpindle::updateHook()
 {
 	if ( inport_caliphers.read(caliphers_msg) == NewData ){
+		
+		// Correct for overflow (only happens when in the upper endstop)
+		if (caliphers_msg.values[0]<0.1)
+			caliphers_msg.values[0] += 0.65536;
+		if (caliphers_msg.values[1]<0.1)
+			caliphers_msg.values[1] += 0.65536;
+		
 		// calculate spindle 1 length
-		X4 = caliphers_msg.values[1]+offset_caliphers[0];
+		X4 = caliphers_msg.values[0]+offset_caliphers[0];
 		X5 = acos((X4*X4-C15)/C16)-C9;
 		output[0] = sqrt(C1+C2*cos(X5+C3));
 
 		// calculate spindle 2 length
-		X6 = caliphers_msg.values[0]+offset_caliphers[1];
+		X6 = caliphers_msg.values[1]+offset_caliphers[1];
 		X7 = acos((X6*X6-C17)/C18)+C19;
 		output[1] = sqrt(C4+C5*cos(X7-C6));
 		
@@ -93,35 +100,6 @@ void InitCalipherToSpindle::updateHook()
 			safe = true;
 		}
 	}
-		
-
-	
-	
-	
-	/*
-    if ( !output_written ){
-        if ( inport_caliphers.read(caliphers_msg) == NewData ){
-            // calculate spindle 1 length
-            X4 = caliphers_msg.values[1]+offset_caliphers[0];
-            X5 = acos((X4*X4-C15)/C16)-C9;
-            output[0] = sqrt(C1+C2*cos(X5+C3));
-
-            // calculate spindle 2 length
-            X6 = caliphers_msg.values[0]+offset_caliphers[1];
-            X7 = acos((X6*X6-C17)/C18)+C19;
-            output[1] = sqrt(C4+C5*cos(X7-C6));
-
-            if ( out_reset.connected() ){
-                // Write only once to reset the encoders
-                out_reset.write(output);
-                log(Debug)<<"InitCalipherToSpindle: encoders initialized on "<<output[0]<<" and "<< output[1]<<endlog();
-                output_written = true;
-            }
-        }
-    } else {
-        safe = true;
-    }
-    */
 
 	safe_msg.data = safe;
     out_safe.write(safe_msg);
