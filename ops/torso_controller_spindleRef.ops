@@ -23,6 +23,7 @@ var bool RESETTABLE			= true
 var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
 var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
 var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+var string  ROBOT 			= "/sergio";
 
 # Motor, gearbox and encoder specs
 var double 	TWOPI 			= 2.0*3.141592
@@ -41,8 +42,8 @@ var array OFFSET_CALIPHERS 	= array(-0.23116, -0.22321);
     # Refrence generator
 var int N_JOINTS                = 2;
 var strings JOINT_NAMES         = strings( "ankle_joint","knee_joint","hip_joint" )
-var array MINPOS                = array(-0.4, -0.4); # safety range:
-var array MAXPOS                = array(0.4, 0.4);   #   TODO update with linear sensor!
+var array MINPOS                = array(0.2, 0.3); # safety range:
+var array MAXPOS                = array(0.4, 0.5);   #   Measured in spindle length
 var array MAXVEL                = array(0.025, 0.025); #range ~400000 bit
 var array MAXACC                = array(0.05, 0.05); # 2 secs to full speed
 
@@ -71,7 +72,7 @@ Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RES
 loadComponent("TORSO_ReadReferences","ROS::JointStateToDoubles")
 addPeer("Supervisor","TORSO_ReadReferences")
 setActivity("TORSO_ReadReferences",0.01,LowestPriority,ORO_SCHED_OTHER)
-TORSO_ReadReferences.vector_size          = N_JOINTS
+TORSO_ReadReferences.vector_size          = 3
 TORSO_ReadReferences.configure
 
 ### CONVERT ANGLE REFERENCE TO SPINDLE REFERENCE ###
@@ -281,12 +282,14 @@ connect ("TORSO_ReferenceGenerator.posout",     "TORSO_Controller.ref_in1",     
 # Ros communication 
 connect( "TORSO_ReadEncoders.out", 					"TORSO_ENCSpindleToAngle.in", 			ConnPolicy() ); # Position
 connect ("TORSO_ENCSpindleToAngle.out_joints",		"JointStateAggregator.torso", 				ConnPolicy() ); # JointState 
+stream ("TORSO_ENCSpindleToAngle.out_joints",		ros.topic(ROBOT+"/torso/measurements"));
 
 # diagnostics
 connect ("TORSO_ReferenceGenerator.posout", 		"TORSO_Diagnostics.vec1", 				ConnPolicy() ); # Reference
 connect ("TORSO_Controller.jointErrors", 			"TORSO_Diagnostics.vec2", 				ConnPolicy() ); # JointErrors
 connect ("TORSO_Controller.out", 					"TORSO_Diagnostics.vec3", 				ConnPolicy() ); # ControlEffort
 connect ("TORSO_Safety.enable",						"TORSO_Diagnostics.bool1", 				ConnPolicy() ); # Enable
+stream ("TORSO_Diagnostics.diagnostics",			ros.topic(ROBOT+"/diagnostics"));
 
 ######################################################
 ############  Start Used for testing #################  

@@ -45,6 +45,7 @@ namespace SERGIOCUSTOM
         // Declaring input- and output_ports
         OutputPort<std_msgs::Bool> out_safe;
         OutputPort<doubles> out_reset;
+        OutputPort<doubles> out;
         InputPort<soem_beckhoff_drivers::AnalogMsg>  inport_caliphers;
 
         // Declaring properties
