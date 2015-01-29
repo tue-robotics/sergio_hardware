@@ -72,6 +72,10 @@ namespace SERGIOCUSTOM
         double C12; // BD^2-GD^2
         double C13; // -2*GD
         double C14; // an(J,G,D)
+        double C20; // max angle 0
+        double C21; // min angle 0
+        double C22; // max angle 2
+        double C23; // min angle 2
 
     public:
 

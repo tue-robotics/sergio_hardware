@@ -64,6 +64,10 @@ bool ConversionSpindleAngle::configureHook()
     C12 = 0.132722;
     C13 = -0.155586;
     C14 = 2.913677;
+	C20 = 2.527369;
+	C21 = -0.614223;
+	C22 = 3.347504;
+	C23 = 0.205912;
 
     return true;
 }
@@ -79,8 +83,8 @@ void ConversionSpindleAngle::updateHook()
     doubles input;
 
     // Read the inputports
-    if ( inport.read(input) == NewData ){
-        if (spindle_to_angle && input.size() == 2){
+    if ( inport.read(input) == NewData ){		
+        if (spindle_to_angle && input.size() == 2){			
             // calculate ankle and hip angles
             output[0] = acos((input[0]*input[0]-C1)/C2)-C3;
             output[1] = acos((input[1]*input[1]-C4)/C5)+C6;
@@ -100,7 +104,11 @@ void ConversionSpindleAngle::updateHook()
                 // write output all angles
                 outport_joints.write(out_msg);
             }
-        } else if ( input.size() == 3 ){
+        } else if ( input.size() == 3 && !spindle_to_angle){
+			// limit input angles
+			input[0] = min(C20,max(C21,input[0]));
+			input[2] = min(C22,max(C23,input[2]));
+			
             // calculate the 2 spindle lengths
             output[0] = sqrt(C1+C2*cos(input[0]+C3));
             output[1] = sqrt(C4+C5*cos(input[2]-C6));

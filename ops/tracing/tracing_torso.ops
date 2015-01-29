@@ -1,0 +1,28 @@
+
+### VARIABLES
+############ Settings #######################################
+var int 	spindle 	    = 1;			# define 
+var int buffersize 			= 30*1000;
+var string	FILENAME 		= "29-01-15_torso_spindle2_calibration.dat"
+#############################################################
+
+	# Part settings
+var double 	Ts = 0.001
+var int 	BODYNUMBER 			= 2
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+#addPeer("Supervisor","Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+Tracing.vector_sizes = array (2.0, 2.0) 
+Tracing.buffersize = buffersize
+Tracing.filename = "/home/amigo/ros/data/Ton_data/torso_calibration"+FILENAME;
+Tracing.Ts = Ts
+Tracing.configure
+
+### Connect tracing componenets ###
+connect ("TORSO_InitEncoder.out",			"Tracing.in2", ConnPolicy() );
+connect ("TORSO_ReadEncoders.out",	    	"Tracing.in1", ConnPolicy() );
+
+# safety and reference
+#Supervisor.AddAllwaysOnPeer ("Tracing")
