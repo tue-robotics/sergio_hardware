@@ -12,13 +12,14 @@
 ##### DECLARATION OF PARAMETERS ####
 	# Part settings
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 		= "Soem.Slave_1002"
-var string 	BASE_SLAVE_2 		= "Soem.Slave_1003"
+var string 	BASE_SLAVE_1 		= os.getenv("BASE_SLAVE_1");
+var string 	BASE_SLAVE_2 		= os.getenv("BASE_SLAVE_2");
 var int BODYNUMBER 			= 1
 var string BODYPARTNAME 	= "base"
 var bool HOMEABLE 			= false
 var bool HOMINGMANDATORY	= false
 var bool RESETTABLE			= true
+
 	# System properties
 var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
@@ -33,13 +34,15 @@ var double 	ENC2RAD 			= TWOPI*GEARRATIO/ENCODERCOUNTS
 var double 	DISTBETWEENFRONTANDREARWHEELS = 0.530; 
 var double 	DISTBETWEENLEFTANDRIGHTWHEELS = 0.550;  
 var double 	GEOMFACTOR 			= 0.540 ; 			# Distance from center base to wheel
+
 	# Safety
 var int    	N_JOINTS			= 3; 				# number of joints
 var int    	N_MOTORS			= 4; 				# number of motors
-var array 	MAX_VELOCITIES 		= array (0.8, 0.8, 1.57);	  #AMIGO: (1.8, 1.0, 3.1415)
-var array 	MAX_ERRORS     		= array (0.8, 0.8, 1.0); # m/s r/s
+var array 	MAX_VELOCITIES 		= array (1.8, 1.0, 3.0);	  #AMIGO: (1.8, 1.0, 3.1415)
+var array 	MAX_ERRORS     		= array (1.0, 0.8, 1.0); # m/s r/s
 var array  	MAX_OUTPUT    		= array (2000.0, 2000.0, 2000.0, 2000.0);
 var double 	MAX_SATURATION_TIME = 1.0;
+var double	MAX_TEMPERATURE 	= 30.0; 			# Temperature of the motor (set to 30 to see if the motors heat up at all!!)
 	# Reference
 var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
 var double MAX_START_VEL 		= 0.7; 				# Velocity limit at startup
@@ -54,8 +57,6 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 	#var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)
 	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0)
 	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7)
-	
-
 	
 		# Controller test 2 (double notch): unstable
 #	var strings CONTROLLERS 			= strings ("WeakIntegrator","Notch")
@@ -75,16 +76,16 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 ### AddBodyPart ###
 Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
 
-### ENCODER TO VELOCITY ###
-loadComponent("BASE_EncoderToVelocity","MATH::Differentiate")
-addPeer("Supervisor","BASE_EncoderToVelocity")
-setActivity("BASE_EncoderToVelocity",0.0,HighestPriority,ORO_SCHED_RT)
-BASE_EncoderToVelocity.vector_size = 3;
-BASE_EncoderToVelocity.sampling_time = Ts;
-BASE_EncoderToVelocity.use_time_check = true;
-BASE_EncoderToVelocity.allowed_variation_Ts = Ts*0.4;
-BASE_EncoderToVelocity.use_discrete = true;
-BASE_EncoderToVelocity.configure
+### POSITION TO ODOM ###
+loadComponent("BASE_MotorToJointSpacePos","MATH::MatrixTransform")
+addPeer("Supervisor","BASE_MotorToJointSpacePos")
+setActivity("BASE_MotorToJointSpacePos",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_MotorToJointSpacePos.Nrows = 3
+BASE_MotorToJointSpacePos.Ncolumns = 4
+BASE_MotorToJointSpacePos.configure
+BASE_MotorToJointSpacePos.function1 = array (-0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpacePos.function2 = array ( 0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpacePos.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR)
 
 ### VELOCITY TO ODOM ###
 loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")
@@ -101,8 +102,11 @@ BASE_MotorToJointSpace.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELR
 loadComponent("BASE_Controller","FILTERS::Controller")
 addPeer("Supervisor","BASE_Controller")
 setActivity("BASE_Controller",0.0,HighestPriority,ORO_SCHED_RT)
-BASE_Controller.vector_size = 3;
-BASE_Controller.sampling_time = Ts;
+BASE_Controller.vector_size 				= 3;
+BASE_Controller.sampling_time 				= Ts;
+BASE_Controller.number_of_refports         	= 1
+BASE_Controller.refinport_sizes             = ints (3)
+BASE_Controller.number_of_ffwports          = 0
 BASE_Controller.controllers = CONTROLLERS;
 BASE_Controller.gains = GAINS;
 BASE_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
@@ -159,6 +163,16 @@ BASE_AnalogOuts.output_sizes 				= array (2.0, 2.0)
 BASE_AnalogOuts.output_positions			= array (1.0, 1.0, 1.0, 1.0)
 BASE_AnalogOuts.configure;
 
+### ERROR FILTER (used to filter out missed encoder counts) ###
+loadComponent("BASE_ErrorFilter","FILTERS::SecondOrderLowPasses")
+addPeer("Supervisor","BASE_ErrorFilter")
+setActivity("BASE_ErrorFilter",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_ErrorFilter.vector_size	= 4
+BASE_ErrorFilter.sampling_time	= Ts
+BASE_ErrorFilter.pole_frequency	= array(100.0, 	100.0, 	100.0, 	100.0);
+BASE_ErrorFilter.pole_damping	= array(0.7, 	0.7, 	0.7, 	0.7);
+BASE_ErrorFilter.configure
+
 ### Safety ###
 loadComponent("BASE_Safety","SUPERVISORY::Safety")
 addPeer("Supervisor","BASE_Safety")
@@ -168,6 +182,7 @@ BASE_Safety.NM					= N_MOTORS
 BASE_Safety.maxJointErrors		= MAX_ERRORS
 BASE_Safety.motorSaturations	= MAX_OUTPUT
 BASE_Safety.maxConSatTime		= MAX_SATURATION_TIME
+BASE_Safety.additional_safeties = strings("motor_temperature");
 BASE_Safety.configure
 
 ### READ REFERENCE VELOCITIES ###
@@ -229,9 +244,10 @@ loadComponent("BASE_ThermalSensor","FILTERS::Polynomials")
 addPeer("Supervisor","BASE_ThermalSensor")
 setActivity("BASE_ThermalSensor",0.1,LowestPriority,ORO_SCHED_OTHER)
 BASE_ThermalSensor.vector_size = 1
-var uint32[] ORDER = 1;
-ORDER[0] = 2;
-BASE_ThermalSensor.orders = ORDER;
+#var uint32[] ORDER = 1;
+#ORDER[0] = 2;
+
+BASE_ThermalSensor.orders = ints(2);
 BASE_ThermalSensor.configure
 BASE_ThermalSensor.coefficients1 	= array(128.1, -36.73, 1.465);
 
@@ -242,13 +258,23 @@ setActivity("BASE_ThermalToROS",0.1,LowestPriority,ORO_SCHED_OTHER)
 BASE_ThermalToROS.NumberOfDoublesInVector = 1;
 BASE_ThermalToROS.configure;
 
+#### THERMAL SENSOR TO SAFETY ###
+loadComponent("BASE_ThermalToSafety", "MATH::SmallerLarger");
+addPeer("Supervisor", "BASE_ThermalToSafety")
+setActivity("BASE_ThermalToSafety",0.0,LowestPriority,ORO_SCHED_OTHER)
+BASE_ThermalToSafety.numberofinports = 1;
+BASE_ThermalToSafety.input_sizes = array(1.0);
+BASE_ThermalToSafety.bound_values = array(30.0);
+BASE_ThermalToSafety.smaller = ints(1);
+BASE_ThermalToSafety.direct_to_ROS = true;
+BASE_ThermalToSafety.configure;
+
 
 
 #### CONNECT COMPONENTS ####
 # Control loop
-connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpace.in", ConnPolicy() )
-connect ("BASE_MotorToJointSpace.out",	"BASE_EncoderToVelocity.in", ConnPolicy() ); #[m \n m \n rad]
-connect ("BASE_EncoderToVelocity.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
+connect ("BASE_ReadEncoders.vel",	"BASE_MotorToJointSpace.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpace.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
 connect ("BASE_Controller.out",			"BASE_JointToMotorSpace.in", ConnPolicy() )
 #connect ("BASE_Notch.out",				"BASE_JointToMotorSpace.in", ConnPolicy() )
 connect ("BASE_JointToMotorSpace.out",	"BASE_SI2Bits.in", ConnPolicy() )
@@ -259,8 +285,11 @@ connect ("BASE_AnalogOuts.out1", 		BASE_SLAVE_1 +".analogOuts", ConnPolicy() );
 connect ("BASE_AnalogOuts.out2", 		BASE_SLAVE_2 +".analogOuts", ConnPolicy() );
 
 # Safety
-connect ("BASE_Controller.jointErrors",	"BASE_Safety.jointErrors", 	ConnPolicy() ); # jointerrors
+connect ("BASE_Controller.jointErrors",			"BASE_ErrorFilter.in", 			ConnPolicy() ); # jointerrors
+connect ("BASE_ErrorFilter.out",				"BASE_Safety.jointErrors", 		ConnPolicy() ); # jointerrors
 connect ("BASE_AddOffset.out",			"BASE_Safety.controlEffort",ConnPolicy() )
+connect ("BASE_ThermalSensor.out",	"BASE_ThermalToSafety.in1",ConnPolicy() )
+connect ("BASE_ThermalToSafety.outmsg1",	"BASE_Safety.motor_temperature",ConnPolicy() )
 connect ("BASE_Safety.error",			"Supervisor.base_error", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable",			"BASE_Controller.enable", 	ConnPolicy() ); # error
 connect ("BASE_Safety.enable", 			BASE_SLAVE_1+".enablePort", ConnPolicy() ); 
@@ -272,10 +301,11 @@ connect ("BASE_DigitalOuts.digital_out", BASE_SLAVE_2+".digitalOuts", ConnPolicy
 
 # Reference signal
 stream ("BASE_ReadReferences.cmd_vel", 	ros.topic("/sergio/base/references"));
-connect ("BASE_ReadReferences.out",		"BASE_Controller.ref_in", ConnPolicy() );
+connect ("BASE_ReadReferences.out",		"BASE_Controller.ref_in1", ConnPolicy() );
 
 # Diagnostics
-connect ("BASE_MotorToJointSpace.out", 	"BASE_OdometryPublisher.pos", ConnPolicy() );
+connect ("BASE_ReadEncoders.out",		"BASE_MotorToJointSpacePos.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpacePos.out", 	"BASE_OdometryPublisher.pos", ConnPolicy() );
 stream ("BASE_OdometryPublisher.odom", 	ros.topic("/sergio/base/measurements"));
 stream ("BASE_OdometryPublisher.reset", ros.topic("/sergio/base/reset_odometry"));
 connect ("BASE_ReadReferences.out", 	"BASE_Diagnostics.vec1", ConnPolicy() )
@@ -291,22 +321,24 @@ stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 #### START COMPONENTS ####
 # Control loop
 Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
-Supervisor.AddAllwaysOnPeer ("BASE_EncoderToVelocity")
-#Supervisor.AddAllwaysOnPeer ("BASE_Notch")
-Supervisor.AddAllwaysOnPeer ("BASE_JointToMotorSpace")
+Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
+Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpace", 	BODYNUMBER)
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AddOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOuts")
+# Reference
+Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
+# Safety 
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
+Supervisor.AddAllwaysOnPeer ("BASE_ThermalToSafety")
+Supervisor.AddEnabledPeer  	("BASE_ErrorFilter", 		BODYNUMBER)
+Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER)
 # Diagnostics
+Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpacePos")
 Supervisor.AddAllwaysOnPeer ("BASE_OdometryPublisher")
 Supervisor.AddAllwaysOnPeer ("BASE_Diagnostics")
 Supervisor.AddAllwaysOnPeer ("BASE_DigitalOuts")
-# Safety and reference
-Supervisor.AddAllwaysOnPeer ("BASE_ThermalSensor")
-Supervisor.AddAllwaysOnPeer ("BASE_ThermalToROS")
-Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
-Supervisor.AddEnabledPeer   ("BASE_ReadReferences",		BODYNUMBER )
-Supervisor.AddEnabledPeer  	("BASE_Safety", 			BODYNUMBER )
 
 
