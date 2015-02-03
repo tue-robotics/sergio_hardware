@@ -62,6 +62,8 @@ bool RefTrajectory::configureHook()
         ref2[i] = atof(in2);
         i++;
     }
+    n_ref = i;
+    log(Warning)<<"RefTrajectory: Number of reference points is "<<n_ref<<endlog();
 
     return true;
 }

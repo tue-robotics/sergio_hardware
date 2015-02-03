@@ -1,0 +1,72 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts = 0.001
+var string file = "/home/amigo/ros/data/private/Ton_data/torso_identification/ref_stand_bend.txt"
+var int	data_size = 75000;
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/manual_ref07.dat"
+var array MINPOS                = array(0.25877, 0.360); # min spindle length [m]
+# Note, min spindle 1 length can be 0.244, increased because of safety reasons.
+var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
+
+
+### Ref component ###
+#loadComponent("RefTrajectory","SERGIOCUSTOM::RefTrajectory")
+#setActivity("RefTrajectory",Ts,HighestPriority,ORO_SCHED_RT)
+#RefTrajectory.ref_size = data_size
+#RefTrajectory.file = file
+#RefTrajectory.min_ref = MINPOS
+#RefTrajectory.max_ref = MAXPOS
+#RefTrajectory.configure
+
+### bool switch ###
+#loadComponent("bool_switch","SOURCES::ConstantBool")
+#setActivity("bool_switch",Ts,HighestPriority,ORO_SCHED_RT)
+#addPeer("Supervisor","bool_switch")
+#bool_switch.value = false;
+#bool_switch.configure
+
+### Ref switch COMPONENT ###
+#loadComponent("Switch","SIGNALROUTING::Switch")
+#setActivity("Switch",0.0,HighestPriority,ORO_SCHED_RT)
+#addPeer("Supervisor","Switch")
+#Switch.size_of_input = 2
+#Switch.configure
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+addPeer("Supervisor","Tracing")
+Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
+Tracing.buffersize = data_size;
+Tracing.filename = fileout;
+Tracing.Ts = Ts
+Tracing.configure
+
+
+#TORSO_ReferenceGenerator.posout.disconnect();
+#connect ("TORSO_ReferenceGenerator.posout",	    "Switch.in_def", ConnPolicy() );
+#connect ("Switch.out",	    "TORSO_Controller.ref_in1", ConnPolicy() );
+#connect ("RefTrajectory.out","Switch.in_swi",ConnPolicy() ); # Reference
+#connect ("bool_switch.out","Switch.switchParam",ConnPolicy() ); 
+
+
+## Do manually
+#	
+#Tracing.start();
+#RefTrajectory.start(); 
+#bool_switch.value=1;
+
+
+connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
+connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
+connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
+
+
+Supervisor.AddEnabledPeer(	"Tracing", 2)
+#Supervisor.AddEnabledPeer(	"Switch", 2)
+#Supervisor.AddAllwaysOnPeer(	"bool_switch")
