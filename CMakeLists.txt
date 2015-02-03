@@ -31,15 +31,16 @@ install(FILES
 sergiohardware.launch
 soem.ops
 base_controller.ops
-base_controller_odom.ops
-base_controller_odom_ff.ops
+torso_controller.ops
 DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 ### Specific hardware components for testing torso ###
 orocos_component(MotorTest src/MotorTest.cpp ${HEADER_FILES})
 orocos_component(RefGenerator src/RefGenerator.cpp ${HEADER_FILES})
+orocos_component(RefTrajectory src/RefTrajectory.cpp ${HEADER_FILES})
 target_link_libraries(MotorTest ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
 target_link_libraries(RefGenerator ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
+target_link_libraries(RefTrajectory ${catkin_LIBRARIES} ${USE_OROCOS_LIBRARIES})
 
 ### Conversion between spindle length en joint angles of the torso ###
 orocos_component(ConversionSpindleAngle src/ConversionSpindleAngle.cpp ${HEADER_FILES})
