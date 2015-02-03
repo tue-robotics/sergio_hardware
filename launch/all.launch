@@ -6,7 +6,6 @@
     -s $(find sergio_hardware)/ops/base_controller.ops
 	-s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
 	-s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops
-	-s $(find sergio_hardware)/ops/torso_controller.ops
     
     "/>
     <arg name="NAME" value = "hardware"/>
