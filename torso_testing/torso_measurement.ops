@@ -5,9 +5,19 @@
 ########################################################################
 
 #### DECLARATION OF PARAMETERS ####
+### SETTINGS
 var double 	Ts = 0.001
-var int	data_size = 120*1000;
+var int	data_size = 60*1000;
 var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/sine_01.dat"
+var int joint = 1;
+var array BIAS = array(0.38, 0.44);
+var double AMPL = 0.01; # 1 cm
+
+
+### VARIABLES
+var array AMP = array(0.00000000001, 0.00000000001); # amplitude cannot be zero
+AMP[joint-1] = AMPL;
+var array FS = 	array(0.1, 0.1); #frequency 
 
 
 ### TRACING COMPONENT ###
@@ -30,23 +40,13 @@ connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
 loadComponent("TORSO_Sine","SOURCES::SineWave")
 #addPeer("Supervisor","TORSO_Sine")
 setActivity("TORSO_Sine",Ts,HighestPriority,ORO_SCHED_RT)
-TORSO_Sine.frequency    = array(0.1, 0.1);
-TORSO_Sine.amplitude    = array(0.00000000001, 0.01);
+TORSO_Sine.frequency    = FS
+TORSO_Sine.amplitude    = AMP
 TORSO_Sine.phase        = array(0.0, 0.0);
-TORSO_Sine.bias         = array(0.380, 0.440);
+TORSO_Sine.bias         = BIAS;
 TORSO_Sine.vector_size  = 2;
 TORSO_Sine.configure
 
 connect ("TORSO_Sine.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 
-### Loading Components ###
-### SOURCES ###
-loadComponent("TORSO_Const","SOURCES::SineWave")
-#addPeer("Supervisor","TORSO_Sine")
-setActivity("TORSO_Sine",Ts,HighestPriority,ORO_SCHED_RT)
-TORSO_Sine.frequency    = array(0.1, 0.1);
-TORSO_Sine.amplitude    = array(0.00000000001, 0.01);
-TORSO_Sine.phase        = array(0.0, 0.0);
-TORSO_Sine.bias         = array(0.380, 0.440);
-TORSO_Sine.vector_size  = 2;
-TORSO_Sine.configure
+
