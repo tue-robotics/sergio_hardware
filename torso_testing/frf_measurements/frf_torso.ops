@@ -1,37 +1,61 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	spindle 	    = 1;			# define 
-var double 	noise_level 	= 35.0;			# 
-var int buffersize 			= 60*1000;
-var string	FILENAME 		= "17-11-14_FRF_up_do_s1.dat"
+var int		joint 			= 2;		# define 
+var int		pos_tr			= 1;		# pos trunk ((1=do, 2=ce, 3=up)
+var int 	pos_leg			= 3; 		# pos leg (1=do, 2=ce, 3=up)
+var array	V_EQUILIBRIUM = array(0.0, 0.0); # equilibrium voltage input (make zero if unknown)
+var double 	noise_level 	= 0.18;		# Volt
+var int 	buffersize 		= 60*1000;	# duration time [s]
+var string	FILENAME 		= "06-02-15_FRF_tr_up_do.dat"
 #############################################################
 
-
-
-var array AMP 			= array(1.0, 1.0);
-AMP[spindle-1] 			= 20000.0;
-
-TORSO_Sine.frequency    = array(0.3, 0.2);
-TORSO_Sine.amplitude    = AMP;
-TORSO_Sine.phase        = array(0.0, 0.0);
-TORSO_Sine.bias         = array(0.0, 0.0);
+var string DIRECTORY	= "/home/amigo/ros/data/private/Ton_data/torso_identification/frf_measurements/";
+var double AMPL 		= 0.01; 			# amplitude of sine 1 cm
+var array FS 			= array(0.1, 0.1); 	#frequency of sine
 
 # Configure settings
-
-	# all wheels
-#var array 	NOISE_MIN 		= array(-noise_level, -noise_level, -noise_level, -noise_level);
-#var array 	NOISE_MAX 		= array(noise_level, noise_level, noise_level, noise_level);
+var array EQ_LEG = array(0.2261, 0.26,   0.26,   0.1761, 0.1905, 0.2109, 0.1206, 0.1352, 0.1667);
+var array EQ_TRU = array(0.0874, 0.0529, 0.0170, 0.0997, 0.0723, 0.0417, 0.1085, 0.0889, 0.0683);
+V_EQUILIBRIUM[0] = EQ_LEG[(pos_leg-1)*3+pos_tr-1]
+V_EQUILIBRIUM[1] = EQ_TRU[(pos_leg-1)*3+pos_tr-1]
+var array BIAS_LEG = array(0.27,  0.325, 0.38 );
+var array BIAS_TRU = array(0.37, 0.405, 0.44);
+var array 	BIAS 	= array(0.0, 0.0);
+BIAS[0] = BIAS_LEG[pos_leg-1];
+BIAS[1] = BIAS_TRU[pos_tr-1];
+var array AMP = array(0.00000000001, 0.00000000001); # amplitude cannot be zero
+AMP[joint-1] = AMPL;
 
 	# per wheel
 var array 	NOISE_MIN 		= array(-0.0, -0.0);
 var array 	NOISE_MAX 		= array(0.0, 0.0);
-NOISE_MIN[spindle-1] 		= -noise_level;
-NOISE_MAX[spindle-1] 		= noise_level;
+NOISE_MIN[joint-1] 		= -noise_level;
+NOISE_MAX[joint-1] 		= noise_level;
 
 	# Part settings
 var double 	Ts = 0.001
-var int 	BODYNUMBER 			= 1
+var int 	BODYNUMBER 			= 2
+
+### Loading Components ###
+### SINE REFERENCE GENERATOR (START MANUALLY!!)###
+loadComponent("IDENTIFICATION_Sine","SOURCES::SineWave")
+#addPeer("Supervisor","IDENTIFICATION_Sine")
+setActivity("IDENTIFICATION_Sine",Ts,HighestPriority,ORO_SCHED_RT)
+IDENTIFICATION_Sine.frequency    = FS
+IDENTIFICATION_Sine.amplitude    = AMP
+IDENTIFICATION_Sine.phase        = array(0.0, 0.0);
+IDENTIFICATION_Sine.bias         = BIAS;
+IDENTIFICATION_Sine.vector_size  = 2;
+IDENTIFICATION_Sine.configure
+
+### SINE REFERENCE GENERATOR (START MANUALLY!!)###
+loadComponent("IDENTIFICATION_Equilibrium","SOURCES::ConstantSignal")
+addPeer("Supervisor","IDENTIFICATION_Equilibrium")
+setActivity("IDENTIFICATION_Equilibrium",Ts,HighestPriority,ORO_SCHED_RT)
+IDENTIFICATION_Equilibrium.value    	= V_EQUILIBRIUM
+IDENTIFICATION_Equilibrium.vector_size 	= 2
+IDENTIFICATION_Equilibrium.configure
 
 #### NOISE COMPONENT ###
 loadComponent("IDENTIFICATION_Noise","SOURCES::UniformRandomNumber")
@@ -46,7 +70,7 @@ IDENTIFICATION_Noise.configure
 loadComponent("IDENTIFICATION_AddNoise","MATH::Addition")
 addPeer("Supervisor","IDENTIFICATION_AddNoise")
 IDENTIFICATION_AddNoise.vectorsize = 2
-IDENTIFICATION_AddNoise.numberofinputs = 2
+IDENTIFICATION_AddNoise.numberofinputs = 3
 setActivity("IDENTIFICATION_AddNoise",0.0,HighestPriority,ORO_SCHED_RT)
 IDENTIFICATION_AddNoise.configure
 
@@ -56,16 +80,20 @@ addPeer("Supervisor","Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
 Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
 Tracing.buffersize = buffersize
-Tracing.filename = "/home/amigo/ros/data/Ton_data/torso_frf/"+FILENAME;
+Tracing.filename = DIRECTORY+FILENAME;
 Tracing.Ts = Ts
 Tracing.configure
 
 ### Disconnect and connect components ###
 TORSO_Controller.out.disconnect();
-connect ("IDENTIFICATION_AddNoise.out","TORSO_ControlToRos.in", ConnPolicy() )
+connect ("IDENTIFICATION_AddNoise.out",		"TORSO_ControlToRos.in", ConnPolicy() )
 connect ("TORSO_Controller.out",			"IDENTIFICATION_AddNoise.in1_ev", ConnPolicy() );
-connect ("IDENTIFICATION_Noise.out",	"IDENTIFICATION_AddNoise.in2", ConnPolicy() );
-connect ("IDENTIFICATION_AddNoise.out",	"TORSO_SI2Bits.in", ConnPolicy() );
+connect ("IDENTIFICATION_Noise.out",		"IDENTIFICATION_AddNoise.in2", ConnPolicy() );
+connect ("IDENTIFICATION_Equilibrium.out",	"IDENTIFICATION_AddNoise.in3", ConnPolicy() );
+connect ("IDENTIFICATION_AddNoise.out",		"TORSO_SI2Bits.in", ConnPolicy() );
+
+### reference component
+connect ("IDENTIFICATION_Sine.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 
 ### Connect tracing componenets ###
 connect ("TORSO_Controller.jointErrors",	"Tracing.in3", ConnPolicy() );
@@ -73,6 +101,7 @@ connect ("TORSO_Controller.out",			"Tracing.in2", ConnPolicy() );
 connect ("IDENTIFICATION_AddNoise.out",	    "Tracing.in1", ConnPolicy() );
 
 # safety and reference
-Supervisor.AddEnabledPeer  	("IDENTIFICATION_Noise",	BODYNUMBER )
+#Supervisor.AddEnabledPeer  	("IDENTIFICATION_Noise",	BODYNUMBER )
 Supervisor.AddAllwaysOnPeer ("IDENTIFICATION_AddNoise")
-Supervisor.AddEnabledPeer  	("Tracing",					BODYNUMBER )
+Supervisor.AddAllwaysOnPeer ("IDENTIFICATION_Equilibrium")
+#Supervisor.AddEnabledPeer  	("Tracing",					BODYNUMBER )

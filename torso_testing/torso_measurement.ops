@@ -9,8 +9,8 @@
 var double 	Ts = 0.001
 var int	data_size = 60*1000;
 var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/sine_01.dat"
-var int joint = 1;
-var array BIAS = array(0.38, 0.44);
+var int joint = 2;
+var array BIAS = array(0.27, 0.44); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
 var double AMPL = 0.01; # 1 cm
 
 
