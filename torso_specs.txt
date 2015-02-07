@@ -6,7 +6,7 @@
 	- Encoder, HED5540
 	- Lead Screw, skf spindle SD 12X2
 	- Ratios:
-		- Encodercounts/round = 500 
+		- Encodercounts/round = 4*500 
 		- Rotations spindle/rotations motor = 2/5
 		- Rotations spindle/translation spindle = 1000*pi rad/m
 
@@ -17,6 +17,6 @@
 	- Encoder, HED5540
 	- Lead Screw, skf spindle SD 12X2
 	- Ratios:
-		- Encodercounts/round = 500 
+		- Encodercounts/round = 4*500 
 		- Rotations spindle/rotations motor = 3/13
 		- Rotations spindle/translation spindle = 1000*pi rad/m
