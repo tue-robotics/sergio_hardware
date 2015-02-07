@@ -8,11 +8,30 @@
 ### SETTINGS
 var double 	Ts = 0.001
 var int	data_size = 60*1000;
-var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/sine_01.dat"
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/ffw01.dat"
 var int joint = 2;
 var array BIAS = array(0.27, 0.44); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
 var double AMPL = 0.01; # 1 cm
 
+var double P_AMP 	= 0.02;
+var array P_OFFSET = array(0.38, 0.43);
+var double VEL = 0.006;
+var double ACC = 0.003;
+
+var array MAXVEL                = array(0.025, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
+var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+MAXVEL[joint-1] = VEL;
+MAXACC[joint-1] = ACC;
+TORSO_ReferenceGenerator.maxVelocity      = array(MAXVEL)
+TORSO_ReferenceGenerator.maxAcceleration  = array(MAXACC)
+
+var double P_WID = 8.0;
+var double P_PER = 2*P_WID;
+var array P_AMPLITUDE = array(0.0, 0.0);
+P_AMPLITUDE[joint-1] = P_AMP;
+var array P_WIDTH =  array(P_WID, P_WID);
+var array P_PERIOD = array(P_PER, P_PER);
+var array P_PHASE = array(0.0, 0.0);
 
 ### VARIABLES
 var array AMP = array(0.00000000001, 0.00000000001); # amplitude cannot be zero
@@ -48,5 +67,19 @@ TORSO_Sine.vector_size  = 2;
 TORSO_Sine.configure
 
 connect ("TORSO_Sine.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+
+### SOURCES ###
+loadComponent("TORSO_Pulse","SOURCES::PulseSignal")
+#addPeer("Supervisor","TORSO_Sine")
+setActivity("TORSO_Pulse",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Pulse.period    	 = P_PERIOD
+TORSO_Pulse.pulse_width  = P_WIDTH
+TORSO_Pulse.amplitude    = P_AMPLITUDE
+TORSO_Pulse.phase_delay  = P_PHASE
+TORSO_Pulse.offset  	 = P_OFFSET
+TORSO_Pulse.vector_size  = 2;
+TORSO_Pulse.configure
+
+connect ("TORSO_Pulse.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
 
 

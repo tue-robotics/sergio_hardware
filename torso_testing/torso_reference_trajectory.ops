@@ -6,22 +6,25 @@
 
 #### DECLARATION OF PARAMETERS ####
 var double 	Ts = 0.001
-var string file = "/home/amigo/ros/data/private/Ton_data/torso_identification/ref_stand_bend.txt"
-var int	data_size = 75000;
-var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/manual_ref07.dat"
+var string file = "/home/amigo/ros/data/private/Ton_data/torso_identification/reference/ref_stand_bend.txt"
+var int	buffer_size = 50*1000;
+var int	data_size = 47131;
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/reference/ref_stand_bend07.dat"
 var array MINPOS                = array(0.25877, 0.360); # min spindle length [m]
 # Note, min spindle 1 length can be 0.244, increased because of safety reasons.
 var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
 
 
 ### Ref component ###
-#loadComponent("RefTrajectory","SERGIOCUSTOM::RefTrajectory")
-#setActivity("RefTrajectory",Ts,HighestPriority,ORO_SCHED_RT)
-#RefTrajectory.ref_size = data_size
-#RefTrajectory.file = file
-#RefTrajectory.min_ref = MINPOS
-#RefTrajectory.max_ref = MAXPOS
-#RefTrajectory.configure
+loadComponent("RefTrajectory","SERGIOCUSTOM::RefTrajectory")
+setActivity("RefTrajectory",Ts,HighestPriority,ORO_SCHED_RT)
+addPeer("Supervisor","RefTrajectory")
+RefTrajectory.ref_size = data_size
+RefTrajectory.file = file
+RefTrajectory.min_ref = MINPOS
+RefTrajectory.max_ref = MAXPOS
+RefTrajectory.start_ref = 1;
+RefTrajectory.configure
 
 ### bool switch ###
 #loadComponent("bool_switch","SOURCES::ConstantBool")
@@ -42,7 +45,7 @@ loadComponent("Tracing","Signal::Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
 addPeer("Supervisor","Tracing")
 Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
-Tracing.buffersize = data_size;
+Tracing.buffersize = buffer_size;
 Tracing.filename = fileout;
 Tracing.Ts = Ts
 Tracing.configure
@@ -61,12 +64,19 @@ Tracing.configure
 #RefTrajectory.start(); 
 #bool_switch.value=1;
 
+# Reference
+TORSO_ReferenceGenerator.posout.disconnect();
+connect ("RefTrajectory.out",     "TORSO_Controller.ref_in1",                ConnPolicy() ); # Reference
+#connect ("RefTrajectory.out","TORSO_ReferenceGenerator.posin1",ConnPolicy() ); 
 
-connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
+# tracing
+#connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
 connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
 connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
 
+connect ("RefTrajectory.out",	    "Tracing.in1", ConnPolicy() );
+
 
 Supervisor.AddEnabledPeer(	"Tracing", 2)
-#Supervisor.AddEnabledPeer(	"Switch", 2)
+Supervisor.AddEnabledPeer(	"RefTrajectory", 2)
 #Supervisor.AddAllwaysOnPeer(	"bool_switch")

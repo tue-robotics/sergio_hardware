@@ -9,13 +9,15 @@ using namespace std;
 using namespace RTT;
 using namespace SERGIOCUSTOM;
 
-RefTrajectory::RefTrajectory(const string& name) : TaskContext(name, PreOperational)
+RefTrajectory::RefTrajectory(const string& name) : TaskContext(name, PreOperational),
+	start_ref(false)
 {
     // Adding Properties:
     addProperty( "ref_size",n_ref).doc("Number of reference points.");
     addProperty("file",file).doc("string conraining file name from root.");
     addProperty("min_ref",min_pos).doc("array containing minimal positions");
     addProperty("max_ref",max_pos).doc("array containing maximal positions");
+    addProperty("start_ref",start_ref).doc("array containing maximal positions");
 
     // Creating ports:
     addPort( "out", outport );
@@ -64,16 +66,21 @@ bool RefTrajectory::configureHook()
     }
     n_ref = i;
     log(Warning)<<"RefTrajectory: Number of reference points is "<<n_ref<<endlog();
+    time = 0;
 
     return true;
 }
 
 bool RefTrajectory::startHook()
 {
-    time = 0;
     output.assign(2,0.0);
+    
+    // initial output
     output[0] = ref1[0];
     output[1] = ref2[0];
+    for (uint i=0; i<2; i++){
+		output[i] = min(max_pos[i],max(min_pos[i],output[i]));
+	}
 
     return true;
 }
@@ -81,21 +88,22 @@ bool RefTrajectory::startHook()
 
 void RefTrajectory::updateHook()
 {
-    if (time<n_ref){
-        for (uint i=0; i<2; i++){
-            output[i] = min(max_pos[i],max(min_pos[i],output[i]));
-        }
-        
-        //write output
-        outport.write(output);
-
+    if (time<n_ref && start_ref){
         // update output
         output[0] = ref1[time];
         output[1] = ref2[time];
+        
+        for (uint i=0; i<2; i++){
+            output[i] = min(max_pos[i],max(min_pos[i],output[i]));
+        }
 
         // update iterator
         time++;
     }
+    
+	//write output
+	outport.write(output);
+	
 }
 
 ORO_CREATE_COMPONENT(SERGIOCUSTOM::RefTrajectory)

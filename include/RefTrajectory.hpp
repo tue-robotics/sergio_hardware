@@ -30,6 +30,7 @@ namespace SERGIOCUSTOM
     // Declaring global variables
     doubles ref1, ref2;
     doubles min_pos, max_pos;
+    bool start_ref;
     uint n_ref;
     string file;
     uint time;
