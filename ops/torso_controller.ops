@@ -43,16 +43,16 @@ var array OFFSET_CALIPHERS 	= array(-0.22986, -0.22312);
     # Refrence generator
 var int N_JOINTS                = 2;
 var strings JOINT_NAMES         = strings( "ankle_joint","knee_joint","hip_joint" )
-var array MINPOS                = array(0.25877, 0.360); # min spindle length [m]
+var array MINPOS                = array(0.259, 0.360); # min spindle length [m]
 # Note, min spindle 1 length can be 0.244, increased because of safety reasons.
 var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
 var array MAXVEL                = array(0.024, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
 var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
-var double LEGS_ENDSTOP			=  0.25117; # extra endstop safety legs
+var array ENDSTOP				= array(0.251, 0.357, 0.397, 0.459); # extra endstop safety
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
-var array   MAX_ERRORS          = array (0.05, 0.05); 
+var array   MAX_ERRORS          = array (0.01, 0.01); 
 var array   MAX_OUTPUT          = array (1000.0, 1000.0);
 var double  MAX_SATURATION_TIME = 2.0;
 
@@ -161,7 +161,7 @@ TORSO_Safety.NM                  = N_MOTORS
 TORSO_Safety.maxJointErrors      = MAX_ERRORS
 TORSO_Safety.motorSaturations    = MAX_OUTPUT
 TORSO_Safety.maxConSatTime       = MAX_SATURATION_TIME
-TORSO_Safety.additional_safeties = strings("calibration","endstopLegs")
+TORSO_Safety.additional_safeties = strings("calibration","endstopLegDown","endstopTrunkDown","endstopLegUp","endstopTrunkUp")
 TORSO_Safety.configure
 
 ### DIGITAL OUTS ENABLE ###
@@ -176,13 +176,6 @@ addPeer("Supervisor", "TORSO_BrakeDO")
 setActivity("TORSO_BrakeDO", 0.0, HighestPriority, ORO_SCHED_RT)
 TORSO_BrakeDO.number_of_bits = NBITS;
 TORSO_BrakeDO.configure
-
-### ENCODER CALIBRATION COMPONENT ###
-loadComponent("TORSO_InitEncoder", "SERGIOCUSTOM::InitCalipherToSpindle")
-addPeer("Supervisor", "TORSO_InitEncoder")
-setActivity("TORSO_InitEncoder",0.1,LowestPriority,ORO_SCHED_OTHER)
-TORSO_InitEncoder.offset_caliphers = OFFSET_CALIPHERS;
-TORSO_InitEncoder.configure
 
 #### LOAD COMPONENT TO PUBLISH DIAGNOSTICS ###
 loadComponent("TORSO_Diagnostics","ROS::RosDiagnostics")
@@ -206,14 +199,21 @@ TORSO_ENCSpindleToAngle.output_joint_states = true
 TORSO_ENCSpindleToAngle.JointNames 			= JOINT_NAMES
 TORSO_ENCSpindleToAngle.configure
 
-#### LEGS LOWER ENDSTOP CHECK ###
+### ENCODER CALIBRATION COMPONENT ###
+loadComponent("TORSO_InitEncoder", "SERGIOCUSTOM::InitCalipherToSpindle")
+addPeer("Supervisor", "TORSO_InitEncoder")
+setActivity("TORSO_InitEncoder",0.1,LowestPriority,ORO_SCHED_OTHER)
+TORSO_InitEncoder.offset_caliphers = OFFSET_CALIPHERS;
+TORSO_InitEncoder.configure
+
+#### LEGS ENDSTOP CHECK ###
 loadComponent("TORSO_Endstop", "MATH::SmallerLarger");
 addPeer("Supervisor", "TORSO_Endstop")
 setActivity("TORSO_Endstop", 0.0, HighestPriority, ORO_SCHED_RT)
-TORSO_Endstop.numberofinports = 1;
-TORSO_Endstop.input_sizes = array(2.0);
-TORSO_Endstop.bound_values = array(LEGS_ENDSTOP,0.0);
-TORSO_Endstop.smaller = ints(0, 0);
+TORSO_Endstop.numberofinports = 2;
+TORSO_Endstop.input_sizes = array(2.0, 2.0);
+TORSO_Endstop.bound_values = ENDSTOP;
+TORSO_Endstop.smaller = ints(0, 0, 1, 1);
 TORSO_Endstop.direct_to_ROS = true;
 TORSO_Endstop.configure;
 
@@ -276,9 +276,9 @@ connect ("TORSO_SI2Bits.out","TORSO_MotorPWM.in1", ConnPolicy())
 connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 
 # Initialize encoders
+connect ("TORSO_InitEncoder.out_safe",    	"TORSO_Safety.calibration", ConnPolicy() )
 connect (TORSO_SLAVE_1+".caliphers",    	"TORSO_InitEncoder.in_calipher", ConnPolicy() )
 connect ("TORSO_InitEncoder.out_reset",    	"TORSO_ReadEncoders.in_init", ConnPolicy() )
-connect ("TORSO_InitEncoder.out_safe",    	"TORSO_Safety.calibration", ConnPolicy() )
 
 
 # Safety
@@ -294,7 +294,11 @@ connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in2", ConnPolicy() )
 connect ("TORSO_EnableDO.digital_out",      TORSO_SLAVE_1+".digitalOuts", ConnPolicy() )
 connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() )
 connect ("TORSO_ReadEncoders.out", 				"TORSO_Endstop.in1", ConnPolicy() )
-connect ("TORSO_Endstop.outmsg1",			"TORSO_Safety.endstopLegs", ConnPolicy() )
+connect ("TORSO_ReadEncoders.out", 				"TORSO_Endstop.in2", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg1",			"TORSO_Safety.endstopLegDown", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg2",			"TORSO_Safety.endstopTrunkDown", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg3",			"TORSO_Safety.endstopLegUp", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg4",			"TORSO_Safety.endstopTrunkUp", ConnPolicy() )
 
 # References 
 stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
@@ -336,14 +340,14 @@ Supervisor.AddEnabledPeer(	"TORSO_Controller", BODYNUMBER)
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
 
-# initialize encoders
-Supervisor.AddAllwaysOnPeer("TORSO_InitEncoder")
-
 # safety
 Supervisor.AddAllwaysOnPeer("TORSO_EnableDO")
 Supervisor.AddAllwaysOnPeer("TORSO_BrakeDO")
 Supervisor.AddAllwaysOnPeer("TORSO_Endstop")
 Supervisor.AddEnabledPeer(	"TORSO_Safety", BODYNUMBER)
+
+# init encoders
+Supervisor.AddAllwaysOnPeer ("TORSO_InitEncoder")
 
 # reference
 Supervisor.AddEnabledPeer(	"TORSO_ReadReferences", BODYNUMBER)

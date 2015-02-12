@@ -126,6 +126,7 @@ var double GEARBOX_UPPER 	= 3.0/13.0; 					# Motor to drive train
 var double METER2RAD		= 500.0*TWOPI;				# translation to rotation (rad/m)
 var array ENC2METER			= array(TWOPI/ENCODERCOUNTS_T*GEARBOX_LOWER/METER2RAD, 
 								TWOPI/ENCODERCOUNTS_T*GEARBOX_UPPER/METER2RAD);
+var array OFFSET_CALIPHERS 	= array(-0.22986, -0.22312);
 
 loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
 addPeer("Supervisor","TORSO_ReadEncoders")
@@ -136,6 +137,8 @@ TORSO_ReadEncoders.configure
 
 connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
 connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
+
+
 
 #### READ_CALIPHERS ### TODO: remove when torso controller is finished
 loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");

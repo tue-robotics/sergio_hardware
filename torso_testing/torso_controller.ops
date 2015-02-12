@@ -43,12 +43,12 @@ var array OFFSET_CALIPHERS 	= array(-0.22986, -0.22312);
     # Refrence generator
 var int N_JOINTS                = 2;
 var strings JOINT_NAMES         = strings( "ankle_joint","knee_joint","hip_joint" )
-var array MINPOS                = array(0.25877, 0.360); # min spindle length [m]
+var array MINPOS                = array(0.259, 0.360); # min spindle length [m]
 # Note, min spindle 1 length can be 0.244, increased because of safety reasons.
 var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
 var array MAXVEL                = array(0.024, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
-var array MAXACC                = array(0.037, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
-var double LEGS_ENDSTOP			=  0.25117; # extra endstop safety legs
+var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+var array ENDSTOP				= array(0.251, 0.357, 0.397, 0.459); # extra endstop safety
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
@@ -57,21 +57,25 @@ var array   MAX_OUTPUT          = array (1000.0, 1000.0);
 var double  MAX_SATURATION_TIME = 2.0;
 
 # Cotroller parameters
-var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
-#var array 	GAINS 						= array (566.5688194020424, 52.94884327142393); # position to volt
-var array 	GAINS 						= array (0.0, 52.94884327142393); # position to volt
-# var array   GAINS                       = array (0.03, 0.025); # encoder to bits
-#var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
-var array   LEAD_FREQUENCY              = array (1.33, 1.0)
-var array   LAG_FREQUENCY               = array (10.0, 10.0)
 
  # from bode 
-#var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
-#var array 	GAINS 						= array (100.5688194020424, 200.4884327142393); # position to volt
-## var array   GAINS                       = array (0.03, 0.025); # encoder to bits
-#var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
-#var array   LEAD_FREQUENCY              = array (3.33, 3.33)
-#var array   LAG_FREQUENCY               = array (30.0, 30.0)
+var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
+#var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
+#var array 	GAINS 						= array (366.5, 529.5); # position to volt
+var array 	GAINS 						= array (0.0, 529.5); # position to volt
+# var array   GAINS                       = array (0.03, 0.025); # encoder to bits
+var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
+var array   LEAD_FREQUENCY              = array (3.33, 3.33)
+var array   LAG_FREQUENCY               = array (30.0, 30.0)
+
+# 		# from bode new, TODO test
+#	var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator","LowPass")
+#	var array 	GAINS 						= array (1000.0, 1200.0); # position to volt
+#	var array   INTEGRATOR_ZERO_FREQUENCY   = array (3.0, 3.0)
+#	var array   LEAD_FREQUENCY              = array (5.0, 4.0)
+#	var array   LAG_FREQUENCY               = array (60.0, 60.0)
+#	var array LOWPASS_FREQUENCY         = array (200.0, 200.0)
+#	var array LOWPASS_DAMPING           = array (0.7, 0.7)
  
 ### NameBodyPart ###
 Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
@@ -118,7 +122,7 @@ TORSO_Controller.number_of_ffwports = 0;
 TORSO_Controller.number_of_refports = 1;
 TORSO_Controller.refinport_sizes = ints(2);
 TORSO_Controller.gains = GAINS;
-#TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
+TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 TORSO_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
 TORSO_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
 #TORSO_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
@@ -158,7 +162,7 @@ TORSO_Safety.NM                  = N_MOTORS
 TORSO_Safety.maxJointErrors      = MAX_ERRORS
 TORSO_Safety.motorSaturations    = MAX_OUTPUT
 TORSO_Safety.maxConSatTime       = MAX_SATURATION_TIME
-TORSO_Safety.additional_safeties = strings("calibration","endstopLegs")
+TORSO_Safety.additional_safeties = strings("calibration","endstopLegDown","endstopTrunkDown","endstopLegUp","endstopTrunkUp")
 TORSO_Safety.configure
 
 ### DIGITAL OUTS ENABLE ###
@@ -197,14 +201,14 @@ TORSO_ENCSpindleToAngle.output_joint_states = true
 TORSO_ENCSpindleToAngle.JointNames 			= JOINT_NAMES
 TORSO_ENCSpindleToAngle.configure
 
-#### LEGS LOWER ENDSTOP CHECK ###
+#### LEGS ENDSTOP CHECK ###
 loadComponent("TORSO_Endstop", "MATH::SmallerLarger");
 addPeer("Supervisor", "TORSO_Endstop")
 setActivity("TORSO_Endstop", 0.0, HighestPriority, ORO_SCHED_RT)
-TORSO_Endstop.numberofinports = 1;
-TORSO_Endstop.input_sizes = array(2.0);
-TORSO_Endstop.bound_values = array(LEGS_ENDSTOP,0.0);
-TORSO_Endstop.smaller = ints(0, 0);
+TORSO_Endstop.numberofinports = 2;
+TORSO_Endstop.input_sizes = array(2.0, 2.0);
+TORSO_Endstop.bound_values = ENDSTOP;
+TORSO_Endstop.smaller = ints(0, 0, 1, 1);
 TORSO_Endstop.direct_to_ROS = true;
 TORSO_Endstop.configure;
 
@@ -238,12 +242,22 @@ setActivity("TORSO_False", Ts, HighestPriority, ORO_SCHED_RT)
 TORSO_False.value = false;
 TORSO_False.configure
 
-# disable lower torso
+# disable torso
 connect ("TORSO_False.out","TORSO_EnableDO.in1", ConnPolicy() )
 connect ("TORSO_False.out","TORSO_BrakeDO.in1", ConnPolicy() )
 #connect ("TORSO_False.out","TORSO_EnableDO.in2", ConnPolicy() )
 #connect ("TORSO_False.out","TORSO_BrakeDO.in2", ConnPolicy() )
 
+### SINE REFERENCE GENERATOR (START MANUALLY!!)###
+#loadComponent("IDENTIFICATION_Equilibrium","SOURCES::ConstantSignal")
+#addPeer("Supervisor","IDENTIFICATION_Equilibrium")
+#setActivity("IDENTIFICATION_Equilibrium",Ts,HighestPriority,ORO_SCHED_RT)
+#IDENTIFICATION_Equilibrium.value    	= array(0.25, 0.0);
+#IDENTIFICATION_Equilibrium.vector_size 	= 2
+#IDENTIFICATION_Equilibrium.configure
+
+#connect ("IDENTIFICATION_Equilibrium.out","TORSO_Controller.ffw_in1", ConnPolicy())
+#Supervisor.AddEnabledPeer(	"IDENTIFICATION_Equilibrium", BODYNUMBER)
 
 ############  End Used for testing #################  
 ####################################################
@@ -257,6 +271,7 @@ connect ("TORSO_SI2Bits.out","TORSO_MotorPWM.in1", ConnPolicy())
 connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 
 # Initialize encoders
+
 connect ("TORSO_InitEncoder.out_safe",    	"TORSO_Safety.calibration", ConnPolicy() )
 
 
@@ -273,7 +288,11 @@ connect ("TORSO_Safety.enable",             "TORSO_BrakeDO.in2", ConnPolicy() )
 connect ("TORSO_EnableDO.digital_out",      TORSO_SLAVE_1+".digitalOuts", ConnPolicy() )
 connect ("TORSO_BrakeDO.digital_out",       TORSO_SLAVE_2+".bits", ConnPolicy() )
 connect ("TORSO_ReadEncoders.out", 				"TORSO_Endstop.in1", ConnPolicy() )
-connect ("TORSO_Endstop.outmsg1",			"TORSO_Safety.endstopLegs", ConnPolicy() )
+connect ("TORSO_ReadEncoders.out", 				"TORSO_Endstop.in2", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg1",			"TORSO_Safety.endstopLegDown", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg2",			"TORSO_Safety.endstopTrunkDown", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg3",			"TORSO_Safety.endstopLegUp", ConnPolicy() )
+connect ("TORSO_Endstop.outmsg4",			"TORSO_Safety.endstopTrunkUp", ConnPolicy() )
 
 # References 
 stream  ("TORSO_ReadReferences.in",             ros.topic("/sergio/torso/references"))
