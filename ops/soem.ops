@@ -66,14 +66,6 @@ setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
 
 connect ("AnalogIns.beckhoffmsg_in_1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
 connect ("AnalogIns.beckhoffmsg_in_2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
-
-#### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
-#loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
-#addPeer("Supervisor", "AnalogInsFToRos")
-#setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
-#AnalogInsFToRos.NumberOfDoublesInVector = 1;
-#AnalogInsFToRos.configure;
-
 stream("AnalogIns.rosmsg_out_1", ros.topic("/sergio/battery_value"))
 
 
@@ -154,6 +146,5 @@ Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
 Supervisor.AddAllwaysOnPeer ("CaliphersIn")
 Supervisor.AddAllwaysOnPeer ("AnalogIns")
-#Supervisor.AddAllwaysOnPeer ("AnalogInsFToRos")
 Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
 Supervisor.start()
