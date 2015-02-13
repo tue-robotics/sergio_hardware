@@ -57,17 +57,15 @@ connect ("Soem.Slave_1001.encoder1", "Supervisor.serialRunning", ConnPolicy() ) 
 #### LOAD COMPONENT TO ENABLE ANALOG INS (only force sensors are used)###
 loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","AnalogIns")
-AnalogIns.numberofinports = 2;
-AnalogIns.input_sizes = array(3.0, 3.0)
-AnalogIns.numberofoutports = 3;
-AnalogIns.output_sizes = array(1.0, 1.0, 4.0); # battery[1], thermal[2], emergency[3,4,5,6]
-AnalogIns.input_positions = array(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
-AnalogIns.direct_to_ROS = false
+AnalogIns.inport_dimensions = array(3.0, 3.0);
+AnalogIns.outport_dimensions = array(1.0, 1.0, 4.0);;
+AnalogIns.from_which_inport = array(1.0, 1.0, 1.0, 2.0, 2.0, 2.0);
+AnalogIns.from_which_entry = array(1.0, 2.0, 3.0, 1.0, 2.0, 3.0);
 AnalogIns.configure
 setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
 
-connect ("AnalogIns.in1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
-connect ("AnalogIns.in2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
+connect ("AnalogIns.beckhoffmsg_in_1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
+connect ("AnalogIns.beckhoffmsg_in_2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
 
 #### LOAD COMPONENT TO STREAM ANALOG INS FORCE DATA TO ROS ###
 loadComponent("AnalogInsFToRos", "ROS::DoublesToROS");
@@ -76,7 +74,7 @@ setActivity("AnalogInsFToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
 AnalogInsFToRos.NumberOfDoublesInVector = 1;
 AnalogInsFToRos.configure;
 
-connect ("AnalogIns.out1", "AnalogInsFToRos.in", ConnPolicy() )
+connect ("AnalogIns.stdvect_out_1", "AnalogInsFToRos.in", ConnPolicy() )
 stream("AnalogInsFToRos.out1", ros.topic("/sergio/battery_value"))
 
 
@@ -91,7 +89,7 @@ EmergencyToRos.smaller = ints(1, 1, 1, 1);
 EmergencyToRos.direct_to_ROS = true;
 EmergencyToRos.configure;
 
-connect ("AnalogIns.out3", "EmergencyToRos.in1", ConnPolicy() )
+connect ("AnalogIns.stdvect_out_3", "EmergencyToRos.in1", ConnPolicy() )
 stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/ebuttonEndswitch"))
 stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/ebuttonWired")); 
 stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/ebuttonReset"))
@@ -143,18 +141,15 @@ connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
 #### READ_CALIPHERS ### TODO: remove when torso controller is finished
 loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","CaliphersIn")
-CaliphersIn.numberofinports = 1;
-CaliphersIn.input_sizes = array(2.0)
-CaliphersIn.numberofoutports = 2;
-CaliphersIn.output_sizes = array(1.0, 1.0); 
-CaliphersIn.input_positions = array(1.0, 1.0)
-CaliphersIn.direct_to_ROS = true
+CaliphersIn.inport_dimensions = array(2.0);
+CaliphersIn.outport_dimensions = array(2.0);
+CaliphersIn.from_which_inport = array(1.0, 1.0);
+CaliphersIn.from_which_entry = array(1.0, 2.0);
 CaliphersIn.configure
 setActivity("CaliphersIn",1.0,HighestPriority,ORO_SCHED_RT)
 
-connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.in1", ConnPolicy() );
-stream("CaliphersIn.outmsg1", ros.topic(ROBOT+"/calipher1"))
-stream("CaliphersIn.outmsg2", ros.topic(ROBOT+"/calipher2"))
+connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.beckhoffmsg_in_1", ConnPolicy() );
+stream("CaliphersIn.rosmsg_out_1", ros.topic(ROBOT+"/caliphers"))
 
 
 #### START COMPONENTS ####

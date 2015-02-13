@@ -102,18 +102,16 @@ connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
 #### READ_CALIPHERS ###
 loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");
 addPeer("Supervisor","CaliphersIn")
-CaliphersIn.numberofinports = 1;
-CaliphersIn.input_sizes = array(2.0)
-CaliphersIn.numberofoutports = 2;
-CaliphersIn.output_sizes = array(1.0, 1.0); 
-CaliphersIn.input_positions = array(1.0, 1.0)
-CaliphersIn.direct_to_ROS = true
+CaliphersIn.inport_dimensions = array(2.0);
+CaliphersIn.outport_dimensions = array(2.0);
+CaliphersIn.from_which_inport = array(1.0, 1.0);
+CaliphersIn.from_which_entry = array(1.0, 2.0);
 CaliphersIn.configure
 setActivity("CaliphersIn",1.0,HighestPriority,ORO_SCHED_RT)
 
-connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.in1", ConnPolicy() );
-stream("CaliphersIn.outmsg1", ros.topic(ROBOT+"/calipher1"))
-stream("CaliphersIn.outmsg2", ros.topic(ROBOT+"/calipher2"))
+connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.beckhoffmsg_in_1", ConnPolicy() );
+stream("CaliphersIn.rosmsg_out_1", ros.topic(ROBOT+"/caliphers"))
+
 
 #### START COMPONENTS ####
 Supervisor.AddAllwaysOnPeer ("Soem")
