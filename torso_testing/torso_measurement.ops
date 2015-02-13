@@ -7,17 +7,17 @@
 #### DECLARATION OF PARAMETERS ####
 ### SETTINGS
 var double 	Ts = 0.001
-var int	data_size = 70*1000;
-var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/add_mass/upper_20_mass01.dat"
+var int	data_size = 25*1000;
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/friction_trunk/tmp.dat"
 var int joint = 2;
 var array BIAS = array(0.27, 0.44); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
 var double AMPL = 0.01; # 1 cm
 
 var double P_AMP 	= 0.096;
-var double P_WID = 30.0;
-var array P_OFFSET = array(0.3248, 0.37);
-var double VEL = 0.004;
-var double ACC = 0.004;
+var double P_WID = 10.0;
+var array P_OFFSET = array(0.3248, 0.36);
+var double VEL = 0.016;
+var double ACC = 0.016;
 
 var array MAXVEL                = array(0.025, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
 var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
