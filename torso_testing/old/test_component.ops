@@ -1,0 +1,68 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+ros.import("sergio_hardware")
+ros.import("amigo_hardware")
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts = 0.001
+var string file = "/home/ton/Dropbox/Linux/Matlab/Torso/Idetification/test.txt"
+var string fileout = "/home/ton/Dropbox/Linux/Matlab/Torso/Idetification/test.dat"
+var array MINPOS                = array(0.244, 0.360); # min spindle length [m]
+var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
+
+
+### Ref component ###
+#loadComponent("RefTrajectory","SERGIOCUSTOM::RefTrajectory")
+#setActivity("RefTrajectory",Ts,HighestPriority,ORO_SCHED_RT)
+#RefTrajectory.ref_size = 29835
+#RefTrajectory.file = file
+#RefTrajectory.min_ref = MINPOS
+#RefTrajectory.max_ref = MAXPOS
+#RefTrajectory.configure
+
+### SOURCES ###
+loadComponent("Constant","SOURCES::ConstantSignal")
+#addPeer("Supervisor","Constant")
+setActivity("Constant",Ts,HighestPriority,ORO_SCHED_RT)
+Constant.value = array(0.32496, 0.36);
+Constant.vector_size = 2;
+Constant.configure
+
+### SOURCES ###
+loadComponent("Constant_vel","SOURCES::ConstantSignal")
+#addPeer("Supervisor","Constant_vel")
+setActivity("Constant_vel",Ts,HighestPriority,ORO_SCHED_RT)
+Constant_vel.value = array(1.0, 1.0);
+Constant_vel.vector_size = 2;
+Constant_vel.configure
+
+### FeedForward ###
+loadComponent("FeedForward","SERGIOCUSTOM::TorsoFeedForward")
+#addPeer("Supervisor","FeedForward")
+setActivity("FeedForward",Ts,HighestPriority,ORO_SCHED_RT)
+FeedForward.mass_arms = 0.0;
+FeedForward.configure
+
+
+### TRACING COMPONENT ###
+#loadComponent("Tracing","Signal::Tracing")
+#setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+#Tracing.vector_sizes = array (2.0) 
+#Tracing.buffersize = 29835;
+#Tracing.filename = fileout;
+#Tracing.Ts = Ts
+#Tracing.configure
+
+connect ("Constant.out",	    "FeedForward.ref_in", ConnPolicy() );
+connect ("Constant_vel.out",	    "FeedForward.vel_in", ConnPolicy() );
+
+#Tracing.start();
+Constant.start();
+Constant_vel.start();
+FeedForward.start();
