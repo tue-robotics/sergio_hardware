@@ -8,16 +8,18 @@
 ### SETTINGS
 var double 	Ts = 0.001
 var int	data_size = 60*1000;
-var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/ffw_trunk/acc_added.dat"
+var string filename = "m10kg_vel024_acc024_PD300_st364_ffa08.dat";
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/ffw_trunk/"+filename;
 var int joint = 2;
-var array BIAS = array(0.27, 0.44); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
-var double AMPL = 0.01; # 1 cm
+var array BIAS = array(0.3248, 0.408); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
+var double AMPL = 0.048; # 1 cm
+var double FRQS = 0.08;
 
 var double P_AMP 	= 0.096;
-var double P_WID = 10.0;
-var array P_OFFSET = array(0.3248, 0.36);
+var double P_WID = 7.0;
+var array P_OFFSET = array(0.3248, 0.364);
 var double VEL = 0.024;
-var double ACC = 0.012;
+var double ACC = 0.024;
 
 var array MAXVEL                = array(0.025, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
 var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
@@ -36,7 +38,7 @@ var array P_PHASE = array(0.0, 0.0);
 ### VARIABLES
 var array AMP = array(0.00000000001, 0.00000000001); # amplitude cannot be zero
 AMP[joint-1] = AMPL;
-var array FS = 	array(0.1, 0.1); #frequency 
+var array FS = 	array(0.1, FRQS); #frequency 
 
 
 ### TRACING COMPONENT ###
