@@ -52,29 +52,29 @@ var array ENDSTOP				= array(0.251, 0.357, 0.397, 0.459); # extra endstop safety
 
     # Safety
 var int     N_MOTORS            = 2;                # number of motors
-var array   MAX_ERRORS          = array (0.01, 0.01); 
+var array   MAX_ERRORS          = array (0.01, 0.015); 
 var array   MAX_OUTPUT          = array (1000.0, 1000.0);
 var double  MAX_SATURATION_TIME = 2.0;
 
 # Cotroller parameters
 
  # from bode 
-var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
-#var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
-#var array 	GAINS 						= array (366.5, 529.5); # position to volt
-var array 	GAINS 						= array (0.0, 300.0); # position to volt
-# var array   GAINS                       = array (0.03, 0.025); # encoder to bits
-var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
-var array   LEAD_FREQUENCY              = array (3.33, 3.33)
-var array   LAG_FREQUENCY               = array (30.0, 30.0)
+	var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
+	#var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
+	#var array 	GAINS 						= array (366.5, 529.5); # position to volt
+	var array 	GAINS 						= array (0.0, 500.0); # position to volt
+	# var array   GAINS                       = array (0.03, 0.025); # encoder to bits
+	var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0)
+	var array   LEAD_FREQUENCY              = array (3.33, 3.33)
+	var array   LAG_FREQUENCY               = array (30.0, 30.0)
 
-# 		# from bode new, TODO test
-#	var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator","LowPass")
-#	var array 	GAINS 						= array (1000.0, 1200.0); # position to volt
-#	var array   INTEGRATOR_ZERO_FREQUENCY   = array (3.0, 3.0)
-#	var array   LEAD_FREQUENCY              = array (5.0, 4.0)
-#	var array   LAG_FREQUENCY               = array (60.0, 60.0)
-#	var array LOWPASS_FREQUENCY         = array (200.0, 200.0)
+ 		# from bode new, TODO test
+#	var strings CONTROLLERS                 = strings ("LeadLag","LowPass")
+#	var array 	GAINS 						= array (0.0, 1100.0); # position to volt
+#	#var array   INTEGRATOR_ZERO_FREQUENCY   = array (3.0, 3.0)
+#	var array   LEAD_FREQUENCY              = array (3.33, 5.0)
+#	var array   LAG_FREQUENCY               = array (30.0, 100.0)
+#	var array LOWPASS_FREQUENCY         = array (1000.0, 200.0)
 #	var array LOWPASS_DAMPING           = array (0.7, 0.7)
  
 ### NameBodyPart ###
