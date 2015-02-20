@@ -59,7 +59,7 @@ var double  MAX_SATURATION_TIME = 2.0;
 # Cotroller parameters
 
  # from bode 
-	var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
+	var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
 	#var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
 	#var array 	GAINS 						= array (366.5, 529.5); # position to volt
 	var array 	GAINS 						= array (0.0, 500.0); # position to volt
@@ -81,6 +81,32 @@ var double  MAX_SATURATION_TIME = 2.0;
 Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGMANDATORY, RESETTABLE)
 
 ### Loading Components ###
+
+### FeedForward ###
+loadComponent("TORSO_FeedForward","SERGIOCUSTOM::TorsoFeedForward")
+addPeer("Supervisor","TORSO_FeedForward")
+setActivity("TORSO_FeedForward",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_FeedForward.mass_arms = 10.0;
+TORSO_FeedForward.configure
+
+### FeedForward ###
+loadComponent("TORSO_FeedForward2","FILTERS::FeedForward")
+addPeer("Supervisor","TORSO_FeedForward2")
+setActivity("TORSO_FeedForward2",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_FeedForward2.vector_size = 2;
+TORSO_FeedForward2.coulomb_gain 		= array(0.0, 0.0);
+TORSO_FeedForward2.viscous_gain 		= array(0.0, 0.0);
+TORSO_FeedForward2.acceleration_gain 	= array(0.0, 0.8);
+TORSO_FeedForward2.direction_gain 		= array(0.0, 0.0);
+TORSO_FeedForward2.configure
+
+### ADD Noise component ###
+loadComponent("TORSO_AddFeedForward","MATH::Addition")
+addPeer("Supervisor","TORSO_AddFeedForward")
+TORSO_AddFeedForward.vectorsize = 2
+TORSO_AddFeedForward.numberofinputs = 3
+setActivity("TORSO_AddFeedForward",0.0,HighestPriority,ORO_SCHED_RT)
+TORSO_AddFeedForward.configure
 
 
 ### READ ANGLE REFERENCES ###
@@ -123,7 +149,7 @@ TORSO_Controller.number_of_ffwports = 0;
 TORSO_Controller.number_of_refports = 1;
 TORSO_Controller.refinport_sizes = ints(2);
 TORSO_Controller.gains = GAINS;
-TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
+#TORSO_Controller.zero_freq_WeakIntegrator = INTEGRATOR_ZERO_FREQUENCY;
 TORSO_Controller.zero_freq_LeadLag = LEAD_FREQUENCY;
 TORSO_Controller.pole_freq_LeadLag = LAG_FREQUENCY;
 #TORSO_Controller.zero_freq_Notch = NOTCH_ZERO_FREQ;
@@ -274,10 +300,18 @@ connect ("TORSO_False.out","TORSO_BrakeDO.in1", ConnPolicy() )
 #### CONNECT COMPONENTS ####
 # control loop
 connect ("TORSO_ReadEncoders.out","TORSO_Controller.pos_in", ConnPolicy())
-connect ("TORSO_Controller.out","TORSO_SI2Bits.in", ConnPolicy())
+connect ("TORSO_Controller.out","TORSO_AddFeedForward.in1_ev", ConnPolicy())
+connect ("TORSO_AddFeedForward.out","TORSO_SI2Bits.in", ConnPolicy())
 connect ("TORSO_SI2Bits.out","TORSO_MotorPWM.in1", ConnPolicy())
 connect ("TORSO_MotorPWM.out1",TORSO_SLAVE_1+".pwmDutyMotors", ConnPolicy() )
 
+# Feed Forward
+connect ("TORSO_ReferenceGenerator.posout",	    "TORSO_FeedForward.ref_in", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.velout",	    "TORSO_FeedForward.vel_in", ConnPolicy() );
+connect ("TORSO_FeedForward.ffw_out",	    	"TORSO_AddFeedForward.in2", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.accout",	    "TORSO_FeedForward2.acc_in", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.velout",	    "TORSO_FeedForward2.vel_in", ConnPolicy() );
+connect ("TORSO_FeedForward2.out",	    		"TORSO_AddFeedForward.in3", ConnPolicy() );
 
 # Initialize encoders
 connect (TORSO_SLAVE_1+".caliphers",    	"TORSO_InitEncoder.in_calipher", ConnPolicy() )
@@ -344,6 +378,10 @@ Supervisor.AddEnabledPeer(	"TORSO_Controller", BODYNUMBER)
 Supervisor.AddAllwaysOnPeer("TORSO_SI2Bits")
 Supervisor.AddAllwaysOnPeer("TORSO_MotorPWM")
 
+# Feed Forward
+Supervisor.AddEnabledPeer(	"TORSO_FeedForward", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"TORSO_FeedForward2", BODYNUMBER)
+Supervisor.AddAllwaysOnPeer(	"TORSO_AddFeedForward")
 
 # init encoders
 Supervisor.AddAllwaysOnPeer ("TORSO_InitEncoder")
