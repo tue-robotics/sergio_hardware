@@ -100,7 +100,7 @@ TORSO_FeedForward2.acceleration_gain 	= array(0.0, 0.8);
 TORSO_FeedForward2.direction_gain 		= array(0.0, 0.0);
 TORSO_FeedForward2.configure
 
-### ADD Noise component ###
+### ADD FeedForward ###
 loadComponent("TORSO_AddFeedForward","MATH::Addition")
 addPeer("Supervisor","TORSO_AddFeedForward")
 TORSO_AddFeedForward.vectorsize = 2

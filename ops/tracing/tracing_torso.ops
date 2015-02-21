@@ -1,10 +1,13 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	spindle 	    = 1;			# define 
-var int buffersize 			= 30*1000;
-var string	FILENAME 		= "29-01-15_torso_spindle2_calibration.dat"
+var int 	spindle 	= 1;			# define 
+var int buffersize 		= 90*1000;
+var string	FILENAME 	= "test_noffw_trunk_complete_system.dat"
+var string FILEDIR 		= "torso_identification/ffw_trunk/";
 #############################################################
+
+var string fileout = "/home/amigo/ros/data/private/Ton_data/"+FILEDIR+FILENAME;
 
 	# Part settings
 var double 	Ts = 0.001
@@ -14,15 +17,19 @@ var int 	BODYNUMBER 			= 2
 loadComponent("Tracing","Signal::Tracing")
 #addPeer("Supervisor","Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
-Tracing.vector_sizes = array (2.0, 2.0) 
+Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
 Tracing.buffersize = buffersize
-Tracing.filename = "/home/amigo/ros/data/Ton_data/torso_calibration"+FILENAME;
+Tracing.filename = fileout;
 Tracing.Ts = Ts
 Tracing.configure
 
 ### Connect tracing componenets ###
-connect ("TORSO_InitEncoder.out",			"Tracing.in2", ConnPolicy() );
-connect ("TORSO_ReadEncoders.out",	    	"Tracing.in1", ConnPolicy() );
+#connect ("TORSO_Controller.out",			"Tracing.in2", ConnPolicy() );
+#connect ("TORSO_ReadEncoders.out",	    	"Tracing.in1", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
+connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
+connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
+#connect ("TORSO_FeedForward.ffw_out",	    "Tracing.in4", ConnPolicy() );
 
 # safety and reference
 #Supervisor.AddAllwaysOnPeer ("Tracing")
