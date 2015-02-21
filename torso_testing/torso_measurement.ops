@@ -7,9 +7,9 @@
 #### DECLARATION OF PARAMETERS ####
 ### SETTINGS
 var double 	Ts = 0.001
-var int	data_size = 60*1000;
-#var string filename = "ffw_trunk/m10kg_vel004_acc024_PD500_st360_ffa08_leg02.dat";
-var string filename = "add_mass/m0kg_vel004_leg02.dat";
+var int	data_size = 67*1000;
+var string filename = "ffw_trunk/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
+#var string filename = "add_mass/m0kg_vel004_leg02.dat";
 var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/"+filename;
 var int joint = 2;
 var array BIAS = array(0.3787, 0.408); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
@@ -17,10 +17,10 @@ var double AMPL = 0.048; # 1 cm
 var double FRQS = 0.08;
 
 var double P_AMP 	= 0.096;
-var double P_WID = 26.0;
+var double P_WID = 11.0;
 #var array P_OFFSET = array(0.3248, 0.380);
-var array P_OFFSET = array(0.26624, 0.360);
-var double VEL = 0.004;
+var array P_OFFSET = array(0.378769, 0.360);
+var double VEL = 0.012;
 var double ACC = 0.024;
 
 var array MAXVEL                = array(0.025, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
@@ -47,7 +47,7 @@ var array FS = 	array(0.1, FRQS); #frequency
 loadComponent("Tracing","Signal::Tracing")
 setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
 #addPeer("Supervisor","Tracing")
-Tracing.vector_sizes = array (2.0, 2.0, 2.0) 
+Tracing.vector_sizes = array (2.0, 2.0, 2.0, 2.0) 
 Tracing.buffersize = data_size;
 Tracing.filename = fileout;
 Tracing.Ts = Ts
@@ -57,7 +57,7 @@ Tracing.configure
 connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
 connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
 connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
-#connect ("TORSO_FeedForward.ffw_out",	    "Tracing.in4", ConnPolicy() );
+connect ("TORSO_FeedForward.ffw_out",	    "Tracing.in4", ConnPolicy() );
 
 ### Loading Components ###
 ### SOURCES ###

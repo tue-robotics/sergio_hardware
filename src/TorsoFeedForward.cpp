@@ -86,15 +86,15 @@ void TorsoFeedForward::updateHook()
         angleForce = acos((-0.1685+0.0062+input[1]*input[1])/(2*0.079*input[1]));
 
         // Calculate gravity compensation force needed
-        forces[1] = (2.2819+0.47*m_arms)*124.19*cos(angles[2]+angles[0]-angles[1])/sin(angleForce);
+        forces[1] = (2.7955+0.47*m_arms)*124.19*cos(angles[2]+angles[0]-angles[1])/sin(angleForce);
 
         // Add friction force needed
-        forces[1] = forces[1]+128.6;            // direction independant friction term
+        forces[1] = forces[1]+91.9194;            // direction independant friction term
         inport_vel.read(input_vel);
         if (input_vel[1]>0){                    // direction dependant friction term
-            forces[1] = forces[1]+393.8;
+            forces[1] = forces[1]+394.8329;
         } else if (input_vel[1]<0){
-            forces[1] = forces[1]-393.8;
+            forces[1] = forces[1]-394.8329;
         }
 
         // convert to output voltage
