@@ -1,0 +1,90 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### DECLARATION OF PARAMETERS ####
+### SETTINGS
+var double 	Ts = 0.001
+var int	data_size = 67*1000;
+var string filename = "ffw_trunk/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
+#var string filename = "add_mass/m0kg_vel004_leg02.dat";
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/"+filename;
+var int joint = 2;
+var array BIAS = array(0.3787, 0.408); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
+var double AMPL = 0.048; # 1 cm
+var double FRQS = 0.08;
+
+var double P_AMP 	= 0.096;
+var double P_WID = 11.0;
+#var array P_OFFSET = array(0.3248, 0.380);
+var array P_OFFSET = array(0.378769, 0.360);
+var double VEL = 0.012;
+var double ACC = 0.024;
+
+var array MAXVEL                = array(0.025, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
+var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+MAXVEL[joint-1] = VEL;
+MAXACC[joint-1] = ACC;
+TORSO_ReferenceGenerator.maxVelocity      = array(MAXVEL)
+TORSO_ReferenceGenerator.maxAcceleration  = array(MAXACC)
+
+var double P_PER = 2*P_WID;
+var array P_AMPLITUDE = array(0.0, 0.0);
+P_AMPLITUDE[joint-1] = P_AMP;
+var array P_WIDTH =  array(P_WID, P_WID);
+var array P_PERIOD = array(P_PER, P_PER);
+var array P_PHASE = array(0.0, 0.0);
+
+### VARIABLES
+var array AMP = array(0.00000000001, 0.00000000001); # amplitude cannot be zero
+AMP[joint-1] = AMPL;
+var array FS = 	array(0.1, FRQS); #frequency 
+
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+#addPeer("Supervisor","Tracing")
+Tracing.vector_sizes = array (2.0, 2.0, 2.0, 2.0) 
+Tracing.buffersize = data_size;
+Tracing.filename = fileout;
+Tracing.Ts = Ts
+Tracing.configure
+
+
+connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
+connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
+connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
+connect ("TORSO_FeedForward.ffw_out",	    "Tracing.in4", ConnPolicy() );
+
+### Loading Components ###
+### SOURCES ###
+loadComponent("TORSO_Sine","SOURCES::SineWave")
+#addPeer("Supervisor","TORSO_Sine")
+setActivity("TORSO_Sine",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Sine.frequency    = FS
+TORSO_Sine.amplitude    = AMP
+TORSO_Sine.phase        = array(0.0, 0.0);
+TORSO_Sine.bias         = BIAS;
+TORSO_Sine.vector_size  = 2;
+TORSO_Sine.configure
+
+connect ("TORSO_Sine.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+
+### SOURCES ###
+loadComponent("TORSO_Pulse","SOURCES::PulseSignal")
+#addPeer("Supervisor","TORSO_Sine")
+setActivity("TORSO_Pulse",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Pulse.period    	 = P_PERIOD
+TORSO_Pulse.pulse_width  = P_WIDTH
+TORSO_Pulse.amplitude    = P_AMPLITUDE
+TORSO_Pulse.phase_delay  = P_PHASE
+TORSO_Pulse.offset  	 = P_OFFSET
+TORSO_Pulse.vector_size  = 2;
+TORSO_Pulse.configure
+
+connect ("TORSO_Pulse.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+
+
