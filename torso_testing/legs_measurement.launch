@@ -4,7 +4,7 @@
     HARDWARE
     -s $(find sergio_hardware)/ops/soem.ops
 	-s $(find sergio_hardware)/torso_testing/legs_controller.ops
-    -s $(find sergio_hardware)/torso_testing/torso_measurement.ops
+    -s $(find sergio_hardware)/torso_testing/legs_measurement.ops
     "/>
     <arg name="NAME" value = "hardware"/>
     <arg name="LOG_LEVEL" value="Warning"/>
