@@ -24,7 +24,7 @@ var bool RESETTABLE			= true
 var double 	WHEELRAD 			= 0.075*1.0147; 	# Corrected for effective wheel radius
 var double 	HALFSQRT2 			= 0.7071
 var double 	GEARRATIO 			= 9.0/169.0;		# Gearratio Maxxon GP42C
-var double 	BITS2CURRENT 		= 25.0/2046.0; 		# Bit value to current value (check is it 15 or 25?)
+var double 	BITS2CURRENT 		= 50.0/2046.0; 		# Bit value to current value (+-2046 bit FPGA-> +-5V ELMO-> +-50A)
 var double 	CURRENT2TORQUE 		= 29.2e-3; 			# Torque constant of the motor Maxxon RE35
 var double 	BITS2WHEELTORQUE 	= BITS2CURRENT * CURRENT2TORQUE * 1.0/GEARRATIO;
 var double 	TWOPI 				= 2.0*3.141592
@@ -51,7 +51,7 @@ var double MAX_INTERVAL 		= 1.0;				# Max interval between reference signals
 
 	# Controller test 1: STABLE
 	var strings CONTROLLERS 			= strings ("WeakIntegrator","LowPass");
-	var array GAINS                     = array (0.20, 0.20, 0.20)
+	var array GAINS                     = array (276.2, 276.2, 80.6)
 	var array INTEGRATOR_ZERO_FREQUENCY = array (30.0, 30.0, 11.0)
 	#var array LEAD_FREQUENCY            = array (1.5, 1.5, 1.5)
 	#var array LAG_FREQUENCY             = array (9.0, 9.0, 9.0)
@@ -88,15 +88,15 @@ BASE_MotorToJointSpacePos.function2 = array ( 0.25*WHEELRAD,  0.25*WHEELRAD, -0.
 BASE_MotorToJointSpacePos.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR)
 
 ### VELOCITY TO ODOM ###
-loadComponent("BASE_MotorToJointSpace","MATH::MatrixTransform")
-addPeer("Supervisor","BASE_MotorToJointSpace")
-setActivity("BASE_MotorToJointSpace",0.0,HighestPriority,ORO_SCHED_RT)
-BASE_MotorToJointSpace.Nrows = 3
-BASE_MotorToJointSpace.Ncolumns = 4
-BASE_MotorToJointSpace.configure
-BASE_MotorToJointSpace.function1 = array (-0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD)
-BASE_MotorToJointSpace.function2 = array ( 0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD, -0.25*WHEELRAD)
-BASE_MotorToJointSpace.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR)
+loadComponent("BASE_MotorToJointSpaceVel","MATH::MatrixTransform")
+addPeer("Supervisor","BASE_MotorToJointSpaceVel")
+setActivity("BASE_MotorToJointSpaceVel",0.0,HighestPriority,ORO_SCHED_RT)
+BASE_MotorToJointSpaceVel.Nrows = 3
+BASE_MotorToJointSpaceVel.Ncolumns = 4
+BASE_MotorToJointSpaceVel.configure
+BASE_MotorToJointSpaceVel.function1 = array (-0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpaceVel.function2 = array ( 0.25*WHEELRAD,  0.25*WHEELRAD, -0.25*WHEELRAD, -0.25*WHEELRAD)
+BASE_MotorToJointSpaceVel.function3 = array ( 0.25*WHEELRAD/GEOMFACTOR, 0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR,  0.25*WHEELRAD/GEOMFACTOR)
 
 ### CONTROLLER COMPONENT ###
 loadComponent("BASE_Controller","FILTERS::Controller")
@@ -133,16 +133,16 @@ BASE_Controller.configure
 #BASE_Notch.configure
 
 ### CONTROL ODOM TO WHEEL ###
-loadComponent("BASE_JointToMotorSpace","MATH::MatrixTransform")
-addPeer("Supervisor","BASE_JointToMotorSpace")
-setActivity("BASE_JointToMotorSpace",0.0,LowestPriority,ORO_SCHED_OTHER)
-BASE_JointToMotorSpace.Nrows = 4
-BASE_JointToMotorSpace.Ncolumns = 3
-BASE_JointToMotorSpace.configure
-BASE_JointToMotorSpace.function1 = array ( -1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
-BASE_JointToMotorSpace.function2 = array (  1.0/WHEELRAD,  1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
-BASE_JointToMotorSpace.function3 = array (  1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
-BASE_JointToMotorSpace.function4 = array ( -1.0/WHEELRAD, -1.0/WHEELRAD,  1.0*GEOMFACTOR/WHEELRAD )
+loadComponent("BASE_JointToMotorSpaceTorque","MATH::MatrixTransform")
+addPeer("Supervisor","BASE_JointToMotorSpaceTorque")
+setActivity("BASE_JointToMotorSpaceTorque",0.0,LowestPriority,ORO_SCHED_OTHER)
+BASE_JointToMotorSpaceTorque.Nrows = 4
+BASE_JointToMotorSpaceTorque.Ncolumns = 3
+BASE_JointToMotorSpaceTorque.configure
+BASE_JointToMotorSpaceTorque.function1 = array ( -0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD/GEOMFACTOR )
+BASE_JointToMotorSpaceTorque.function2 = array (  0.25*WHEELRAD,  0.25*WHEELRAD,  0.25*WHEELRAD/GEOMFACTOR )
+BASE_JointToMotorSpaceTorque.function3 = array (  0.25*WHEELRAD, -0.25*WHEELRAD,  0.25*WHEELRAD/GEOMFACTOR )
+BASE_JointToMotorSpaceTorque.function4 = array ( -0.25*WHEELRAD, -0.25*WHEELRAD,  0.25*WHEELRAD/GEOMFACTOR )
 
 ### SI2BITS ###
 loadComponent("BASE_SI2Bits","MATH::Gain")
@@ -273,11 +273,11 @@ BASE_ThermalToSafety.configure;
 
 #### CONNECT COMPONENTS ####
 # Control loop
-connect ("BASE_ReadEncoders.vel",	"BASE_MotorToJointSpace.in", ConnPolicy() )
-connect ("BASE_MotorToJointSpace.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
-connect ("BASE_Controller.out",			"BASE_JointToMotorSpace.in", ConnPolicy() )
-#connect ("BASE_Notch.out",				"BASE_JointToMotorSpace.in", ConnPolicy() )
-connect ("BASE_JointToMotorSpace.out",	"BASE_SI2Bits.in", ConnPolicy() )
+connect ("BASE_ReadEncoders.vel",	"BASE_MotorToJointSpaceVel.in", ConnPolicy() )
+connect ("BASE_MotorToJointSpaceVel.out",	"BASE_Controller.pos_in", ConnPolicy() ); #[m \n m \n rad]
+connect ("BASE_Controller.out",			"BASE_JointToMotorSpaceTorque.in", ConnPolicy() )
+#connect ("BASE_Notch.out",				"BASE_JointToMotorSpaceTorque.in", ConnPolicy() )
+connect ("BASE_JointToMotorSpaceTorque.out",	"BASE_SI2Bits.in", ConnPolicy() )
 connect ("BASE_SI2Bits.out", 			"BASE_AddOffset.in1_ev", 	ConnPolicy() );
 connect ("BASE_AnalogOffset.out", 		"BASE_AddOffset.in2", 		ConnPolicy() );
 connect ("BASE_AddOffset.out", 			"BASE_AnalogOuts.in1", 		ConnPolicy() );
@@ -320,9 +320,9 @@ stream("BASE_ThermalToROS.out1", ros.topic("/sergio/base/temperature"))
 
 #### START COMPONENTS ####
 # Control loop
-Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpace")
+Supervisor.AddAllwaysOnPeer ("BASE_MotorToJointSpaceVel")
 Supervisor.AddEnabledPeer   ("BASE_Controller",			BODYNUMBER)
-Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpace", 	BODYNUMBER)
+Supervisor.AddEnabledPeer 	("BASE_JointToMotorSpaceTorque", 	BODYNUMBER)
 Supervisor.AddAllwaysOnPeer ("BASE_SI2Bits" )
 Supervisor.AddAllwaysOnPeer ("BASE_AnalogOffset")
 Supervisor.AddAllwaysOnPeer ("BASE_AddOffset")
