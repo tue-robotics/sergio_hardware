@@ -1,14 +1,14 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	wheel 			= 1;			# define wheel
-var int 	dir 			= 3;			# define direction of motion
-var double 	noise_level 	= 1.5;			# 0.6 wheel torque
+var int 	wheel 			= 4;			# define wheel
+#var int 	dir 			= 3;			# define direction of motion
+var double 	noise_level 	= 0.4;			# 0.6 wheel torque
 var double	ref_velocity 	= 6.0;			# rad/s wheel speed
 var int buffersize 			= 120*1000;
-var string DIRECTORY		= "/home/amigo/ros/data/private/Ton_data/base/frf_air_pos/"
+var string DIRECTORY		= "/home/amigo/ros/data/private/Ton_data/base/frf_air_pos/final/"
 var string File = "tmp"
-#var string	FILENAME 		= "19-03-15_FRF_pos_wheel1_noControl.dat"
+#var string	FILENAME 		= "20-03-15_FRF_pos_wheel4.dat"
 var string 	FILE			= DIRECTORY+FILENAME
 #############################################################
 
@@ -31,14 +31,15 @@ VELOCITY[wheel-1] 			= ref_velocity;
 var double 	Ts = 0.001
 var int 	BODYNUMBER 			= 1
 
-# Controller parameters
-var strings CONTROLLERS 			= strings ("WeakIntegrator","LeadLag","LowPass")
-var array GAINS                     = array (1.1, 1.1, 1.1, 1.1)
-var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
-var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
-var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
-var array LOWPASS_FREQUENCY         = array (50.0, 50.0, 50.0, 50.0)
-var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
+# Controller parameters  TO BE SET IN THE CONTROLLER
+	 # Weak controller:
+	var strings CONTROLLERS 				= strings ("LeadLag","LowPass")
+	var array GAINS                     = array (1.0,1.0,1.0,1.0)
+	var array INTEGRATOR_ZERO_FREQUENCY = array (0.01, 0.01, 0.01, 0.01)
+	var array LEAD_FREQUENCY            = array (1.7, 1.7, 1.7, 1.7)
+	var array LAG_FREQUENCY             = array (15.0, 15.0, 15.0, 15.0)
+	var array LOWPASS_FREQUENCY         = array (500.0, 500.0, 500.0, 500.0)
+	var array LOWPASS_DAMPING           = array (0.7, 0.7, 0.7, 0.7)
 
 ### RECONFIGURE CONTROLLER
 #BASE_Controller.stop
