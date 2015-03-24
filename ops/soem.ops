@@ -43,7 +43,7 @@ stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds"));
 stream("Supervisor.ebutton_status", ros.topic(ROBOT+"/ebutton_status"));
 
 #### Create Robot Object ####
-var strings DEFAULT_PART_NAMES = strings("base","head"); #,"torso","left_arm", "right_arm", "head")
+var strings DEFAULT_PART_NAMES = strings("base","head","spindle"); #,"torso","left_arm", "right_arm", "head")
 Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
