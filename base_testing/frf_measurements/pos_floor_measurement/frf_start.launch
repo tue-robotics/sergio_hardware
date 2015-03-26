@@ -3,8 +3,9 @@
     <arg name="DEPLOYER_ARGS" value="gnulinux
     HARDWARE
     -s $(find sergio_hardware)/ops/soem.ops
-    -s $(find sergio_hardware)/base_testing/frf_measurements/pos_floor_measurements/wheel_pos_control.ops
-    -s $(find sergio_hardware)/base_testing/frf_measurements/pos_floor_measurements/frf_one_wheel_floor_pos.ops
+    -s $(find sergio_hardware)/base_testing/frf_measurements/pos_floor_measurement/wheel_pos_control.ops
+    -s $(find sergio_hardware)/base_testing/frf_measurements/pos_floor_measurement/frf_one_wheel_floor_pos.ops
+    
     
     "/>
     <arg name="NAME" value = "hardware"/>
@@ -13,4 +14,5 @@
   </include>
 </launch>
 <!---s $(find sergio_hardware)/ops/all_dynamixel_controllers.ops-->
-<!---s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops -->
+<!---s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops 
+-->

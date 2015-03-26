@@ -1,14 +1,14 @@
 
 ### VARIABLES
 ############ Settings #######################################
-var int 	wheel 			= 4;			# define wheel
+var int 	wheel 			= 1;			# define wheel
 #var int 	dir 			= 3;			# define direction of motion
-var double 	noise_level 	= 0.4;			# wheel torque
-var double	ref_velocity 	= 6.0;			# rad/s wheel speed
+var double 	noise_level 	= 1.0;			# wheel torque 0.4
+var double	ref_velocity 	= 1.0;			# rad/s wheel speed
 var int buffersize 			= 120*1000;
 var string DIRECTORY		= "/home/amigo/ros/data/private/Ton_data/base/frf_floor_pos/"
-var string File = "tmp"
-#var string	FILENAME 		= "20-03-15_FRF_pos_wheel4.dat"
+var string FILENAME = "tmp"
+#var string	FILENAME 		= "26-03-15_FRF_wheel1_n10_v10_120s.dat"
 var string 	FILE			= DIRECTORY+FILENAME
 #############################################################
 
@@ -72,7 +72,7 @@ setActivity("IDENTIFICATION_Step",0.5*Ts,HighestPriority,ORO_SCHED_RT); #Since t
 IDENTIFICATION_Step.vector_size = 4
 IDENTIFICATION_Step.init_value = array(0.0, 0.0, 0.0, 0.0)
 IDENTIFICATION_Step.final_value = VELOCITY; #vx 0.25?, vy 0.25?, vphi 0.5?
-IDENTIFICATION_Step.step_time = array(2.0, 2.0, 2.0)
+IDENTIFICATION_Step.step_time = array(2.0, 2.0, 2.0, 2.0)
 IDENTIFICATION_Step.configure
 
 #### NOISE COMPONENT ###
