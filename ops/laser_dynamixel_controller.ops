@@ -17,15 +17,18 @@ var string DYNAMIXEL_SLAVE	= os.getenv("TORSO_SLAVE_3");
 var string ROBOT 			= "/sergio"
 
 
-var double RAD_TO_STEP 	= 195.37860814; # IF YOU CHANGE THIS VARIABLE, ALSO RECALCULATE PAN_MIN, PAN_MAX, TILT_MIN AND TILT_MAX, (From header file) 
+# on AMIGO AX-12
+#var double RAD_TO_STEP 	= 195.37860814; # IF YOU CHANGE THIS VARIABLE, ALSO RECALCULATE PAN_MIN, PAN_MAX, TILT_MIN AND TILT_MAX, (From header file) 
+# on SERGIO RX-64
+var double RAD_TO_STEP 	= 190.9859; # IF YOU CHANGE THIS VARIABLE, ALSO RECALCULATE PAN_MIN, PAN_MAX, TILT_MIN AND TILT_MAX, (From header file) 
 
 var strings JOINT_NAMES = strings( "laser_tilt_joint" )
 
 # laser tilt joint
 var int LASER_ID 		= 3 	; # Dynamixel id
-var int LASER_OFFSET 	= 620	; # Center laser dynamixel (Can be changed)
-var int LASER_MIN 		= -4	; # -0.0205 *RAD_TO_STEP  (-4)
-var int LASER_MAX 		= 58	; #  0.2969 *RAD_TO_STEP  (58)
+var int LASER_OFFSET 	= 616; 		# Center laser dynamixel 
+var int LASER_MIN 		= 0; 		#  0.0 *RAD_TO_STEP  (0)
+var int LASER_MAX 		= 62;	 	#  0.324 *RAD_TO_STEP  (62)
 var int LASER_SPEED 	= 25
 
 ### AddBodyPart ###
