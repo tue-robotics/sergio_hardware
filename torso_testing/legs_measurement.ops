@@ -9,8 +9,8 @@
 var double 	Ts = 0.001
 var int	data_size = 125*1000;
 #var string filename = "ffw_leg/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
-var string filename = "friction_leg/m0kg_vel004_trunk20_st282.dat";
-var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/"+filename;
+var string filename = "m0kg_vel004_trunk10.dat";
+var string fileout = "/home/ton/ros/data/private/Ton_data/torso_identification/identification_leg/"+filename;
 var int joint = 1;
 var array BIAS = array(0.3787, 0.408); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
 var double AMPL = 0.048; # 1 cm

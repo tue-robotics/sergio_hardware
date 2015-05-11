@@ -59,7 +59,7 @@ var double  MAX_SATURATION_TIME = 2.0;
 # Cotroller parameters
 
  # from bode 
-	var strings CONTROLLERS                 = strings ("LeadLag"); #,"WeakIntegrator")
+	var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
 	#var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
 	#var array 	GAINS 						= array (366.5, 529.5); # position to volt
 	var array 	GAINS 						= array (366.5, 0.0); # position to volt
