@@ -117,18 +117,18 @@ void TorsoFeedForward::updateHook()
         // angle at which the force is applied to the trunk
         angleForce[1] = acos((C24-input[1]*input[1])/(C25*input[1]));
         angleForce[0] = acos((C26-input[0]*input[0])/(C27*input[0]));
-        //log(Error)<< "FAngle 1 = "<<angleForce[0]<< ", Fangle 2 = "<<angleForce[1]<<endlog();
+        
 
         // current gear ratio between angle0 and angle1;
         dq1_dq0 = change_q1_q0(angles[0]);
-        //log(Error)<<" dq1/dq0 "<<dq1_dq0<<endlog();
+        
 
         // Calculate gravity compensation force needed
 //        forces[1] = (P3+0.47*m_arms)*124.19*cos(angles[2]+angles[0]-angles[1])/sin(angleForce);
         forces[1] = g*(P3+l3*m_arms)*cos(angles[2]+angles[0]-angles[1]+gravity_offset)/(sin(angleForce[1])*C28);
         forces[0] = g*(cos(angles[0])*(P1+l1*m_arms)+(dq1_dq0-1)*cos(angles[1]-angles[0])*(P2+l2*m_arms)+(1-dq1_dq0)*cos(angles[2]-angles[1]+angles[0]+gravity_offset)*(P3+l3*m_arms))/(sin(angleForce[0])*C29);
 
-        //log(Error)<< "tau G 1 = "<<forces[0]<< ", tau G 2 = "<<forces[1]<<endlog();
+        
         // TODO. add spring forces
 
 		
@@ -161,7 +161,7 @@ void TorsoFeedForward::updateHook()
 //        output[1] = forces[1]*0.00025156;
         output[1] = forces[1];
         output[0] = forces[0];
-        log(Error)<< "Torque 1 = "<<output[0]<< ", Torque 2 = "<<output[1]<<endlog();
+        log(Debug)<< "Torque 1 = "<<output[0]<< ", Torque 2 = "<<output[1]<<endlog();
 
     }
 

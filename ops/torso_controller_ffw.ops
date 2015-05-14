@@ -36,6 +36,8 @@ var int NBITS 				= 8; 						# number of bits to the backhoff stack (Brake)
 var array SI2BITS 			= array(-1.0,-1.0);
 #var array VOLT2BITS 		= array(-5.0/1023.0, -5.0/1023.0) 
 var array VOLT2BITS 		= array(-1023.0/5.0, -1023.0/5.0) 
+var double VOLT2TORQUE		= 0.2920;  		# elmo input voltage to motor torque
+var array TORQUE2BITS		= array(-1023.0/5.0/VOLT2TORQUE, -1023.0/5.0/VOLT2TORQUE) 
 var array OFFSET_CALIPHERS 	= array(-0.22986, -0.22312);
 
     # Refrence generator
@@ -44,8 +46,10 @@ var strings JOINT_NAMES         = strings( "ankle_joint","knee_joint","hip_joint
 var array MINPOS                = array(0.259, 0.360); # min spindle length [m]
 # Note, min spindle 1 length can be 0.244, increased because of safety reasons.
 var array MAXPOS                = array(0.394, 0.456); # max spindle length [m]
-var array MAXVEL                = array(0.024, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
-var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+#var array MAXVEL                = array(0.024, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
+#var array MAXACC                = array(0.024, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
+var array MAXVEL                = array(0.034, 0.024); # spindle vel [m/s] (6 and 4 secs. over full range)
+var array MAXACC                = array(0.034, 0.024);   # spindle acc [m/s2] (1 sec to full speed)
 var array ENDSTOP				= array(0.251, 0.357, 0.397, 0.459); # extra endstop safety
 
     # Safety
@@ -59,10 +63,11 @@ var double  MAX_SATURATION_TIME = 2.0;
  # from bode 
 var strings CONTROLLERS                 = strings ("LeadLag","WeakIntegrator")
 #var array 	GAINS 						= array (15344996.0, 22165000.0); # position to volt
-var array 	GAINS 						= array (366.5, 529.5); # position to volt
+#var array 	GAINS 						= array (366.5, 529.5); # position to volt
+var array 	GAINS 						= array (366.5*VOLT2TORQUE, 529.5*VOLT2TORQUE); # position to torque
 # var array   GAINS                       = array (0.03, 0.025); # encoder to bits
-#var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0); # withouth feed fowrward
-var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 0.00001); # with upper feed forward
+var array   INTEGRATOR_ZERO_FREQUENCY   = array (2.0, 2.0); # withouth feed fowrward
+#var array   INTEGRATOR_ZERO_FREQUENCY   = array (0.00001, 0.00001); # with upper feed forward
 var array   LEAD_FREQUENCY              = array (3.33, 3.33)
 var array   LAG_FREQUENCY               = array (30.0, 30.0)
  
@@ -85,7 +90,7 @@ setActivity("TORSO_FeedForwardAcc",Ts,HighestPriority,ORO_SCHED_RT)
 TORSO_FeedForwardAcc.vector_size = 2;
 TORSO_FeedForwardAcc.coulomb_gain 		= array(0.0, 0.0);
 TORSO_FeedForwardAcc.viscous_gain 		= array(0.0, 0.0);
-TORSO_FeedForwardAcc.acceleration_gain 	= array(0.0, 0.8);
+TORSO_FeedForwardAcc.acceleration_gain 	= array(0.15, 0.08);
 TORSO_FeedForwardAcc.direction_gain 		= array(0.0, 0.0);
 TORSO_FeedForwardAcc.configure
 
@@ -146,7 +151,8 @@ addPeer("Supervisor","TORSO_SI2Bits")
 setActivity("TORSO_SI2Bits",0.0,HighestPriority,ORO_SCHED_RT)
 TORSO_SI2Bits.vectorsize 	= 2;
 #TORSO_SI2Bits.gain 			= SI2BITS
-TORSO_SI2Bits.gain 			= VOLT2BITS
+#TORSO_SI2Bits.gain 			= VOLT2BITS
+TORSO_SI2Bits.gain 			= TORQUE2BITS
 TORSO_SI2Bits.configure
 
 # PWM out
@@ -230,7 +236,7 @@ TORSO_Endstop.configure;
 # Reference to ros
 loadComponent("TORSO_RefToRos","ROS::DoublesToROS")
 addPeer("Supervisor","TORSO_RefToRos")
-setActivity("TORSO_RefToRos",0.25,LowestPriority,ORO_SCHED_OTHER)
+setActivity("TORSO_RefToRos",0.01,LowestPriority,ORO_SCHED_OTHER)
 TORSO_RefToRos.NumberOfDoublesInVector = 2;
 TORSO_RefToRos.configure
 
@@ -337,9 +343,9 @@ stream ("TORSO_Diagnostics.diagnostics",			ros.topic(ROBOT+"/diagnostics"));
 ######################################################
 ############  Start Used for testing #################  
 # data to ros
-connect ("TORSO_ReferenceGenerator.posout","TORSO_RefToRos.in", ConnPolicy() )
-stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/ref_1"));
-stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/ref_2"));
+connect ("TORSO_Controller.jointErrors","TORSO_RefToRos.in", ConnPolicy() )
+stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/err_1"));
+stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/err_2"));
 connect ("TORSO_Controller.out","TORSO_ControlToRos.in", ConnPolicy() )
 stream ("TORSO_ControlToRos.out1", ros.topic("/sergio/torso/control_1"));
 stream ("TORSO_ControlToRos.out2", ros.topic("/sergio/torso/control_2"));
