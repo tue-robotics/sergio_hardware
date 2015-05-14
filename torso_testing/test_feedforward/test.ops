@@ -1,0 +1,43 @@
+########################################################################
+#                                                                      #
+# Component test file 							 				   	   #
+#                                                                      #
+########################################################################
+
+import("rtt_ros")
+ros.import("sergio_hardware")
+ros.import("amigo_hardware")
+
+var double Ts = 0.001;
+
+### FeedForward ###
+loadComponent("TORSO_FeedForward","SERGIOCUSTOM::TorsoFeedForward")
+#addPeer("Supervisor","TORSO_FeedForward")
+setActivity("TORSO_FeedForward",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_FeedForward.mass_arms = 20.0;
+TORSO_FeedForward.configure
+
+### SOURCES ###
+loadComponent("Constant_vel","SOURCES::ConstantSignal")
+#addPeer("Supervisor","TORSO_Sine")
+setActivity("Constant_vel",5.0,HighestPriority,ORO_SCHED_RT)
+Constant_vel.vector_size  = 2;
+Constant_vel.value  = array(1.0, 1.0);
+Constant_vel.configure
+
+### SOURCES ###
+loadComponent("Constant_pos","SOURCES::ConstantSignal")
+#addPeer("Supervisor","TORSO_Sine")
+setActivity("Constant_pos",5.0,HighestPriority,ORO_SCHED_RT)
+Constant_pos.vector_size  = 2;
+Constant_pos.value  = array(0.394, 0.36);
+Constant_pos.configure
+
+connect ("Constant_pos.out",	    "TORSO_FeedForward.ref_in", ConnPolicy() );
+connect ("Constant_vel.out",	    "TORSO_FeedForward.vel_in", ConnPolicy() );
+
+TORSO_FeedForward.start();
+Constant_pos.start();
+Constant_vel.start();
+
+
