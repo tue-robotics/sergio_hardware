@@ -1,0 +1,166 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### DECLARATION OF PARAMETERS ####
+### SETTINGS
+var int BODYNUMBER 			= 2
+var double 	Ts = 0.001
+var int	data_size = 40*1000;
+#var string filename = "ffw_leg/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
+var string filename = "stand_bend_PID_ffw.dat";
+#var string filename = "test.dat";
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_validation/"+filename;
+
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+addPeer("Supervisor","Tracing")
+Tracing.vector_sizes = array (2.0, 2.0, 2.0, 2.0) 
+Tracing.buffersize = data_size;
+Tracing.filename = fileout;
+Tracing.Ts = Ts
+Tracing.configure
+
+connect ("TORSO_ReferenceGenerator.posout",	    "Tracing.in1", ConnPolicy() );
+connect ("TORSO_Controller.out",	    "Tracing.in2", ConnPolicy() );
+connect ("TORSO_ReadEncoders.out",	    "Tracing.in3", ConnPolicy() );
+#connect ("TORSO_ReadEncoders.out",	    "Tracing.in4", ConnPolicy() );
+connect ("TORSO_FeedForwardModel.ffw_out",	    "Tracing.in4", ConnPolicy() );
+
+### Create reference ###
+# Settings
+# stand
+var array INIT1 = array(0.260, 0.3869);
+var array TIME1 = array(1.0, 2.0);
+var array FINAL1 = array(0.3950, 0.4525);
+# bend
+var array INIT2 = array(0.0, 0.0);
+var array TIME2 = array(7.0, 7.0);
+var array FINAL2 = array(0.0, -0.0915);
+# straight
+var array INIT3 = array(0.0, 0.0);
+var array TIME3 = array(13.0, 13.0);
+var array FINAL3 = array(0.0, 0.0915);
+# down
+var array INIT4 = array(0.0, 0.0);
+var array TIME4 = array(19.0, 19.0);
+var array FINAL4 = array(-0.1350, -0.0629);
+# bend
+var array INIT5 = array(0.0, 0.0);
+var array TIME5 = array(25.0, 25.0);
+var array FINAL5 = array(0.0, -0.0286);
+# straight
+var array INIT6 = array(0.0, 0.0);
+var array TIME6 = array(31.0, 31.0);
+var array FINAL6 = array(0.0, 0.0286);
+
+### ADD ###
+loadComponent("AddStep","MATH::Addition")
+addPeer("Supervisor","AddStep")
+setActivity("AddStep",0.0,HighestPriority,ORO_SCHED_RT)
+AddStep.numberofinputs = 6;
+AddStep.vectorsize    = 2;
+AddStep.configure
+
+### SOURCES ###
+loadComponent("Step1","SOURCES::StepSignal")
+addPeer("Supervisor","Step1")
+setActivity("Step1",Ts,HighestPriority,ORO_SCHED_RT)
+Step1.init_value    = INIT1
+Step1.step_time    	= TIME1
+Step1.final_value   = FINAL1
+Step1.vector_size   = 2;
+Step1.configure
+connect ("Step1.out",     "AddStep.in1_ev",        ConnPolicy() ); # RefGoal
+### SOURCES ###
+loadComponent("Step2","SOURCES::StepSignal")
+addPeer("Supervisor","Step2")
+setActivity("Step2",Ts,HighestPriority,ORO_SCHED_RT)
+Step2.init_value    = INIT2
+Step2.step_time    	= TIME2
+Step2.final_value   = FINAL2
+Step2.vector_size   = 2;
+Step2.configure
+connect ("Step2.out",     "AddStep.in2",        ConnPolicy() ); # RefGoal
+
+### SOURCES ###
+loadComponent("Step3","SOURCES::StepSignal")
+addPeer("Supervisor","Step3")
+setActivity("Step3",Ts,HighestPriority,ORO_SCHED_RT)
+Step3.init_value    = INIT3
+Step3.step_time    	= TIME3
+Step3.final_value   = FINAL3
+Step3.vector_size   = 2;
+Step3.configure
+connect ("Step3.out",     "AddStep.in3",        ConnPolicy() ); # RefGoal
+
+### SOURCES ###
+loadComponent("Step4","SOURCES::StepSignal")
+addPeer("Supervisor","Step4")
+setActivity("Step4",Ts,HighestPriority,ORO_SCHED_RT)
+Step4.init_value    = INIT4
+Step4.step_time    	= TIME4
+Step4.final_value   = FINAL4
+Step4.vector_size   = 2;
+Step4.configure
+connect ("Step4.out",     "AddStep.in4",        ConnPolicy() ); # RefGoal
+### SOURCES ###
+loadComponent("Step5","SOURCES::StepSignal")
+addPeer("Supervisor","Step5")
+setActivity("Step5",Ts,HighestPriority,ORO_SCHED_RT)
+Step5.init_value    = INIT5
+Step5.step_time    	= TIME5
+Step5.final_value   = FINAL5
+Step5.vector_size   = 2;
+Step5.configure
+connect ("Step5.out",     "AddStep.in5",        ConnPolicy() ); # RefGoal
+### SOURCES ###
+loadComponent("Step6","SOURCES::StepSignal")
+addPeer("Supervisor","Step6")
+setActivity("Step6",Ts,HighestPriority,ORO_SCHED_RT)
+Step6.init_value    = INIT6
+Step6.step_time    	= TIME6
+Step6.final_value   = FINAL6
+Step6.vector_size   = 2;
+Step6.configure
+connect ("Step6.out",     "AddStep.in6",        ConnPolicy() ); # RefGoal
+### SOURCES ###
+#loadComponent("Step7","SOURCES::StepSignal")
+#addPeer("Supervisor","Step7")
+#setActivity("Step7",Ts,HighestPriority,ORO_SCHED_RT)
+#Step7.init_value    = INIT7
+#Step7.step_time    	= TIME7
+#Step7.final_value   = FINAL7
+#Step7.vector_size   = 2;
+#Step7.configure
+#connect ("Step7.out",     "AddStep.in7",        ConnPolicy() ); # RefGoal
+### SOURCES ###
+#loadComponent("Step8","SOURCES::StepSignal")
+#addPeer("Supervisor","Step8")
+#setActivity("Step8",Ts,HighestPriority,ORO_SCHED_RT)
+#Step8.init_value    = INIT8
+#Step8.step_time    	= TIME8
+#Step8.final_value   = FINAL8
+#Step8.vector_size   = 2;
+#Step8.configure
+#connect ("Step8.out",     "AddStep.in8",        ConnPolicy() ); # RefGoal
+
+connect ("AddStep.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+
+
+Supervisor.AddEnabledPeer(	"Step1", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Step2", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Step3", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Step4", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Step5", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Step6", BODYNUMBER)
+#Supervisor.AddEnabledPeer(	"Step7", BODYNUMBER)
+#Supervisor.AddEnabledPeer(	"Step8", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"AddStep", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Tracing", BODYNUMBER)
+
+
