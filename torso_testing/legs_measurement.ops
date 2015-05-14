@@ -7,19 +7,19 @@
 #### DECLARATION OF PARAMETERS ####
 ### SETTINGS
 var double 	Ts = 0.001
-var int	data_size = 125*1000;
+var int	data_size = 160*1000;
 #var string filename = "ffw_leg/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
-var string filename = "m0kg_vel004_trunk10.dat";
-var string fileout = "/home/ton/ros/data/private/Ton_data/torso_identification/identification_leg/"+filename;
+var string filename = "m0kg_vel004_trunk22.dat";
+var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_identification/identification_leg/"+filename;
 var int joint = 1;
 var array BIAS = array(0.3787, 0.408); #leg 0.38 0.325 0.27, trunk 0.44 0.405 0.37
 var double AMPL = 0.048; # 1 cm
 var double FRQS = 0.08;
 
-var double P_AMP 	= 0.112;
-var double P_WID = 30.0;
+var double P_AMP 	= 0.096;
+var double P_WID = 35.0;
 #var array P_OFFSET = array(0.2590, 0.360);
-var array P_OFFSET = array(0.282, 0.4349);
+var array P_OFFSET = array(0.298, 0.449);
 var double VEL = 0.004;
 var double ACC = 0.024;
 
