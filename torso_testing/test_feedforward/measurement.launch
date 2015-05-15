@@ -4,7 +4,7 @@
     HARDWARE
     -s $(find sergio_hardware)/ops/soem.ops
 	-s $(find sergio_hardware)/torso_testing/test_feedforward/torso_controller_ffw.ops
-    -s $(find sergio_hardware)/torso_testing/test_feedforward/measurement.ops
+    -s $(find sergio_hardware)/torso_testing/test_feedforward/measurement_stand_bend.ops
     "/>
     <arg name="NAME" value = "hardware"/>
     <arg name="LOG_LEVEL" value="Warning"/>
@@ -13,4 +13,5 @@
 </launch>
 <!--
 	-s $(find sergio_hardware)/torso_testing/torso_measurement.ops-->
-<!---s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops -->
+<!---s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
+ -->

@@ -10,8 +10,8 @@ var int BODYNUMBER 			= 2
 var double 	Ts = 0.001
 var int	data_size = 40*1000;
 #var string filename = "ffw_leg/m10kg_vel0012_acc024_PD500_st360_ffa08_leg09_newParams.dat";
-var string filename = "stand_bend_PID_ffw.dat";
-#var string filename = "test.dat";
+#var string filename = "stand_bend_PD_ffw03.dat";
+var string filename = "test.dat";
 var string fileout = "/home/amigo/ros/data/private/Ton_data/torso_validation/"+filename;
 
 
