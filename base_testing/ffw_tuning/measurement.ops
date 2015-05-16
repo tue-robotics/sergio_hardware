@@ -1,0 +1,168 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### DECLARATION OF PARAMETERS ####
+### SETTINGS
+var int BODYNUMBER 	= 1
+var double 	Ts 		= 0.001
+var int joint 		= 2;
+var int	data_size 	= 36*1000;
+#var string filename = "FFW_y_01.dat";
+var string filename = "test.dat";
+var string fileout 	= "/home/amigo/ros/data/private/Ton_data/base/ffw/"+filename;
+BASE_FeedForward.coulomb_gain =	 		array(0.0, 0.0, 0.0);
+BASE_FeedForward.viscous_gain = 		array(0.0, 0.0, 0.0);
+BASE_FeedForward.acceleration_gain = 	array(0.0, 0.0, 0.0);
+#BASE_FeedForward.direction_gain = 		array(0.0, 0.0, 0.0);
+
+## Linear
+var double P_AMP 	= 4.5;
+var double P_WID = 11;
+var array P_OFFSET = array(0.0, 0.0, 0.0);
+var double VEL = 0.75;
+var double ACC = 0.25;
+
+## angular
+#var double P_AMP 	= 9.0;
+#var double P_WID = 11;
+#var array P_OFFSET = array(0.0, 0.0, 0.0);
+#var double VEL = 1.5;
+#var double ACC = 0.5;
+
+var array MAXVEL                = array(1.8, 1.0, 3.0); # spindle vel [m/s] (6 and 4 secs. over full range)
+var array MAXACC                = array(0.7, 0.7, 2.0);   # spindle acc [m/s2] (1 sec to full speed)
+MAXVEL[joint-1] = VEL;
+MAXACC[joint-1] = ACC;
+#TORSO_ReferenceGenerator.maxVelocity      = array(MAXVEL)
+#TORSO_ReferenceGenerator.maxAcceleration  = array(MAXACC)
+
+var double P_PER = 2*P_WID;
+var array P_AMPLITUDE = array(0.0, 0.0, 0.0);
+P_AMPLITUDE[joint-1] = P_AMP;
+var array P_WIDTH =  array(P_WID, P_WID, P_WID);
+var array P_PERIOD = array(P_PER, P_PER, P_PER);
+var array P_PHASE = array(1.0, 1.0, 1.0);
+
+
+#var double P_AMP 	= 0.9;
+#var double P_WID = 6.0;
+#var array P_OFFSET = array(0.0, 0.0, 0.0);
+#var double ACC = 0.3;
+
+#var array 	MAX_VELOCITIES 		= array (1.8, 1.0, 3.0);	  #AMIGO: (1.8, 1.0, 3.1415)
+#var array 	MIN_VELOCITIES 		= array (-1.8, -1.0, -3.0);	  #AMIGO: (1.8, 1.0, 3.1415)
+#var array MAX_ACC 				= array (0.7, 0.7, 2.0); # acceleration used to generate reference trajectory
+#MAX_ACC[joint-1] = ACC;
+
+#var double P_PER = 22;
+#var array P_AMPLITUDE = array(0.0, 0.0, 0.0);
+#P_AMPLITUDE[joint-1] = P_AMP;
+#var array P_WIDTH =  array(P_WID, P_WID);
+#var array P_PERIOD = array(P_PER, P_PER);
+#var array P_PHASE = array(1.0, 1.0, 1.0);
+
+#var array P_AMPLITUDE2 = array(0.0, 0.0, 0.0);
+#P_AMPLITUDE2[joint-1] = P_AMP;
+#var array P_PHASE2 = array(12.0, 12.0, 12.0);
+
+### SOURCES ###
+loadComponent("Constant","SOURCES::ConstantSignal")
+addPeer("Supervisor","Constant")
+setActivity("Constant",Ts,HighestPriority,ORO_SCHED_RT)
+Constant.value = array(0.0,0.0);
+Constant.vector_size  = 2;
+Constant.configure
+
+#Loading Reference Generator
+loadComponent("TORSO_ReferenceGenerator","SOURCES::ReferenceGenerator")
+addPeer("Supervisor","TORSO_ReferenceGenerator")
+setActivity("TORSO_ReferenceGenerator",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_ReferenceGenerator.vector_size      = 3
+TORSO_ReferenceGenerator.number_of_inports= 1
+TORSO_ReferenceGenerator.inport_sizes     = ints (3)
+TORSO_ReferenceGenerator.InterpolatorDt   = Ts
+TORSO_ReferenceGenerator.InterpolatorEps  = 1.0
+TORSO_ReferenceGenerator.minPosition      = array(-10.0, -10.0, -10.0)
+TORSO_ReferenceGenerator.maxPosition      = array(10.0, 10.0,10.0)
+TORSO_ReferenceGenerator.maxVelocity      = array(MAXVEL)
+TORSO_ReferenceGenerator.maxAcceleration  = array(MAXACC)
+TORSO_ReferenceGenerator.configure
+
+BASE_ReadReferences.out.disconnect();
+BASE_ReadReferences.out_acc.disconnect();
+connect ("TORSO_ReferenceGenerator.velout",		"BASE_Controller.ref_in1", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.accout",	    "BASE_FeedForward.acc_in", ConnPolicy() );
+connect ("TORSO_ReferenceGenerator.velout",	    "BASE_FeedForward.vel_in", ConnPolicy() );
+connect ("BASE_FeedForward.out",	    	"BASE_Controller.ffw_in1", ConnPolicy() );
+connect ("Constant.out",              "TORSO_ReferenceGenerator.initial_pos",   ConnPolicy() ); # Position
+
+
+### TRACING COMPONENT ###
+loadComponent("Tracing","Signal::Tracing")
+setActivity("Tracing",0.0,HighestPriority,ORO_SCHED_RT)
+addPeer("Supervisor","Tracing")
+Tracing.vector_sizes = array (3.0, 3.0, 3.0, 3.0) 
+Tracing.buffersize = data_size;
+Tracing.filename = fileout;
+Tracing.Ts = Ts
+Tracing.configure
+
+
+
+
+### SOURCES ###
+loadComponent("TORSO_Pulse","SOURCES::PulseSignal")
+addPeer("Supervisor","TORSO_Pulse")
+setActivity("TORSO_Pulse",Ts,HighestPriority,ORO_SCHED_RT)
+TORSO_Pulse.period    	 = P_PERIOD
+TORSO_Pulse.pulse_width  = P_WIDTH
+TORSO_Pulse.amplitude    = P_AMPLITUDE
+TORSO_Pulse.phase_delay  = P_PHASE
+TORSO_Pulse.offset  	 = P_OFFSET
+TORSO_Pulse.vector_size  = 3;
+TORSO_Pulse.configure
+
+connect ("TORSO_Pulse.out",     "TORSO_ReferenceGenerator.posin1",        ConnPolicy() ); # RefGoal
+
+# compute position error
+loadComponent("Error","MATH::Subtraction")
+addPeer("Supervisor","Error")
+Error.vectorsize = 3
+setActivity("Error",0.0,HighestPriority,ORO_SCHED_RT)
+Error.configure
+
+
+connect ("TORSO_ReferenceGenerator.posout",     "Error.in_plus",        ConnPolicy() );
+connect ("BASE_MotorToJointSpacePos.out",     "Error.in_minus",        ConnPolicy() );
+
+
+# Reference to ros
+loadComponent("TORSO_RefToRos","ROS::DoublesToROS")
+addPeer("Supervisor","TORSO_RefToRos")
+setActivity("TORSO_RefToRos",0.01,LowestPriority,ORO_SCHED_OTHER)
+TORSO_RefToRos.NumberOfDoublesInVector = 3;
+TORSO_RefToRos.configure
+
+connect ("Error.out","TORSO_RefToRos.in", ConnPolicy() )
+#connect ("TORSO_ReferenceGenerator.accout","TORSO_RefToRos.in", ConnPolicy() )
+stream ("TORSO_RefToRos.out1", ros.topic("/sergio/torso/err_1"));
+stream ("TORSO_RefToRos.out2", ros.topic("/sergio/torso/err_2"));
+stream ("TORSO_RefToRos.out3", ros.topic("/sergio/torso/err_3"));
+Supervisor.AddAllwaysOnPeer("TORSO_RefToRos")
+
+
+connect ("TORSO_ReferenceGenerator.velout",	    "Tracing.in1", ConnPolicy() );
+connect ("BASE_Controller.out",	    "Tracing.in2", ConnPolicy() );
+connect ("BASE_Controller.jointErrors",	    "Tracing.in3", ConnPolicy() );
+connect ("BASE_FeedForward.out",	    "Tracing.in4", ConnPolicy() );
+
+Supervisor.AddAllwaysOnPeer ("Constant")
+Supervisor.AddAllwaysOnPeer ("Error")
+Supervisor.AddEnabledPeer(	"TORSO_ReferenceGenerator", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"TORSO_Pulse", BODYNUMBER)
+#Supervisor.AddEnabledPeer(	"TORSO_Pulse2", BODYNUMBER)
+#Supervisor.AddEnabledPeer(	"Add", BODYNUMBER)
+Supervisor.AddEnabledPeer(	"Tracing", BODYNUMBER)

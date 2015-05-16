@@ -3,11 +3,12 @@
     <arg name="DEPLOYER_ARGS" value="gnulinux
     HARDWARE
     -s $(find sergio_hardware)/ops/soem.ops
-    -s $(find sergio_hardware)/ops/base_controller.ops
-    -s $(find sergio_hardware)/ops/tracing/trace_always_odom.ops
+    -s $(find sergio_hardware)/base_testing/ffw_tuning/base_controller_ffw.ops
+    -s $(find sergio_hardware)/base_testing/ffw_tuning/measurement.ops
     "/>
     <arg name="NAME" value ="hardware"/>
     <arg name="LOG_LEVEL" value="Warning"/>
     <arg name="DEBUG" value="false"/>
   </include>
 </launch>
+<!---->
