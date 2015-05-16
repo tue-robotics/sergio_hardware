@@ -3,7 +3,7 @@
     <arg name="DEPLOYER_ARGS" value="gnulinux
     HARDWARE
     -s $(find sergio_hardware)/ops/soem.ops
-	-s $(find sergio_hardware)/torso_testing/test_feedforward/torso_controller_ffw.ops
+	-s $(find sergio_hardware)/torso_testing/test_feedforward/torso_controller.ops
     -s $(find sergio_hardware)/torso_testing/test_feedforward/measurement_stand_bend.ops
     "/>
     <arg name="NAME" value = "hardware"/>
