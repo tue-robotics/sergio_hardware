@@ -10,20 +10,21 @@ var int BODYNUMBER 	= 1
 var double 	Ts 		= 0.001
 var int joint 		= 2;
 var int	data_size 	= 36*1000;
-#var string filename = "FFW_y_01.dat";
+#var string filename = "FFW_xy_04.dat";
 var string filename = "test.dat";
 var string fileout 	= "/home/amigo/ros/data/private/Ton_data/base/ffw/"+filename;
-BASE_FeedForward.coulomb_gain =	 		array(0.0, 0.0, 0.0);
+BASE_FeedForward.coulomb_gain =	 		array(20.0, 80.0, 7.0);
 BASE_FeedForward.viscous_gain = 		array(0.0, 0.0, 0.0);
-BASE_FeedForward.acceleration_gain = 	array(0.0, 0.0, 0.0);
+BASE_FeedForward.acceleration_gain = 	array(70.0, 70.0, 25.0);
 #BASE_FeedForward.direction_gain = 		array(0.0, 0.0, 0.0);
 
+
 ## Linear
-var double P_AMP 	= 4.5;
+var double P_AMP 	= 2.7;
 var double P_WID = 11;
 var array P_OFFSET = array(0.0, 0.0, 0.0);
-var double VEL = 0.75;
-var double ACC = 0.25;
+var double VEL = 0.45;
+var double ACC = 0.15;
 
 ## angular
 #var double P_AMP 	= 9.0;
@@ -46,6 +47,10 @@ var array P_WIDTH =  array(P_WID, P_WID, P_WID);
 var array P_PERIOD = array(P_PER, P_PER, P_PER);
 var array P_PHASE = array(1.0, 1.0, 1.0);
 
+
+#MAXVEL[joint-2] = VEL;
+#MAXACC[joint-2] = ACC;
+#P_AMPLITUDE[joint-2] = P_AMP;
 
 #var double P_AMP 	= 0.9;
 #var double P_WID = 6.0;

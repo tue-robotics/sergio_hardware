@@ -6,8 +6,9 @@ var int 	wheel 			= 1;			# define wheel
 var double 	noise_level 	= 1.0;			# wheel torque 0.4
 var double	ref_velocity 	= 1.0;			# rad/s wheel speed
 var int buffersize 			= 120*1000;
-var string DIRECTORY		= "/home/amigo/ros/data/private/Ton_data/base/frf_floor_pos/"
+var string DIRECTORY		= "/home/amigo/ros/data/private/Ton_data/base/frf_floor_pos/final/"
 var string FILENAME = "tmp"
+#var string FILENAME = "FRF_wheel1_hal.dat"
 #var string	FILENAME 		= "26-03-15_FRF_wheel1_n10_v10_120s.dat"
 var string 	FILE			= DIRECTORY+FILENAME
 #############################################################
