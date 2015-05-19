@@ -99,7 +99,7 @@ setActivity("TORSO_FeedForwardAcc",Ts,HighestPriority,ORO_SCHED_RT)
 TORSO_FeedForwardAcc.vector_size = 2;
 TORSO_FeedForwardAcc.coulomb_gain 		= array(0.0, 0.0);
 TORSO_FeedForwardAcc.viscous_gain 		= array(0.0, 0.0);
-TORSO_FeedForwardAcc.acceleration_gain 	= array(0.15, 0.08);
+TORSO_FeedForwardAcc.acceleration_gain 	= array(0.15, 0.15);
 TORSO_FeedForwardAcc.direction_gain 		= array(0.0, 0.0);
 TORSO_FeedForwardAcc.configure
 
