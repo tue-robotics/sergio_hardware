@@ -1,0 +1,28 @@
+########################################################################
+#                                                                      #
+# Simple Open EtherCAT Master (SOEM) deployer file 				   	   #
+#                                                                      #
+########################################################################
+
+#### IMPORT PACKAGE ####
+import("rtt_ros")
+ros.import("sergio_hardware")
+ros.import("amigo_hardware")
+
+#### DECLARATION OF PARAMETERS ####
+var double 	Ts = 0.001
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
+var string 	BASE_SLAVE_2 	= "Soem.Slave_1002"; # Wheel 3 and 4
+var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+var string  ROBOT 			= "/sergio";
+
+
+
+### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
+loadComponent("Soem","soem_master::SoemMasterComponent")
+Soem.configure
+setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
+
+Soem.start();
