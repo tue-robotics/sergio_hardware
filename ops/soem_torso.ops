@@ -36,8 +36,9 @@ stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
 #stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/emergency_switch"));  # to be removed
 stream("Supervisor.rosshutdown", ros.topic(ROBOT+"/etherCAT_shutdown")); 
 stream("Supervisor.rosetherCATenabled", ros.topic(ROBOT+"/etherCAT_enabled")); 
-stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status")); 
-stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds")); 
+stream("Supervisor.hardware_status", ros.topic("/hardware_status")); 
+stream("Supervisor.dashboardCmd", ros.topic("/dashboard_ctrlcmds")); 
+stream("Supervisor.ebutton_status", ros.topic("/ebutton_status"));
 
 
 #### Create Robot Object ####
@@ -80,6 +81,7 @@ stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/runstop"))
 
 
 ### READ TORSO ENCODERS ###
+var double 	TWOPI 			= 2.0*3.141592
 var int ENCODERBITS_T 		= 65536;					# Max encoderbits (16 bits)
 var int ENCODERCOUNTS_T		= 500*4;						# Counts per cycle
 var double GEARBOX_LOWER 	= 2.0/5.0; 						# Motor to drive train
