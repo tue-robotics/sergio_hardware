@@ -10,6 +10,6 @@ r = JointState()
 r.name = ["laser_tilt_joint"]
 r.position = [0.27]
 
-rospy.sleep(10)
-
-pub.publish(r)
+while not rospy.is_shutdown():
+    pub.publish(r)
+    rospy.sleep(1)
