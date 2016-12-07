@@ -8,12 +8,12 @@
 
 #### DECLARATION OF PARAMETERS ####
 var double TS 				= 0.001
-var int BODYNUMBER 			= 5
-var string BODYPARTNAME 	= "head"
+var int BODYNUMBER 			= 1
+var string BODYPARTNAME 	= "hand"
 var bool HOMEABLE 			= false
 var bool HOMINGOBLIGATORY	= false
 var bool RESETTABLE			= false
-var string DYNAMIXEL_SLAVE	= os.getenv("TORSO_SLAVE_3");
+var string DYNAMIXEL_SLAVE	= os.getenv("BASE_SLAVE_1");
 var string ROBOT 			= "/sergio"
 
 # on AMIGO AX-12
@@ -27,24 +27,19 @@ var strings JOINT_NAMES = strings( "neck_pan_joint", "neck_tilt_joint", "laser_t
 
 # head pan joint					(range 164~770)
 var int PAN_ID 			= 1 ; 		# Dynamixel id
-var int PAN_OFFSET 		= 467; 		# Center pan dynamixel
-var int PAN_MIN 		= -303; 	# -1.586 rad
+var int PAN_OFFSET 		= 0; 		# Center pan dynamixel
+var int PAN_MIN 		= -10; 	#  0.0 rad
 var int PAN_MAX 		= 303; 		#  1.586 rad
-var int PAN_SPEED 		= 50;
+var int PAN_SPEED 		= 25;
 
 # head tilt joint					(range 190~570)
 var int TILT_ID 		= 2 ; 		# Dynamixel id
-var int TILT_OFFSET 	= 380; 		# Center tilt dynamixel
-var int TILT_MIN 		= -190; 	# -0.994 rad
-var int TILT_MAX 		= 190; 		#  0.994 rad
+var int TILT_OFFSET 	= 0; 		# Center tilt dynamixel
+var int TILT_MIN 		= -303; 	# -0.994 rad
+var int TILT_MAX 		= 10; 		#  0.994 rad
 var int TILT_SPEED 	 	= 25;
 
-# laser tilt joint
-var int LASER_ID 		= 3 ; 		# Dynamixel id
-var int LASER_OFFSET 	= 616; 		# Center laser dynamixel 
-var int LASER_MIN 		= 0; 		#  0.0 *RAD_TO_STEP  (0)
-var int LASER_MAX 		= 62;	 	#  0.324 *RAD_TO_STEP  (62)
-var int LASER_SPEED 	= 25;
+
 
 ### AddBodyPart ###
 Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
@@ -76,8 +71,8 @@ connect ("DYNAMIXEL_Controller.errortosupervisor","Supervisor.head_error", ConnP
 connect ("DYNAMIXEL_Enabler.out","DYNAMIXEL_Controller.enabler", ConnPolicy() )
 
 #### CONNECT ROS STREAMS ####
-stream( "DYNAMIXEL_Controller.goalPos", ros.topic(ROBOT+"/neck/references"))
-stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/neck/measurements"))
+stream( "DYNAMIXEL_Controller.goalPos", ros.topic(ROBOT+"/hand/references"))
+stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/hand/measurements"))
 stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/joint_states"))
 
 #### START COMPONENTS ####

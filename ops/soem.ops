@@ -11,40 +11,40 @@ ros.import("amigo_hardware")
 
 #### DECLARATION OF PARAMETERS ####
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
-var string 	BASE_SLAVE_2 	= "Soem.Slave_1002"; # Wheel 3 and 4
-var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
-var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
-var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
+#var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
+#var string 	BASE_SLAVE_2 	= "Soem.Slave_1002"; # Wheel 3 and 4
+#var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
+#var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
+#var string 	TORSO_SLAVE_3 	= "Soem.Slave_1005"; # torso beckhoff dynamixel
 var string  ROBOT 			= "/sergio";
 
 #### MAKING PARAMETERS GLOBAL ####
 loadService("HARDWARE","os")
 os.setenv("BASE_SLAVE_1",	BASE_SLAVE_1)
-os.setenv("BASE_SLAVE_2",	BASE_SLAVE_2)
-os.setenv( "TORSO_SLAVE_1",	TORSO_SLAVE_1)
-os.setenv("TORSO_SLAVE_2",	TORSO_SLAVE_2)
-os.setenv("TORSO_SLAVE_3",	TORSO_SLAVE_3)
+#os.setenv("BASE_SLAVE_2",	BASE_SLAVE_2)
+#os.setenv( "TORSO_SLAVE_1",	TORSO_SLAVE_1)
+#os.setenv("TORSO_SLAVE_2",	TORSO_SLAVE_2)
+#os.setenv("TORSO_SLAVE_3",	TORSO_SLAVE_3)
 
 #### LOAD SUPERVISOR ###
 # TODO correct ports if dashboard is adjusted
 loadComponent("Supervisor","SUPERVISORY::Supervisor")
-Supervisor.ebuttonorder	= strings("Wireless","Wired","Endswitch","Reset")
+#Supervisor.ebuttonorder	= strings("Wireless","Wired","Endswitch","Reset")
 Supervisor.configure
 setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
-stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
-stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
-stream("Supervisor.ebuttonEndswitch", ros.topic(ROBOT+"/ebuttonEndswitch"));
-stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/ebuttonReset"));
-stream("Supervisor.rosshutdown", ros.topic(ROBOT+"/etherCAT_shutdown")); 
-stream("Supervisor.rosetherCATenabled", ros.topic(ROBOT+"/etherCAT_enabled")); 
-stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status")); 
-stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds")); 
-stream("Supervisor.ebutton_status", ros.topic(ROBOT+"/ebutton_status"));
+#stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
+#stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
+#stream("Supervisor.ebuttonEndswitch", ros.topic(ROBOT+"/ebuttonEndswitch"));
+#stream("Supervisor.ebuttonReset", ros.topic(ROBOT+"/ebuttonReset"));
+#stream("Supervisor.rosshutdown", ros.topic(ROBOT+"/etherCAT_shutdown")); 
+#stream("Supervisor.rosetherCATenabled", ros.topic(ROBOT+"/etherCAT_enabled")); 
+#stream("Supervisor.hardware_status", ros.topic(ROBOT+"/hardware_status")); 
+#stream("Supervisor.dashboardCmd", ros.topic(ROBOT+"/dashboard_ctrlcmds")); 
+#stream("Supervisor.ebutton_status", ros.topic(ROBOT+"/ebutton_status"));
 
 #### Create Robot Object ####
-var strings DEFAULT_PART_NAMES = strings("base","head","spindle"); #,"torso","left_arm", "right_arm", "head")
-Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
+#var strings DEFAULT_PART_NAMES = strings("base","head","spindle"); #,"torso","left_arm", "right_arm", "head")
+#Supervisor.CreateRobotObject("sergio", DEFAULT_PART_NAMES)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
 loadComponent("Soem","soem_master::SoemMasterComponent")
@@ -53,98 +53,6 @@ Soem.configure
 setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 
 connect ("Soem.Slave_1001.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
-
-#### LOAD COMPONENT TO ENABLE ANALOG INS (only force sensors are used)###
-loadComponent("AnalogIns","SOEM::AnalogInsGeneric");
-addPeer("Supervisor","AnalogIns")
-AnalogIns.inport_dimensions = array(3.0, 3.0);
-AnalogIns.outport_dimensions = array(1.0, 1.0, 4.0);;
-AnalogIns.from_which_inport = array(1.0, 1.0, 1.0, 2.0, 2.0, 2.0);
-AnalogIns.from_which_entry = array(1.0, 2.0, 3.0, 1.0, 2.0, 3.0);
-AnalogIns.configure
-setActivity("AnalogIns",1.0,HighestPriority,ORO_SCHED_RT)
-
-connect ("AnalogIns.beckhoffmsg_in_1",BASE_SLAVE_1 +".forceSensors", ConnPolicy() );
-connect ("AnalogIns.beckhoffmsg_in_2",BASE_SLAVE_2 +".forceSensors", ConnPolicy() );
-stream("AnalogIns.rosmsg_out_1", ros.topic("/sergio/battery_value"))
-
-
-#### LOAD COMPONENT TO SEND EMERGENCY SWITCH STATUS TO ROS ###
-loadComponent("EmergencyToRos", "MATH::SmallerLarger");
-addPeer("Supervisor", "EmergencyToRos")
-setActivity("EmergencyToRos",0.1,LowestPriority,ORO_SCHED_OTHER)
-EmergencyToRos.numberofinports = 1;
-EmergencyToRos.input_sizes = array(4.0);
-EmergencyToRos.bound_values = array(2.0, 2.0, 2.0, 2.0);
-EmergencyToRos.smaller = ints(1, 1, 1, 1);
-EmergencyToRos.direct_to_ROS = true;
-EmergencyToRos.configure;
-
-connect ("AnalogIns.stdvect_out_3", "EmergencyToRos.in1", ConnPolicy() )
-stream("EmergencyToRos.outmsg1", ros.topic(ROBOT+"/ebuttonEndswitch"))
-stream("EmergencyToRos.outmsg2", ros.topic(ROBOT+"/ebuttonWired")); 
-stream("EmergencyToRos.outmsg3", ros.topic(ROBOT+"/ebuttonReset"))
-stream("EmergencyToRos.outmsg4", ros.topic(ROBOT+"/ebuttonWireless"))
-
-
-### READ WHEEL ENCODERS ###
-var double 	GEARRATIO 		= 9.0/169.0;		# Gearratio Maxxon GP42C
-var double 	TWOPI 			= 2.0*3.141592
-var double 	ENCODERCOUNTS 	= 500.0*4.0;		# Counts per cycle
-var int   	ENCODERBITS 	= 65536;			# From encoder datasheet
-var double 	ENC2RAD 		= TWOPI*GEARRATIO/ENCODERCOUNTS
-
-loadComponent("BASE_ReadEncoders","SOEM::ReadEncoders")
-addPeer("Supervisor","BASE_ReadEncoders")
-setActivity("BASE_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
-BASE_ReadEncoders.encoderbits = ENCODERBITS;
-BASE_ReadEncoders.enc2SI = array (ENC2RAD, ENC2RAD, ENC2RAD, ENC2RAD)
-BASE_ReadEncoders.gearratios = array (GEARRATIO, GEARRATIO, GEARRATIO, GEARRATIO)
-BASE_ReadEncoders.configure
-
-connect (BASE_SLAVE_1+".encoder1","BASE_ReadEncoders.enc1_in", ConnPolicy() ); #enc1[-]
-connect (BASE_SLAVE_1+".encoder2","BASE_ReadEncoders.enc2_in", ConnPolicy() ); #enc2[-]
-connect (BASE_SLAVE_2+".encoder1","BASE_ReadEncoders.enc3_in", ConnPolicy() ); #enc3[-]
-connect (BASE_SLAVE_2+".encoder2","BASE_ReadEncoders.enc4_in", ConnPolicy() ); #enc4[-]
-
-connect (BASE_SLAVE_1+".encoder1_vel","BASE_ReadEncoders.vel1_in", ConnPolicy() ); #vel1[-]
-connect (BASE_SLAVE_1+".encoder2_vel","BASE_ReadEncoders.vel2_in", ConnPolicy() ); #vel2[-]
-connect (BASE_SLAVE_2+".encoder1_vel","BASE_ReadEncoders.vel3_in", ConnPolicy() ); #vel3[-]
-connect (BASE_SLAVE_2+".encoder2_vel","BASE_ReadEncoders.vel4_in", ConnPolicy() ); #vel4[-]
-
-
-### READ TORSO ENCODERS ###
-var int ENCODERBITS_T 		= 65536;					# Max encoderbits (16 bits)
-var int ENCODERCOUNTS_T		= 500*4;						# Counts per cycle
-var double GEARBOX_LOWER 	= 2.0/5.0; 						# Motor to drive train
-var double GEARBOX_UPPER 	= 3.0/13.0; 					# Motor to drive train
-var double METER2RAD		= 500.0*TWOPI;				# translation to rotation (rad/m)
-var array ENC2METER			= array(TWOPI/ENCODERCOUNTS_T*GEARBOX_LOWER/METER2RAD, 
-								TWOPI/ENCODERCOUNTS_T*GEARBOX_UPPER/METER2RAD);
-
-loadComponent("TORSO_ReadEncoders","SOEM::ReadEncoders")
-addPeer("Supervisor","TORSO_ReadEncoders")
-setActivity("TORSO_ReadEncoders",Ts,HighestPriority,ORO_SCHED_RT)
-TORSO_ReadEncoders.encoderbits = ENCODERBITS_T
-TORSO_ReadEncoders.enc2SI = ENC2METER;
-TORSO_ReadEncoders.gearratios = array (GEARBOX_LOWER/METER2RAD, GEARBOX_UPPER/METER2RAD)
-TORSO_ReadEncoders.configure
-
-connect (TORSO_SLAVE_1+".encoder1","TORSO_ReadEncoders.enc1_in", ConnPolicy() )
-connect (TORSO_SLAVE_1+".encoder2","TORSO_ReadEncoders.enc2_in", ConnPolicy() )
-
-#### READ_CALIPHERS ### TODO: remove when torso controller is finished
-loadComponent("CaliphersIn","SOEM::AnalogInsGeneric");
-addPeer("Supervisor","CaliphersIn")
-CaliphersIn.inport_dimensions = array(2.0);
-CaliphersIn.outport_dimensions = array(2.0);
-CaliphersIn.from_which_inport = array(1.0, 1.0);
-CaliphersIn.from_which_entry = array(1.0, 2.0);
-CaliphersIn.configure
-setActivity("CaliphersIn",1.0,HighestPriority,ORO_SCHED_RT)
-
-connect (TORSO_SLAVE_1 +".caliphers", "CaliphersIn.beckhoffmsg_in_1", ConnPolicy() );
-stream("CaliphersIn.rosmsg_out_1", ros.topic(ROBOT+"/caliphers"))
 
 
 #### START COMPONENTS ####
