@@ -23,20 +23,20 @@ var double RAD_TO_STEP 	= 190.9859; # IF YOU CHANGE THIS VARIABLE, ALSO RECALCUL
 
 
 
-var strings JOINT_NAMES = strings( "neck_pan_joint", "neck_tilt_joint", "laser_tilt_joint" )
+var strings JOINT_NAMES = strings( "neck_pan_joint", "neck_tilt_joint" )
 
 # head pan joint					(range 164~770)
 var int PAN_ID 			= 1 ; 		# Dynamixel id
-var int PAN_OFFSET 		= 0; 		# Center pan dynamixel
-var int PAN_MIN 		= -10; 	#  0.0 rad
-var int PAN_MAX 		= 303; 		#  1.586 rad
+var int PAN_OFFSET 		= 200; 		# Center pan dynamixel
+var int PAN_MIN 		= 50; 	#  0.0 rad
+var int PAN_MAX 		= 250; 		#  1.586 rad
 var int PAN_SPEED 		= 25;
 
 # head tilt joint					(range 190~570)
 var int TILT_ID 		= 2 ; 		# Dynamixel id
-var int TILT_OFFSET 	= 0; 		# Center tilt dynamixel
-var int TILT_MIN 		= -303; 	# -0.994 rad
-var int TILT_MAX 		= 10; 		#  0.994 rad
+var int TILT_OFFSET 	= 100; 		# Center tilt dynamixel
+var int TILT_MIN 		= 50; 	# -0.994 rad
+var int TILT_MAX 		= 150; 		#  0.994 rad
 var int TILT_SPEED 	 	= 25;
 
 
@@ -49,11 +49,11 @@ loadComponent("DYNAMIXEL_Controller", "DYNAMIXEL::DynamixelController")
 #addPeer("Supervisor","DYNAMIXEL_Controller")
 setActivity("DYNAMIXEL_Controller",TS,HighestPriority,ORO_SCHED_RT)
 DYNAMIXEL_Controller.joint_names 		= JOINT_NAMES
-DYNAMIXEL_Controller.dynamixel_ids		= ints(PAN_ID,					TILT_ID,				LASER_ID)
-DYNAMIXEL_Controller.dynamixel_offset 	= ints(PAN_OFFSET, 				TILT_OFFSET,			LASER_OFFSET)
-DYNAMIXEL_Controller.dynamixel_max 		= ints(PAN_OFFSET + PAN_MAX, 	TILT_OFFSET + TILT_MAX,	LASER_OFFSET + LASER_MAX)
-DYNAMIXEL_Controller.dynamixel_min 		= ints(PAN_OFFSET + PAN_MIN, 	TILT_OFFSET + TILT_MIN, LASER_OFFSET + LASER_MIN)
-DYNAMIXEL_Controller.dynamixel_speed 	= ints(PAN_SPEED, 				TILT_SPEED,				LASER_SPEED)
+DYNAMIXEL_Controller.dynamixel_ids		= ints(PAN_ID,					TILT_ID)
+DYNAMIXEL_Controller.dynamixel_offset 	= ints(PAN_OFFSET, 				TILT_OFFSET)
+DYNAMIXEL_Controller.dynamixel_max 		= ints(PAN_OFFSET + PAN_MAX, 	TILT_OFFSET + TILT_MAX)
+DYNAMIXEL_Controller.dynamixel_min 		= ints(PAN_OFFSET + PAN_MIN, 	TILT_OFFSET + TILT_MIN)
+DYNAMIXEL_Controller.dynamixel_speed 	= ints(PAN_SPEED, 				TILT_SPEED)
 DYNAMIXEL_Controller.configure
 
 ## Dynamixel enabler
@@ -67,7 +67,7 @@ connect (DYNAMIXEL_SLAVE+".data_tx", "DYNAMIXEL_Controller.instruction", ConnPol
 connect (DYNAMIXEL_SLAVE+".data_rx", "DYNAMIXEL_Controller.status", ConnPolicy() )
 connect (DYNAMIXEL_SLAVE+".ready_rx", "DYNAMIXEL_Controller.serialReadyRx", ConnPolicy() )
 connect (DYNAMIXEL_SLAVE+".running", "DYNAMIXEL_Controller.serialRunning", ConnPolicy() )
-connect ("DYNAMIXEL_Controller.errortosupervisor","Supervisor.head_error", ConnPolicy() )
+#connect ("DYNAMIXEL_Controller.errortosupervisor","Supervisor.head_error", ConnPolicy() )
 connect ("DYNAMIXEL_Enabler.out","DYNAMIXEL_Controller.enabler", ConnPolicy() )
 
 #### CONNECT ROS STREAMS ####
@@ -78,3 +78,6 @@ stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/joint_states"))
 #### START COMPONENTS ####
 #Supervisor.AddAllwaysOnPeer ("DYNAMIXEL_Controller")
 #Supervisor.AddEnabledPeer ("DYNAMIXEL_Enabler",BODYNUMBER)
+
+Soem.start
+#DYNAMIXEL_Controller.start
