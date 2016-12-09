@@ -42,11 +42,11 @@ var int TILT_SPEED 	 	= 25;
 
 
 ### AddBodyPart ###
-Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
+#Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
 
 ## Dynamixel controller
 loadComponent("DYNAMIXEL_Controller", "DYNAMIXEL::DynamixelController")
-addPeer("Supervisor","DYNAMIXEL_Controller")
+#addPeer("Supervisor","DYNAMIXEL_Controller")
 setActivity("DYNAMIXEL_Controller",TS,HighestPriority,ORO_SCHED_RT)
 DYNAMIXEL_Controller.joint_names 		= JOINT_NAMES
 DYNAMIXEL_Controller.dynamixel_ids		= ints(PAN_ID,					TILT_ID,				LASER_ID)
@@ -58,7 +58,7 @@ DYNAMIXEL_Controller.configure
 
 ## Dynamixel enabler
 loadComponent("DYNAMIXEL_Enabler", "AMIGOHEAD::HeadEnabler")
-addPeer("Supervisor","DYNAMIXEL_Enabler")
+#addPeer("Supervisor","DYNAMIXEL_Enabler")
 setActivity("DYNAMIXEL_Enabler",TS,HighestPriority,ORO_SCHED_RT)
 DYNAMIXEL_Enabler.configure
 
@@ -76,5 +76,5 @@ stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/hand/measurements")
 stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/joint_states"))
 
 #### START COMPONENTS ####
-Supervisor.AddAllwaysOnPeer ("DYNAMIXEL_Controller")
-Supervisor.AddEnabledPeer ("DYNAMIXEL_Enabler",BODYNUMBER)
+#Supervisor.AddAllwaysOnPeer ("DYNAMIXEL_Controller")
+#Supervisor.AddEnabledPeer ("DYNAMIXEL_Enabler",BODYNUMBER)

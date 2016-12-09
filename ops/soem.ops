@@ -11,7 +11,7 @@ ros.import("amigo_hardware")
 
 #### DECLARATION OF PARAMETERS ####
 var double 	Ts = 0.001
-#var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
 #var string 	BASE_SLAVE_2 	= "Soem.Slave_1002"; # Wheel 3 and 4
 #var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
 #var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs
@@ -28,10 +28,10 @@ os.setenv("BASE_SLAVE_1",	BASE_SLAVE_1)
 
 #### LOAD SUPERVISOR ###
 # TODO correct ports if dashboard is adjusted
-loadComponent("Supervisor","SUPERVISORY::Supervisor")
+#loadComponent("Supervisor","SUPERVISORY::Supervisor")
 #Supervisor.ebuttonorder	= strings("Wireless","Wired","Endswitch","Reset")
-Supervisor.configure
-setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
+#Supervisor.configure
+#setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
 #stream("Supervisor.ebuttonWireless", ros.topic(ROBOT+"/ebuttonWireless"));
 #stream("Supervisor.ebuttonWired", ros.topic(ROBOT+"/ebuttonWired"));
 #stream("Supervisor.ebuttonEndswitch", ros.topic(ROBOT+"/ebuttonEndswitch"));
@@ -48,18 +48,15 @@ setActivity("Supervisor",0.04,LowestPriority,ORO_SCHED_OTHER)
 
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
 loadComponent("Soem","soem_master::SoemMasterComponent")
-addPeer("Supervisor","Soem")
+#addPeer("Supervisor","Soem")
 Soem.configure
 setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 
-connect ("Soem.Slave_1001.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
+#connect ("Soem.Slave_1001.encoder1", "Supervisor.serialRunning", ConnPolicy() ) ;
 
 
 #### START COMPONENTS ####
-Supervisor.AddAllwaysOnPeer ("Soem")
-Supervisor.AddAllwaysOnPeer ("BASE_ReadEncoders")
-Supervisor.AddAllwaysOnPeer ("TORSO_ReadEncoders")
-Supervisor.AddAllwaysOnPeer ("CaliphersIn")
-Supervisor.AddAllwaysOnPeer ("AnalogIns")
-Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
-Supervisor.start()
+#Supervisor.AddAllwaysOnPeer ("Soem")
+#Supervisor.AddAllwaysOnPeer ("AnalogIns")
+#Supervisor.AddAllwaysOnPeer ("EmergencyToRos")
+#Supervisor.start()
