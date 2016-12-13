@@ -11,7 +11,7 @@ ros.import("amigo_hardware")
 
 #### DECLARATION OF PARAMETERS ####
 var double 	Ts = 0.001
-var string 	BASE_SLAVE_1 	= "Soem.Slave_1001"; # Wheel 1 and 2
+var string 	BASE_SLAVE_1 	= "Soem.Slave_1002"; # Wheel 1 and 2
 #var string 	BASE_SLAVE_2 	= "Soem.Slave_1002"; # Wheel 3 and 4
 #var string 	TORSO_SLAVE_1 	= "Soem.Slave_1003"; # torso motors
 #var string 	TORSO_SLAVE_2 	= "Soem.Slave_1004"; # torso beckhoff digital outs

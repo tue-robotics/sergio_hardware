@@ -34,9 +34,9 @@ var int PAN_SPEED 		= 25;
 
 # head tilt joint					(range 190~570)
 var int TILT_ID 		= 2 ; 		# Dynamixel id
-var int TILT_OFFSET 	= 100; 		# Center tilt dynamixel
-var int TILT_MIN 		= 50; 	# -0.994 rad
-var int TILT_MAX 		= 150; 		#  0.994 rad
+var int TILT_OFFSET 	= 200; 		# Center tilt dynamixel
+var int TILT_MIN 		= 150; 	# -0.994 rad
+var int TILT_MAX 		= 250; 		#  0.994 rad
 var int TILT_SPEED 	 	= 25;
 
 
@@ -80,4 +80,5 @@ stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/joint_states"))
 #Supervisor.AddEnabledPeer ("DYNAMIXEL_Enabler",BODYNUMBER)
 
 Soem.start
-#DYNAMIXEL_Controller.start
+DYNAMIXEL_Controller.start
+DYNAMIXEL_Enabler.start
