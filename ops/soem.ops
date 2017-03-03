@@ -49,6 +49,7 @@ os.setenv("BASE_SLAVE_1",	BASE_SLAVE_1)
 ### LOAD SOEM COMPONENT FOR ETHERCAT COMMUNICATION ###
 loadComponent("Soem","soem_master::SoemMasterComponent")
 #addPeer("Supervisor","Soem")
+Soem.ifname="enp0s25"
 Soem.configure
 setActivity("Soem",Ts,HighestPriority,ORO_SCHED_RT)
 

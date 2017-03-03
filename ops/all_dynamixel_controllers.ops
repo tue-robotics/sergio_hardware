@@ -13,7 +13,7 @@ var string BODYPARTNAME 	= "head"
 var bool HOMEABLE 			= false
 var bool HOMINGOBLIGATORY	= false
 var bool RESETTABLE			= false
-var string DYNAMIXEL_SLAVE	= os.getenv("TORSO_SLAVE_3");
+var string DYNAMIXEL_SLAVE	= os.getenv("TORSO_SLAVE_2");
 var string ROBOT 			= "/sergio"
 
 # on AMIGO AX-12
@@ -39,15 +39,9 @@ var int TILT_MIN 		= -190; 	# -0.994 rad
 var int TILT_MAX 		= 190; 		#  0.994 rad
 var int TILT_SPEED 	 	= 25;
 
-# laser tilt joint
-var int LASER_ID 		= 3 ; 		# Dynamixel id
-var int LASER_OFFSET 	= 616; 		# Center laser dynamixel 
-var int LASER_MIN 		= 0; 		#  0.0 *RAD_TO_STEP  (0)
-var int LASER_MAX 		= 62;	 	#  0.324 *RAD_TO_STEP  (62)
-var int LASER_SPEED 	= 25;
 
 ### AddBodyPart ###
-Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
+#Supervisor.AddBodyPart( BODYNUMBER, BODYPARTNAME, HOMEABLE, HOMINGOBLIGATORY, RESETTABLE)
 
 ## Dynamixel controller
 loadComponent("DYNAMIXEL_Controller", "DYNAMIXEL::DynamixelController")
@@ -81,5 +75,8 @@ stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/neck/measurements")
 stream( "DYNAMIXEL_Controller.currentPos", ros.topic(ROBOT+"/joint_states"))
 
 #### START COMPONENTS ####
-Supervisor.AddAllwaysOnPeer ("DYNAMIXEL_Controller")
-Supervisor.AddEnabledPeer ("DYNAMIXEL_Enabler",BODYNUMBER)
+DYNAMIXEL_Controller.start
+
+DYNAMIXEL_Enabler.start
+
+

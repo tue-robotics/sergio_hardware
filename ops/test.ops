@@ -35,7 +35,7 @@ var int PAN_SPEED 		= 25;
 # head tilt joint					(range 190~570)
 var int TILT_ID 		= 2 ; 		# Dynamixel id
 var int TILT_OFFSET 	= 200; 		# Center tilt dynamixel
-var int TILT_MIN 		= 150; 	# -0.994 rad
+var int TILT_MIN 		= 190; 	# -0.994 rad
 var int TILT_MAX 		= 250; 		#  0.994 rad
 var int TILT_SPEED 	 	= 25;
 
