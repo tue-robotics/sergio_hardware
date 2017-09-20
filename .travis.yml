@@ -11,7 +11,8 @@ before_install:
   - export PACKAGE=${TRAVIS_REPO_SLUG#*/}
 
 install:
-  - travis_wait 30 mvn bash install-package.sh --package=$PACKAGE --branch=$TRAVIS_BRANCH --commit=$TRAVIS_COMMIT --pullrequest=$TRAVIS_PULL_REQUEST
+  - travis_wait 30 mvn
+  - bash install-package.sh --package=$PACKAGE --branch=$TRAVIS_BRANCH --commit=$TRAVIS_COMMIT --pullrequest=$TRAVIS_PULL_REQUEST
 
 script: 
   - bash build-package.sh --package=$PACKAGE
