@@ -25,6 +25,7 @@
   <build_depend>rtt_rosnode</build_depend>
   <build_depend>soem</build_depend>
   <build_depend>soem_master</build_depend>
+  <build_depend>soem_beckhoff_driver</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>rtt_sensor_msgs</build_depend>
