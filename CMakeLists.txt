@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rtt_rosnode
   rtt_ros_msgs
   std_msgs
+  soem_beckhoff_drivers
   )
 
 include_directories(
